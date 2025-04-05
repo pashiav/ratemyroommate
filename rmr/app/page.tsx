@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { SignUpButton } from "@clerk/nextjs";
+import { useEffect, useState } from "react";
+import { useAuth, SignInButton, SignUpButton } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -15,6 +16,15 @@ export default function Home() {
     { id: "dishes", label: "DISHES", checked: false },
   ]);
 
+  const { isSignedIn } = useAuth(); // ✅ more reliable than useUser
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isSignedIn) {
+      router.push("/search"); // ✅ guaranteed redirect after sign-in
+    }
+  }, [isSignedIn]);
+
   const handleToggle = (id: string) => {
     setTodoItems((prev) =>
       prev.map((item) =>
@@ -24,10 +34,21 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-blue-50 p-4">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-blue-50 p-4 relative">
+      {/* Login button in top-right */}
+      <div className="absolute top-4 right-4">
+        <SignInButton mode="modal">
+          <button className="bg-navy-blue text-white px-4 py-2 rounded-full hover:bg-navy-blue/90">
+            Log In
+          </button>
+        </SignInButton>
+      </div>
+
       <div className="relative w-full max-w-xl bg-white rounded-3xl shadow-lg p-8">
+        {/* Decorative bar */}
         <div className="absolute left-4 top-1/4 bottom-1/2 w-8 bg-navy-blue rounded-full"></div>
 
+        {/* Title cards */}
         <div className="flex justify-center mb-12">
           <div className="relative">
             <div className="absolute -top-6 -left-8 bg-light-blue p-4 rounded-lg rotate-3 shadow-sm">
@@ -48,32 +69,28 @@ export default function Home() {
           </div>
         </div>
 
+        {/* TO DO LIST */}
         <div className="mt-8 border-t-2 border-b-2 border-pink-300 py-4 relative">
           <div className="absolute -left-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-pink-300 rounded-full"></div>
           <div className="absolute -right-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-pink-300 rounded-full"></div>
 
-          <h2 className="text-center text-xl text-gray-600 font-medium mb-4 underline">
-            TO DO LIST
-          </h2>
+          <h2 className="text-center text-xl text-gray-600 font-medium mb-4 underline">TO DO LIST</h2>
 
           <div className="space-y-4">
-            {/* Sign up block */}
+            {/* Signup input + button */}
             <div className="flex items-start space-x-2">
-              <Checkbox
-                id="signup"
-                checked={todoItems[0].checked}
+              <Checkbox 
+                id="signup" 
+                checked={todoItems[0].checked} 
                 onCheckedChange={() => handleToggle("signup")}
                 className="mt-1 data-[state=checked]:bg-navy-blue"
               />
               <div className="flex-1">
-                <label
-                  htmlFor="signup"
-                  className="text-2xl font-bold text-navy-blue"
-                >
+                <label htmlFor="signup" className="text-2xl font-bold text-navy-blue">
                   {todoItems[0].label}
                 </label>
                 <div className="mt-2 flex">
-                  <Input
+                  <Input 
                     placeholder="Enter your .edu email address"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -91,17 +108,17 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Other to-dos */}
+            {/* Other checklist items */}
             {todoItems.slice(1).map((item) => (
               <div key={item.id} className="flex items-center space-x-2">
-                <Checkbox
-                  id={item.id}
-                  checked={item.checked}
+                <Checkbox 
+                  id={item.id} 
+                  checked={item.checked} 
                   onCheckedChange={() => handleToggle(item.id)}
                   className="data-[state=checked]:bg-navy-blue"
                 />
-                <label
-                  htmlFor={item.id}
+                <label 
+                  htmlFor={item.id} 
                   className="text-xl font-medium text-purple-500"
                 >
                   {item.label}
