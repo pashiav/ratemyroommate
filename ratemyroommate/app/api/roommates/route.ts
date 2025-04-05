@@ -3,24 +3,31 @@ import { supabase } from "@/lib/supabase"
 import { NextResponse } from "next/server"
 
 // GET /api/roommates → returns all roommate profiles
-export async function GET() {
-  const { userId } = await auth()
-
-  if (!userId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+export async function GET(req: Request) {
+    const { userId } = await auth()
+  
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+  
+    const { searchParams } = new URL(req.url)
+    const place_id = searchParams.get("place_id")
+  
+    let query = supabase.from("roommates").select("*")
+  
+    if (place_id) {
+      query = query.eq("places_id", place_id)
+    }
+  
+    const { data, error } = await query
+  
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+  
+    return NextResponse.json(data)
   }
-
-  const { data, error } = await supabase
-    .from("roommates")
-    .select("*")
-    .order("created_at", { ascending: false })
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
-  }
-
-  return NextResponse.json(data)
-}
+  
 
 // POST /api/roommates → creates a new roommate profile
 export async function POST(req: Request) {
