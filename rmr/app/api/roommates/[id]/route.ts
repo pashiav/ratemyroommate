@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { auth } from "@clerk/nextjs/server";
 
-// Remove type declarations completely
 export async function GET(
   request: NextRequest,
   { params }: any
@@ -14,7 +13,6 @@ export async function GET(
     method: request.method,
     url: request.url
   });
-
 
   // Verify Clerk authentication
   const { userId } = await auth();
