@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useAuth, UserButton, SignInButton } from '@clerk/nextjs';
-import Link from 'next/link';
+import { useEffect, useState } from "react";
+import { useAuth, UserButton, SignInButton } from "@clerk/nextjs";
+import Link from "next/link";
 
 interface Review {
   rv_id: string;
@@ -42,16 +42,16 @@ export default function RoommateDetails({ id }: { id: string }) {
 
       if (!isSignedIn) {
         setLoading(false);
-        setError('User is not signed in');
+        setError("User is not signed in");
         return;
       }
 
       try {
         const token = await getToken();
         const fetchOptions: RequestInit = {
-          method: 'GET',
+          method: "GET",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             ...(token && { Authorization: `Bearer ${token}` }),
           },
         };
@@ -61,7 +61,9 @@ export default function RoommateDetails({ id }: { id: string }) {
 
         if (!res.ok) {
           const errorText = await res.text();
-          throw new Error(`Failed to fetch roommate. Status: ${res.status}, ID: ${id}, Message: ${errorText}`);
+          throw new Error(
+            `Failed to fetch roommate. Status: ${res.status}, ID: ${id}, Message: ${errorText}`
+          );
         }
 
         const data: Roommate = await res.json();
@@ -81,7 +83,8 @@ export default function RoommateDetails({ id }: { id: string }) {
   }, [id, isSignedIn, getToken]);
 
   const averageRating = roommate?.reviews?.length
-    ? roommate.reviews.reduce((sum, review) => sum + review.rating, 0) / roommate.reviews.length
+    ? roommate.reviews.reduce((sum, review) => sum + review.rating, 0) /
+      roommate.reviews.length
     : 0;
 
   return (
@@ -116,17 +119,36 @@ export default function RoommateDetails({ id }: { id: string }) {
         ) : roommate ? (
           <div className="bg-white rounded-3xl shadow-lg p-8">
             <div className="mb-6">
-              <Link href="/search-results" className="inline-flex items-center text-navy-blue hover:underline mb-4">
-                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              <Link
+                href="/search"
+                className="inline-flex items-center text-navy-blue hover:underline mb-4"
+              >
+                <svg
+                  className="w-4 h-4 mr-1"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                  />
                 </svg>
-                Back to Results
+                Back to Search
               </Link>
 
-              <h1 className="text-4xl font-bold text-gray-800">{roommate.name}</h1>
-              <p className="text-xl text-gray-600 mt-1">Unit {roommate.unit_end}</p>
+              <h1 className="text-4xl font-bold text-gray-800">
+                {roommate.name}
+              </h1>
+              <p className="text-xl text-gray-600 mt-1">
+                Unit {roommate.unit_end}
+              </p>
               <p className="text-lg text-gray-600">{roommate.places.name}</p>
-              {roommate.places.school && <p className="text-gray-500">{roommate.places.school}</p>}
+              {roommate.places.school && (
+                <p className="text-gray-500">{roommate.places.school}</p>
+              )}
             </div>
 
             <div className="mb-10">
@@ -135,7 +157,7 @@ export default function RoommateDetails({ id }: { id: string }) {
                   {[1, 2, 3, 4, 5].map((star) => (
                     <svg
                       key={star}
-                      className={`w-6 h-6 ${star <= Math.round(averageRating) ? 'text-yellow-400' : 'text-gray-300'}`}
+                      className={`w-6 h-6 ${star <= Math.round(averageRating) ? "text-yellow-400" : "text-gray-300"}`}
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -143,9 +165,12 @@ export default function RoommateDetails({ id }: { id: string }) {
                     </svg>
                   ))}
                 </div>
-                <span className="ml-2 text-xl font-medium text-gray-700">{averageRating.toFixed(1)}</span>
+                <span className="ml-2 text-xl font-medium text-gray-700">
+                  {averageRating.toFixed(1)}
+                </span>
                 <span className="ml-2 text-sm text-gray-500">
-                  ({roommate.reviews.length} review{roommate.reviews.length !== 1 ? 's' : ''})
+                  ({roommate.reviews.length} review
+                  {roommate.reviews.length !== 1 ? "s" : ""})
                 </span>
               </div>
 
@@ -168,7 +193,7 @@ export default function RoommateDetails({ id }: { id: string }) {
                         {[1, 2, 3, 4, 5].map((star) => (
                           <svg
                             key={star}
-                            className={`w-5 h-5 ${star <= review.rating ? 'text-yellow-400' : 'text-gray-300'}`}
+                            className={`w-5 h-5 ${star <= review.rating ? "text-yellow-400" : "text-gray-300"}`}
                             fill="currentColor"
                             viewBox="0 0 20 20"
                           >
@@ -176,7 +201,9 @@ export default function RoommateDetails({ id }: { id: string }) {
                           </svg>
                         ))}
                       </div>
-                      <span className="ml-2 text-sm font-medium text-gray-700">{review.rating}/5</span>
+                      <span className="ml-2 text-sm font-medium text-gray-700">
+                        {review.rating}/5
+                      </span>
                       <span className="ml-auto text-sm text-gray-500">
                         {new Date(review.created_at).toLocaleDateString()}
                       </span>
@@ -200,7 +227,8 @@ export default function RoommateDetails({ id }: { id: string }) {
                       )}
                       {review.years_lived > 0 && (
                         <span className="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded">
-                          {review.years_lived} year{review.years_lived !== 1 ? 's' : ''} lived
+                          {review.years_lived} year
+                          {review.years_lived !== 1 ? "s" : ""} lived
                         </span>
                       )}
                     </div>
@@ -213,7 +241,9 @@ export default function RoommateDetails({ id }: { id: string }) {
               </div>
             ) : (
               <div className="text-center py-10">
-                <p className="text-gray-500 mb-4">No reviews yet. Be the first to leave a review!</p>
+                <p className="text-gray-500 mb-4">
+                  No reviews yet. Be the first to leave a review!
+                </p>
                 <Link
                   href={`/roommate/${id}/review/new`}
                   className="inline-block bg-navy-blue text-white px-6 py-2 rounded-md hover:bg-blue-700"
