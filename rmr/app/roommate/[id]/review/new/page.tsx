@@ -4,8 +4,9 @@ export default async function NewReviewPage({ params }: { params: Promise<{ id: 
   const { id } = await params;
 
   return (
-    <main className="flex min-h-screen flex-col bg-blue-50 p-4">
-      <div className="max-w-3xl mx-auto w-full my-8">
+    <main className="min-h-screen bg-[#315d8d] pl-4 pr-4 font-lazyDog">
+    <div className="bg-[#f5f5f5] rounded-[96px] shadow-lg p-8 min-h-screen">
+      
         <ReviewForm roommate_id={id} />
       </div>
     </main>
