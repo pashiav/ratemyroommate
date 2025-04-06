@@ -2,16 +2,20 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { auth } from "@clerk/nextjs/server";
 
+type Params = {
+  id: string;
+};
+
 export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  props: { params: Params }
 ) {
-  const { id } = params;
+  const { id } = props.params;
 
   console.log('Roommate Details Request:', {
     id,
-    method: req.method,
-    url: req.url
+    method: request.method,
+    url: request.url
   });
 
   // Verify Clerk authentication
