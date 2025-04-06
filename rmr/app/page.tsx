@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useAuth, SignInButton, SignUpButton } from "@clerk/nextjs";
+import { useUser, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -16,12 +16,12 @@ export default function Home() {
     { id: "dishes", label: "DISHES", checked: false },
   ]);
 
-  const { isSignedIn } = useAuth(); // ✅ more reliable than useUser
+  const { isSignedIn, user } = useUser(); // Using useUser() to get user data
   const router = useRouter();
 
   useEffect(() => {
     if (isSignedIn) {
-      router.push("/search"); // ✅ guaranteed redirect after sign-in
+      router.push("/search"); // Redirect after sign-in
     }
   }, [isSignedIn]);
 
@@ -37,11 +37,15 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center justify-center bg-blue-50 p-4 relative">
       {/* Login button in top-right */}
       <div className="absolute top-4 right-4">
-        <SignInButton mode="modal">
-          <button className="bg-navy-blue text-white px-4 py-2 rounded-full hover:bg-navy-blue/90">
-            Log In
-          </button>
-        </SignInButton>
+        {isSignedIn ? (
+          <UserButton /> // Clerk's UserButton to display the profile when signed in
+        ) : (
+          <SignInButton mode="modal">
+            <button className="bg-navy-blue text-white px-4 py-2 rounded-full hover:bg-navy-blue/90">
+              Log In
+            </button>
+          </SignInButton>
+        )}
       </div>
 
       <div className="relative w-full max-w-xl bg-white rounded-3xl shadow-lg p-8">
