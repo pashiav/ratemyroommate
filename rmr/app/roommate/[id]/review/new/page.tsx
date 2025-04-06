@@ -1,11 +1,12 @@
-import { type Metadata } from 'next';
+// app/roommate/[id]/review/new/page.tsx
+
 import ReviewForm from './review-form';
 
-type PageProps = {
+interface PageProps {
   params: {
     id: string;
   };
-};
+}
 
 export default function NewReviewPage({ params }: PageProps) {
   return (
