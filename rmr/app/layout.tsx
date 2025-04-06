@@ -5,28 +5,28 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { neobrutalism } from "@clerk/themes";
 import "./globals.css";
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ["latin"] });
 
-export const metadata = {
-  title: 'Rate My Roommate',
-  description: 'A simple app to rate and manage roommate responsibilities',
+export const metadata: Metadata = {
+  title: "Rate My Roommate",
+  description: "A simple app to rate and manage roommate responsibilities",
 };
 
 export default function RootLayout({
   children,
-}: {
-  children: ReactNode;
-}) {
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <ClerkProvider
-    appearance={{
-      baseTheme: neobrutalism,
-      variables: {
-        colorPrimary: "#1e3a8a",
-        borderRadius: "8px",
-      fontFamily: "'Lazy Dog', cursive", 
-      },
-    }}
+      appearance={{
+        baseTheme: neobrutalism,
+        variables: {
+          colorPrimary: "#1e3a8a",
+          borderRadius: "8px",
+          fontFamily: "'Lazy Dog', cursive",
+        },
+      }}
       localization={{
         signUp: {
           start: {
@@ -41,8 +41,14 @@ export default function RootLayout({
           },
         },
       }}
+      afterSignInUrl="/search"
+      afterSignUpUrl="/search"
     >
-      {children}
+      <html lang="en">
+        <body className={inter.className}>
+          {children}
+        </body>
+      </html>
     </ClerkProvider>
   );
 }
