@@ -183,6 +183,8 @@ export default function Home() {
                 </label>
               </div>
             ))}
+            </div>
+            </div>
           </div>
           <div className="bg-[#f5f5f5] rounded-[96px] -mt-1 shadow-lg p-10 min-h-[55rem] w-[100%] mx-auto relative">
         {/* Fridge handle */}
@@ -225,8 +227,7 @@ export default function Home() {
       <div className="w-full flex justify-between px-32 -mt-0">
         <div className="w-60 h-20 bg-[#2c2c30] rounded-bl-[40px] rounded-br-[40px]"></div>
         <div className="w-60 h-20 bg-[#2c2c30] rounded-bl-[40px] rounded-br-[40px]"></div>
-      </div>
-      </div>
+      
       </div>
     </main>
 
