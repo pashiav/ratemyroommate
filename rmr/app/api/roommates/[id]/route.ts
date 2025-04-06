@@ -2,13 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { auth } from "@clerk/nextjs/server";
 
-type RouteParams = {
-  params: {
-    id: string;
-  };
-};
-
-export async function GET(req: NextRequest, { params }: RouteParams) {
+export async function GET(
+  req: NextRequest, 
+  { params }: { params: { id: string } }
+) {
   const { id } = params;
 
   console.log('Roommate Details Request:', {

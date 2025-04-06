@@ -137,47 +137,30 @@ export default function Home() {
                   {todoItems[0].label}
                 </label>
 
-                <div className="mt-3 flex flex-col gap-1">
-                  <div className="flex">
-                    <Input
-                      placeholder="Enter your .edu email address"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="border-2 border-darkblue rounded-md py-2 px-4"
-                    />
-                    <div className="flex">
-                      <Input
-                        placeholder="Enter your .edu email address"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="border-2 border-darkblue rounded-md py-2 px-4"
-                      />
-
-                      <SignUpButton mode="modal">
-                        <Button
-                          onClick={handleGoClick}
-                          className="ml-2 bg-darkblue text-white rounded-md px-4 font-lazyDog"
-                          disabled={!email.endsWith(".edu")}
-                        >
-                          GO
-                        </Button>
-                      </SignUpButton>
-                    </div>
-
-                    {showError && (
-                      <p className="text-red-600 font-lazyDog text-sm ml-1">
-                        Please enter a valid{" "}
-                        <span className="underline">.edu</span> email address!
-                      </p>
-                    )}
-                  </div>
-                  {showError && (
-                    <p className="text-red-600 font-lazyDog text-sm ml-1">
-                      Please enter a valid{" "}
-                      <span className="underline">.edu</span> email address!
-                    </p>
-                  )}
+                <div className="flex">
+                  <Input
+                    placeholder="Enter your .edu email address"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="border-2 border-darkblue rounded-md py-2 px-4"
+                  />
+                  <SignUpButton mode="modal">
+                    <Button
+                      onClick={handleGoClick}
+                      className="ml-2 bg-darkblue text-white rounded-md px-4 font-lazyDog"
+                      disabled={!email.endsWith(".edu")}
+                    >
+                      GO
+                    </Button>
+                  </SignUpButton>
                 </div>
+
+                {showError && (
+                  <p className="text-red-600 font-lazyDog text-sm ml-1">
+                    Please enter a valid <span className="underline">.edu</span>{" "}
+                    email address!
+                  </p>
+                )}
               </div>
             </div>
 
