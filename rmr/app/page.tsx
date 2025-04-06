@@ -114,7 +114,7 @@ export default function Home() {
                   />
                   <SignUpButton mode="modal">
                     <Button
-                      className="ml-2 bg-navy-blue text-white rounded-md px-4"
+                      className="ml-2 bg-darkblue text-white rounded-md px-4 font-lazyDog -mt-2"
                       disabled={!email.endsWith(".edu")}
                     >
                       GO
