@@ -2,22 +2,19 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { auth } from "@clerk/nextjs/server";
 
-// Define the params type
-type Params = {
-  id: string;
-};
 
 export async function GET(
   request: NextRequest,
-  context: { params: Params }
+  { params }: { params: { id: string } }
 ) {
-  const { id } = context.params;
+  const id = params.id;
 
   console.log('Roommate Details Request:', {
     id,
     method: request.method,
     url: request.url
   });
+
 
   // Verify Clerk authentication
   const { userId } = await auth();
