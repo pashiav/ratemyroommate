@@ -3,7 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { auth } from "@clerk/nextjs/server";
 
 export async function GET(
-  req: NextRequest, 
+  req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   const { id } = params;
