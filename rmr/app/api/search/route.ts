@@ -76,6 +76,7 @@ export async function POST(req: Request) {
         console.error("Search error:", message);
         return NextResponse.json({ error: message }, { status: 500 });
       }
+        return NextResponse.json(results);
 
     } else {
       return NextResponse.json(
