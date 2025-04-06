@@ -1,17 +1,17 @@
-import { auth } from "@clerk/nextjs/server";
-import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
+import { auth } from "@clerk/nextjs/server";
 
 export async function GET(
-  request: NextRequest,
+  req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   const id = params.id;
 
   console.log('Roommate Details Request:', {
     id,
-    method: request.method,
-    url: request.url
+    method: req.method,
+    url: req.url
   });
 
   // Verify Clerk authentication
