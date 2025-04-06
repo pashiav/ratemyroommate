@@ -184,8 +184,51 @@ export default function Home() {
               </div>
             ))}
           </div>
+          <div className="bg-[#f5f5f5] rounded-[96px] -mt-1 shadow-lg p-10 min-h-[55rem] w-[100%] mx-auto relative">
+        {/* Fridge handle */}
+        <img
+          src="/handle.png"
+          alt="Fridge Handle"
+          className="absolute left-0 ml-24 top-0 mt-28 w-36 h-auto object-contain"
+        />
+        {/* shineeeee left */}
+        <img
+          src="/shine-left.png"
+          alt="shine"
+          className="absolute left-0 top-0 mt-3 ml-4 w-xs h-auto object-contain"
+        />
+        {/* shineeeee right */}
+        <img
+          src="/shine-right.png"
+          alt="shine"
+          className="absolute right-0 top-0 mt-3 mr-4 w-xs h-auto object-contain"
+        />
+
+        <div className="mt-32 bg-[#fdfeff] rounded-[10px] shadow-md p-8 max-w-xl mx-auto text-left font-sans text-[#315d8d] italic">
+          <h2 className="text-6xl font-bold mb-4 font-lazyDog text-center">About RMR</h2>
+          <p className="text-md">
+            We’ve all had unpredictable roommates - and wished we knew more
+            before moving in.<br />
+            <br />
+            Rate My Roommate helps students share honest, verified reviews to make
+            finding the right roommate easier and safer.
+            <br />
+            <br />
+            All reviews are tied to .edu emails, so only real students can
+            contribute.
+            <br />
+            <br />
+          </p>
         </div>
       </div>
+
+      <div className="w-full flex justify-between px-32 -mt-0">
+        <div className="w-60 h-20 bg-[#2c2c30] rounded-bl-[40px] rounded-br-[40px]"></div>
+        <div className="w-60 h-20 bg-[#2c2c30] rounded-bl-[40px] rounded-br-[40px]"></div>
+      </div>
+      </div>
+      </div>
     </main>
+
   );
 }
