@@ -116,7 +116,7 @@ export default function SearchResultsClient() {
         )}
       </div>
 
-      <div className="flex flex-col items-center gap-6 mt-[13rem]">
+      <div className="flex flex-col items-center gap-6 mt-[13rem] font-lazyDog">
       <h1 className="text-[5rem] font-lazyDog text-darkblue text-center leading-none">Search Results</h1>
         <p className="text-lg text-darkBlue text-sans mb-6">
           Showing results for <strong>{type}</strong>
@@ -207,7 +207,7 @@ export default function SearchResultsClient() {
             <p className="text-gray-500 mb-4">No results found.</p>
             <Link
               href={type === "roommate" ? "/roommate/new" : "/place/new"}
-              className="inline-block bg-navy-blue text-lazyDog text-white px-6 py-2 rounded-md bg-darkblue hover:bg-blue-800"
+              className="inline-block bg-navy-blue text-lazyDog text-white px-6 py-2 rounded-md bg-darkblue hover:bg-blue-800 hover:transition"
             >
               Add a new {type}
             </Link>

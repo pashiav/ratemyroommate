@@ -85,8 +85,30 @@ export default function RoommateDetails({ id }: { id: string }) {
     : 0;
 
   return (
-    <main className="flex min-h-screen flex-col bg-blue-50 p-4">
-      <div className="absolute top-4 right-4">
+    <main className="min-h-screen bg-[#315d8d] pl-4 pr-4 font-lazyDog">
+    <div className="bg-[#f5f5f5] rounded-[96px] shadow-lg p-8 min-h-screen">
+      {/* Fridge handle */}
+      <img
+        src="/handle.png"
+        alt="Fridge Handle"
+        className="absolute left-0 ml-24 top-[7.5rem] w-36 h-auto object-contain"
+      />
+
+      {/* shineeeee left */}
+      <img
+        src="/shine-left-crop.png"
+        alt="shine"
+        className="absolute left-0 top-0 mt-1 ml-6 w-xs h-auto object-cover"
+      />
+      {/* shineeeee right */}
+      <img
+        src="/shine-right-crop.png"
+        alt="shine"
+        className="absolute right-0 top-0 mt-1 mr-6 w-xs h-auto object-cover"
+      />
+
+
+    <div className="absolute top-20 right-28 z-50">
         {isSignedIn ? (
           <UserButton />
         ) : (
@@ -98,11 +120,9 @@ export default function RoommateDetails({ id }: { id: string }) {
         )}
       </div>
 
-      <div className="max-w-3xl mx-auto w-full">
+      <div className="max-w-3xl mx-auto w-full mt-[8rem] text-lazyDog">
         {loading ? (
-          <div className="bg-white rounded-3xl shadow-lg p-8 text-center">
             <p>Loading roommate details...</p>
-          </div>
         ) : error ? (
           <div className="bg-white rounded-3xl shadow-lg p-8 text-center">
             <p className="text-red-500 mb-4">{error}</p>
@@ -151,7 +171,7 @@ export default function RoommateDetails({ id }: { id: string }) {
 
               <Link
                 href={`/roommate/${id}/review/new`}
-                className="inline-block bg-navy-blue text-white px-6 py-2 rounded-md hover:bg-blue-700"
+                className="inline-block bg-darkblue text-white px-6 py-2 rounded-md hover:bg-blue-800"
               >
                 Leave a Review
               </Link>
@@ -224,6 +244,7 @@ export default function RoommateDetails({ id }: { id: string }) {
             )}
           </div>
         ) : null}
+      </div>
       </div>
     </main>
   );

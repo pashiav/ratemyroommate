@@ -301,7 +301,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-navy-blue text-white py-3 px-4 rounded-md hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-darkblue text-white py-3 px-4 rounded-md hover:bg-blue-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSubmitting ? 'Submitting...' : 'Submit Review'}
         </button>

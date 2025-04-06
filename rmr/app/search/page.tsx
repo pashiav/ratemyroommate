@@ -87,7 +87,7 @@ export default function SearchPage() {
         </div>
 
         {/* Search Form Inline */}
-        <div className="flex flex-col items-center gap-6 mt-[13rem]">
+        <div className="flex flex-col items-center gap-6 mt-[13rem] font-lazyDog">
           {/* Heading */}
           <h1 className="text-[10rem] font-lazyDog text-darkblue text-center leading-none">
             Search
@@ -139,7 +139,7 @@ export default function SearchPage() {
             {/* GO Button */}
             <button
               onClick={handleSearch}
-              className="bg-darkblue text-white px-6 py-2 rounded-lg font-bold font-lazyDog"
+              className="bg-darkblue text-white px-6 py-2 rounded-lg font-bold font-lazyDog hover:bg-blue-800 hover:transition"
             >
               GO
             </button>
