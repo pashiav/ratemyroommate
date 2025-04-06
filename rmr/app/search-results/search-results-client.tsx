@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useUser, UserButton, SignInButton } from "@clerk/nextjs";
 
-// Define types for the data
+// Types
 interface Review {
   rating: number;
   would_recommend: boolean;
@@ -39,12 +39,12 @@ type SearchResult = Roommate | PlaceResult;
 
 export default function SearchResultsClient() {
   const searchParams = useSearchParams();
-  const query = searchParams.get("query");
+  const roommateName = searchParams.get("roommateName");
+  const location = searchParams.get("location");
   const type = searchParams.get("type");
 
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(true);
-
   const { isSignedIn } = useUser();
 
   useEffect(() => {
@@ -53,7 +53,7 @@ export default function SearchResultsClient() {
         const res = await fetch("/api/search", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ searchQuery: query, searchType: type }),
+          body: JSON.stringify({ searchType: type, roommateName, location }),
         });
 
         const data = await res.json();
@@ -66,25 +66,22 @@ export default function SearchResultsClient() {
       }
     }
 
-    if (query && type) fetchResults();
-  }, [query, type]);
+    if (type) fetchResults();
+  }, [type, roommateName, location]);
 
-  // Helper function to calculate average rating
   const calculateAverageRating = (reviews: Review[] | undefined): number => {
     if (!reviews || reviews.length === 0) return 0;
     return reviews.reduce((sum, review) => sum + (review.rating || 0), 0) / reviews.length;
   };
 
-  // Helper function to calculate recommendation percentage
   const calculateRecommendPercentage = (reviews: Review[] | undefined): number => {
     if (!reviews || reviews.length === 0) return 0;
-    const recommendCount = reviews.filter(r => r.would_recommend).length;
+    const recommendCount = reviews.filter((r) => r.would_recommend).length;
     return Math.round((recommendCount / reviews.length) * 100);
   };
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-blue-50 p-4">
-      {/* Clerk Profile Button or Sign In Button */}
       <div className="absolute top-4 right-4">
         {isSignedIn ? (
           <UserButton />
@@ -100,7 +97,9 @@ export default function SearchResultsClient() {
       <div className="bg-white rounded-3xl shadow-lg p-8 w-full max-w-3xl text-center">
         <h1 className="text-4xl font-bold text-gray-800 mb-4">Search Results</h1>
         <p className="text-lg text-gray-600 mb-6">
-          Showing results for <strong>{query}</strong> in <strong>{type}</strong>
+          Showing results for <strong>{type}</strong>
+          {type === "roommate" && roommateName && `: ${roommateName}`}
+          {location && ` @ ${location}`}
         </p>
 
         {loading ? (
@@ -109,7 +108,7 @@ export default function SearchResultsClient() {
           <ul className="space-y-4">
             {results.map((item, i) => (
               <li key={i} className="bg-gray-100 rounded-md shadow-sm overflow-hidden">
-                {type === "roommate" && 'unit_end' in item && (
+                {type === "roommate" && "unit_end" in item && (
                   <Link href={`/roommate/${item.rm_id}`} className="block p-4 hover:bg-gray-200 transition-colors">
                     <div className="text-left">
                       <p className="font-semibold">{item.name}</p>
@@ -120,8 +119,7 @@ export default function SearchResultsClient() {
                           {item.places.school && ` - ${item.places.school}`}
                         </p>
                       )}
-                      
-                      {/* Ratings section */}
+
                       <div className="mt-2 pt-2 border-t border-gray-200">
                         {item.reviews && item.reviews.length > 0 ? (
                           <>
@@ -130,10 +128,12 @@ export default function SearchResultsClient() {
                                 {[1, 2, 3, 4, 5].map((star) => {
                                   const avgRating = calculateAverageRating(item.reviews);
                                   return (
-                                    <svg 
-                                      key={star} 
-                                      className={`w-4 h-4 ${star <= Math.round(avgRating) ? 'text-yellow-400' : 'text-gray-300'}`} 
-                                      fill="currentColor" 
+                                    <svg
+                                      key={star}
+                                      className={`w-4 h-4 ${
+                                        star <= Math.round(avgRating) ? "text-yellow-400" : "text-gray-300"
+                                      }`}
+                                      fill="currentColor"
                                       viewBox="0 0 20 20"
                                     >
                                       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
@@ -144,41 +144,36 @@ export default function SearchResultsClient() {
                               <span className="ml-2 text-sm font-medium text-gray-700">
                                 {calculateAverageRating(item.reviews).toFixed(1)}
                                 <span className="ml-1 text-xs text-gray-500">
-                                  ({item.reviews.length} review{item.reviews.length !== 1 ? 's' : ''})
+                                  ({item.reviews.length} review{item.reviews.length !== 1 ? "s" : ""})
                                 </span>
                               </span>
                             </div>
-                            
-                            {/* Would recommend percentage */}
+
                             <div className="text-xs text-gray-700 mt-1">
                               {calculateRecommendPercentage(item.reviews)}% would recommend
                             </div>
-                            
-                            {/* Pet information if available */}
-                            {item.reviews.some(r => r.has_pets) && (
+
+                            {item.reviews.some((r) => r.has_pets) && (
                               <div className="text-xs text-gray-700 mt-1">
-                                Has pets{item.reviews.some(r => r.pet_friendly) ? ' • Pet friendly' : ''}
+                                Has pets{item.reviews.some((r) => r.pet_friendly) ? " • Pet friendly" : ""}
                               </div>
                             )}
                           </>
                         ) : (
-                          <p className="text-xs text-gray-500">
-                            No reviews yet
-                          </p>
+                          <p className="text-xs text-gray-500">No reviews yet</p>
                         )}
                       </div>
                     </div>
                   </Link>
                 )}
-                
-                {type === "place" && 'places_id' in item && (
+
+                {type === "place" && "places_id" in item && (
                   <div className="p-4 text-left">
                     <p className="font-semibold">{item.name}</p>
-                    {item.school && (
-                      <p className="text-sm text-gray-500">{item.school}</p>
-                    )}
+                    {item.school && <p className="text-sm text-gray-500">{item.school}</p>}
                     <p className="text-sm text-gray-500 mt-1">
-                      {item.roommates?.count || 0} roommate{(item.roommates?.count || 0) !== 1 ? 's' : ''}
+                      {item.roommates?.count || 0} roommate
+                      {(item.roommates?.count || 0) !== 1 ? "s" : ""}
                     </p>
                   </div>
                 )}
@@ -196,21 +191,17 @@ export default function SearchResultsClient() {
             </Link>
           </div>
         )}
-        
-        {/* Back to Search button */}
+
         <div className="mt-8">
-          <Link
-            href="/"
-            className="inline-flex items-center text-navy-blue hover:underline"
-          >
-            <svg 
-              className="w-4 h-4 mr-1" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24" 
+          <Link href="/" className="inline-flex items-center text-navy-blue hover:underline">
+            <svg
+              className="w-4 h-4 mr-1"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
             Back to Search
           </Link>
