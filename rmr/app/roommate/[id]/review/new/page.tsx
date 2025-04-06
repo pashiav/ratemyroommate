@@ -1,18 +1,12 @@
-// app/roommate/[id]/review/new/page.tsx
-
 import ReviewForm from './review-form';
 
-interface PageProps {
-  params: {
-    id: string;
-  };
-}
+export default async function NewReviewPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
 
-export default function NewReviewPage({ params }: PageProps) {
   return (
     <main className="flex min-h-screen flex-col bg-blue-50 p-4">
       <div className="max-w-3xl mx-auto w-full my-8">
-        <ReviewForm roommate_id={params.id} />
+        <ReviewForm roommate_id={id} />
       </div>
     </main>
   );
