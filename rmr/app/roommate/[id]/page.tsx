@@ -11,8 +11,19 @@
 //     </Suspense>
 //   );
 // }
+// app/roommate/[id]/page.tsx
+
+import { Suspense } from 'react';
 import RoommateDetails from './roommate-details-client';
 
-export default function RoommatePage({ params }: { params: { id: string } }) {
-  return <RoommateDetails id={params.id} />;
+interface PageParams {
+  id: string;
+}
+
+export default function RoommatePage({ params }: { params: PageParams }) {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <RoommateDetails id={params.id} />
+    </Suspense>
+  );
 }
