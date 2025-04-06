@@ -20,6 +20,7 @@ const config = {
     extend: {
       fontFamily: {
         lazyDog: ['Lazy Dog', 'sans-serif'],
+        sans: ["IBM Plex Sans", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",

@@ -81,8 +81,30 @@ export default function SearchResultsClient() {
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-blue-50 p-4">
-      <div className="absolute top-4 right-4">
+    <main className="min-h-screen bg-[#315d8d] pl-4 pr-4">
+    <div className="bg-[#f5f5f5] rounded-[96px] shadow-lg p-8 min-h-screen">
+      {/* Fridge handle */}
+      <img
+        src="/handle.png"
+        alt="Fridge Handle"
+        className="absolute left-0 ml-24 top-[7.5rem] w-36 h-auto object-contain"
+      />
+
+      {/* shineeeee left */}
+      <img
+        src="/shine-left-crop.png"
+        alt="shine"
+        className="absolute left-0 top-0 mt-1 ml-6 w-xs h-auto object-cover"
+      />
+      {/* shineeeee right */}
+      <img
+        src="/shine-right-crop.png"
+        alt="shine"
+        className="absolute right-0 top-0 mt-1 mr-6 w-xs h-auto object-cover"
+      />
+
+
+    <div className="absolute top-20 right-28 z-50">
         {isSignedIn ? (
           <UserButton />
         ) : (
@@ -94,9 +116,9 @@ export default function SearchResultsClient() {
         )}
       </div>
 
-      <div className="bg-white rounded-3xl shadow-lg p-8 w-full max-w-3xl text-center">
-        <h1 className="text-4xl font-bold text-gray-800 mb-4">Search Results</h1>
-        <p className="text-lg text-gray-600 mb-6">
+      <div className="flex flex-col items-center gap-6 mt-[13rem]">
+      <h1 className="text-[5rem] font-lazyDog text-darkblue text-center leading-none">Search Results</h1>
+        <p className="text-lg text-darkBlue text-sans mb-6">
           Showing results for <strong>{type}</strong>
           {type === "roommate" && roommateName && `: ${roommateName}`}
           {location && ` @ ${location}`}
@@ -185,7 +207,7 @@ export default function SearchResultsClient() {
             <p className="text-gray-500 mb-4">No results found.</p>
             <Link
               href={type === "roommate" ? "/roommate/new" : "/place/new"}
-              className="inline-block bg-navy-blue text-white px-6 py-2 rounded-md hover:bg-blue-700"
+              className="inline-block bg-navy-blue text-lazyDog text-white px-6 py-2 rounded-md bg-darkblue hover:bg-blue-800"
             >
               Add a new {type}
             </Link>
@@ -206,6 +228,7 @@ export default function SearchResultsClient() {
             Back to Search
           </Link>
         </div>
+      </div>
       </div>
     </main>
   );
