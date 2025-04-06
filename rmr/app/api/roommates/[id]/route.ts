@@ -4,9 +4,9 @@ import { auth } from "@clerk/nextjs/server";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
-  const id = params.id;
+  const { id } = context.params;
 
   console.log('Roommate Details Request:', {
     id,
@@ -37,7 +37,7 @@ export async function GET(
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    console.log("Executing database query for roommate:", params.id);
+    console.log("Executing database query for roommate:", id);
 
     // Fetch roommate details
     const { data: roommate, error: roommateError } = await supabase
@@ -50,7 +50,7 @@ export async function GET(
         places_id
       `
       )
-      .eq("rm_id", params.id)
+      .eq("rm_id", id)
       .single();
 
     if (roommateError) {
@@ -62,7 +62,7 @@ export async function GET(
     }
 
     if (!roommate) {
-      console.warn("No roommate found with ID:", params.id);
+      console.warn("No roommate found with ID:", id);
       return NextResponse.json(
         { error: "Roommate not found" },
         { status: 404 }
@@ -85,7 +85,7 @@ export async function GET(
     const { data: reviews, error: reviewsError } = await supabase
       .from("reviews")
       .select("*")
-      .eq("rm_id", params.id);
+      .eq("rm_id", id);
 
     if (reviewsError) {
       console.error("Reviews query error:", reviewsError);
