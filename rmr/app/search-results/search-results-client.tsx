@@ -71,10 +71,15 @@ export default function SearchResultsClient() {
 
   const calculateAverageRating = (reviews: Review[] | undefined): number => {
     if (!reviews || reviews.length === 0) return 0;
-    return reviews.reduce((sum, review) => sum + (review.rating || 0), 0) / reviews.length;
+    return (
+      reviews.reduce((sum, review) => sum + (review.rating || 0), 0) /
+      reviews.length
+    );
   };
 
-  const calculateRecommendPercentage = (reviews: Review[] | undefined): number => {
+  const calculateRecommendPercentage = (
+    reviews: Review[] | undefined
+  ): number => {
     if (!reviews || reviews.length === 0) return 0;
     const recommendCount = reviews.filter((r) => r.would_recommend).length;
     return Math.round((recommendCount / reviews.length) * 100);
@@ -95,7 +100,9 @@ export default function SearchResultsClient() {
       </div>
 
       <div className="bg-white rounded-3xl shadow-lg p-8 w-full max-w-3xl text-center">
-        <h1 className="text-4xl font-bold text-gray-800 mb-4">Search Results</h1>
+        <h1 className="text-4xl font-bold text-gray-800 mb-4">
+          Search Results
+        </h1>
         <p className="text-lg text-gray-600 mb-6">
           Showing results for <strong>{type}</strong>
           {type === "roommate" && roommateName && `: ${roommateName}`}
@@ -107,12 +114,20 @@ export default function SearchResultsClient() {
         ) : results.length > 0 ? (
           <ul className="space-y-4">
             {results.map((item, i) => (
-              <li key={i} className="bg-gray-100 rounded-md shadow-sm overflow-hidden">
+              <li
+                key={i}
+                className="bg-gray-100 rounded-md shadow-sm overflow-hidden"
+              >
                 {type === "roommate" && "unit_end" in item && (
-                  <Link href={`/roommate/${item.rm_id}`} className="block p-4 hover:bg-gray-200 transition-colors">
+                  <Link
+                    href={`/roommate/${item.rm_id}`}
+                    className="block p-4 hover:bg-gray-200 transition-colors"
+                  >
                     <div className="text-left">
                       <p className="font-semibold">{item.name}</p>
-                      <p className="text-sm text-gray-500">Unit {item.unit_end}</p>
+                      <p className="text-sm text-gray-500">
+                        Unit {item.unit_end}
+                      </p>
                       {item.places && (
                         <p className="text-sm text-gray-500">
                           {item.places.name}
@@ -126,12 +141,16 @@ export default function SearchResultsClient() {
                             <div className="flex items-center">
                               <div className="flex">
                                 {[1, 2, 3, 4, 5].map((star) => {
-                                  const avgRating = calculateAverageRating(item.reviews);
+                                  const avgRating = calculateAverageRating(
+                                    item.reviews
+                                  );
                                   return (
                                     <svg
                                       key={star}
                                       className={`w-4 h-4 ${
-                                        star <= Math.round(avgRating) ? "text-yellow-400" : "text-gray-300"
+                                        star <= Math.round(avgRating)
+                                          ? "text-yellow-400"
+                                          : "text-gray-300"
                                       }`}
                                       fill="currentColor"
                                       viewBox="0 0 20 20"
@@ -142,25 +161,34 @@ export default function SearchResultsClient() {
                                 })}
                               </div>
                               <span className="ml-2 text-sm font-medium text-gray-700">
-                                {calculateAverageRating(item.reviews).toFixed(1)}
+                                {calculateAverageRating(item.reviews).toFixed(
+                                  1
+                                )}
                                 <span className="ml-1 text-xs text-gray-500">
-                                  ({item.reviews.length} review{item.reviews.length !== 1 ? "s" : ""})
+                                  ({item.reviews.length} review
+                                  {item.reviews.length !== 1 ? "s" : ""})
                                 </span>
                               </span>
                             </div>
 
                             <div className="text-xs text-gray-700 mt-1">
-                              {calculateRecommendPercentage(item.reviews)}% would recommend
+                              {calculateRecommendPercentage(item.reviews)}%
+                              would recommend
                             </div>
 
                             {item.reviews.some((r) => r.has_pets) && (
                               <div className="text-xs text-gray-700 mt-1">
-                                Has pets{item.reviews.some((r) => r.pet_friendly) ? " • Pet friendly" : ""}
+                                Has pets
+                                {item.reviews.some((r) => r.pet_friendly)
+                                  ? " • Pet friendly"
+                                  : ""}
                               </div>
                             )}
                           </>
                         ) : (
-                          <p className="text-xs text-gray-500">No reviews yet</p>
+                          <p className="text-xs text-gray-500">
+                            No reviews yet
+                          </p>
                         )}
                       </div>
                     </div>
@@ -168,14 +196,19 @@ export default function SearchResultsClient() {
                 )}
 
                 {type === "place" && "places_id" in item && (
-                  <div className="p-4 text-left">
+                  <Link
+                    href={`/place/${item.places_id}/roommates`}
+                    className="block p-4 text-left hover:bg-gray-200 transition-colors"
+                  >
                     <p className="font-semibold">{item.name}</p>
-                    {item.school && <p className="text-sm text-gray-500">{item.school}</p>}
+                    {item.school && (
+                      <p className="text-sm text-gray-500">{item.school}</p>
+                    )}
                     <p className="text-sm text-gray-500 mt-1">
                       {item.roommates?.count || 0} roommate
                       {(item.roommates?.count || 0) !== 1 ? "s" : ""}
                     </p>
-                  </div>
+                  </Link>
                 )}
               </li>
             ))}
@@ -193,7 +226,10 @@ export default function SearchResultsClient() {
         )}
 
         <div className="mt-8">
-          <Link href="/" className="inline-flex items-center text-navy-blue hover:underline">
+          <Link
+            href="/"
+            className="inline-flex items-center text-navy-blue hover:underline"
+          >
             <svg
               className="w-4 h-4 mr-1"
               fill="none"
@@ -201,7 +237,12 @@ export default function SearchResultsClient() {
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
             </svg>
             Back to Search
           </Link>
