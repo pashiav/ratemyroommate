@@ -2,12 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { auth } from "@clerk/nextjs/server";
 
-
+// Remove type declarations completely
 export async function GET(
   request: NextRequest,
-  context: { params: { id: string } }
+  { params }: any
 ) {
-  const id = context.params.id;
+  const id = params.id;
 
   console.log('Roommate Details Request:', {
     id,
