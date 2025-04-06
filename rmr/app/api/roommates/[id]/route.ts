@@ -8,10 +8,10 @@ type Params = {
 
 export async function GET(
   request: NextRequest,
-  props: { params: Params }
+  { params }: { params: Params }
 ) {
-  const { id } = props.params;
-
+  const { id } = params;  // Access id directly from params, not from props.params
+  
   console.log('Roommate Details Request:', {
     id,
     method: request.method,
