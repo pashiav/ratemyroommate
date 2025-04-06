@@ -19,7 +19,7 @@ const config = {
     },
     extend: {
       fontFamily: {
-        lazyDog: ['Lazy Dog', 'cursive'],
+        lazyDog: ['Lazy Dog', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
