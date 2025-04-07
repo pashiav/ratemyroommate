@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { neobrutalism } from "@clerk/themes";
 import "./globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Rate My Roommate",
@@ -44,7 +41,7 @@ export default function RootLayout({
       afterSignUpUrl="/search"
     >
       <html lang="en">
-        <body className={inter.className}>
+        <body style={{ fontFamily: "'Lazy Dog', cursive" }}>
           {children}
         </body>
       </html>

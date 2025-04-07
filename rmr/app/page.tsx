@@ -74,7 +74,7 @@ export default function Home() {
 
             {/* TO DO Heading */}
             <h2
-              className="text-xl font-medium text-center font-lazyDog underline"
+              className="text-xl font-medium text-center underline"
               style={{ color: "#76708d" }}
             >
               TO DO LIST
@@ -86,12 +86,12 @@ export default function Home() {
                 id="signup"
                 checked={todoItems[0].checked}
                 onCheckedChange={() => handleToggle("signup")}
-                className="text-3xl font-bold text-primary font-lazyDog mt-7"
+                className="text-3xl font-bold text-primary mt-7"
               />
               <div className="flex-1">
                 <label
                   htmlFor="signup"
-                  className="text-5xl mt-5 block font-bold text-darkblue font-lazyDog"
+                  className="text-5xl mt-5 block font-bold text-darkblue"
                 >
                   {todoItems[0].label}
                 </label>
@@ -103,23 +103,29 @@ export default function Home() {
                     onChange={(e) => setEmail(e.target.value)}
                     className="border-2 border-darkblue rounded-md py-2 px-4"
                   />
-                  <SignUpButton mode="modal">
+                  <SignUpButton 
+                  mode="modal"
+                  initialValues={{
+                    emailAddress: email,
+                  }}
+                  >
                     <Button
                       onClick={handleGoClick}
-                      className="ml-2 bg-darkblue text-white rounded-md px-4 font-lazyDog"
+                      className="ml-2 bg-darkblue text-white rounded-md px-4"
                       disabled={!email.endsWith(".edu")}
                     >
                       GO
                     </Button>
                   </SignUpButton>
-                </div>
-
-                {showError && (
-                  <p className="text-red-600 font-lazyDog text-sm ml-1">
+                  {showError && (
+                  <p className="text-red-600 text-sm ml-1">
                     Please enter a valid <span className="underline">.edu</span>{" "}
                     email address!
                   </p>
                 )}
+                </div>
+
+                
               </div>
             </div>
 
@@ -135,7 +141,7 @@ export default function Home() {
                 />
                 <label
                   htmlFor={item.id}
-                  className="text-2xl font-mediu font-lazyDog"
+                  className="text-2xl font-mediu"
                   style={{ color: "#76708d" }}
                 >
                   {item.label}
@@ -148,7 +154,7 @@ export default function Home() {
 
       <BottomFridge>
         <div className="mt-32 bg-[#fdfeff] rounded-[10px] shadow-md p-8 max-w-xl mx-auto text-left font-sans text-[#315d8d] italic">
-          <h2 className="text-6xl font-bold mb-4 font-lazyDog text-center">
+          <h2 className="text-6xl font-bold mb-4 text-center">
             About RMR
           </h2>
           <p className="text-md">
