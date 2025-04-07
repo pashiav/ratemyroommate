@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { SignInButton, SignUpButton, useUser, UserButton } from "@clerk/nextjs";
+import { SignUpButton, useUser, UserButton } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/Checkbox";
+import { Input } from "@/components/ui/Input";
+import { Button } from "@/components/ui/Button";
+import TopFridge from "@/components/TopFridge";
+import BottomFridge from "@/components/BottomFridge";
+import AuthHeader from "@/components/AuthHeader";
 
 export default function Home() {
   const [email, setEmail] = useState("");
@@ -45,52 +48,8 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-[#315d8d] p-4">
-      <div className="bg-[#f5f5f5] rounded-[96px] shadow-lg p-8 min-h-screen relative">
-        {/* Title cards */}
-        <div className="flex justify-center mb-12">
-          <div className="relative">
-            <div className="logo">
-              <img
-                src="/logo.png"
-                alt="Logo"
-                className="w-[30rem] h-auto max-w-full"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Fridge handle */}
-        <img
-          src="/handle.png"
-          alt="Fridge Handle"
-          className="absolute left-0 ml-24 top-1/3 w-36 h-auto object-contain"
-        />
-
-        {/* Shine effects */}
-        <img
-          src="/shine-left.png"
-          alt="shine"
-          className="absolute left-0 top-0 mt-6 ml-6 w-xs h-auto object-contain"
-        />
-        <img
-          src="/shine-right.png"
-          alt="shine"
-          className="absolute right-0 top-0 mt-6 mr-6 w-xs h-auto object-contain"
-        />
-
-        {/* Login Button */}
-        <div className="absolute top-20 right-28">
-          {isSignedIn ? (
-            <UserButton />
-          ) : (
-            <SignInButton mode="modal">
-              <Button className="bg-darkblue text-white px-6 text-lg py-2 font-lazyDog rounded-md z-50">
-                Log In
-              </Button>
-            </SignInButton>
-          )}
-        </div>
-
+      <TopFridge>
+        <AuthHeader />
         {/* To Do List Section */}
         <div className="mt-10 mx-auto max-w-lg relative">
           <div
@@ -183,37 +142,22 @@ export default function Home() {
                 </label>
               </div>
             ))}
-            </div>
-            </div>
           </div>
-          <div className="bg-[#f5f5f5] rounded-[96px] -mt-1 shadow-lg p-10 min-h-[55rem] w-[100%] mx-auto relative">
-        {/* Fridge handle */}
-        <img
-          src="/handle.png"
-          alt="Fridge Handle"
-          className="absolute left-0 ml-24 top-0 mt-28 w-36 h-auto object-contain"
-        />
-        {/* shineeeee left */}
-        <img
-          src="/shine-left.png"
-          alt="shine"
-          className="absolute left-0 top-0 mt-3 ml-4 w-xs h-auto object-contain"
-        />
-        {/* shineeeee right */}
-        <img
-          src="/shine-right.png"
-          alt="shine"
-          className="absolute right-0 top-0 mt-3 mr-4 w-xs h-auto object-contain"
-        />
+        </div>
+      </TopFridge>
 
+      <BottomFridge>
         <div className="mt-32 bg-[#fdfeff] rounded-[10px] shadow-md p-8 max-w-xl mx-auto text-left font-sans text-[#315d8d] italic">
-          <h2 className="text-6xl font-bold mb-4 font-lazyDog text-center">About RMR</h2>
+          <h2 className="text-6xl font-bold mb-4 font-lazyDog text-center">
+            About RMR
+          </h2>
           <p className="text-md">
             We’ve all had unpredictable roommates - and wished we knew more
-            before moving in.<br />
+            before moving in.
             <br />
-            Rate My Roommate helps students share honest, verified reviews to make
-            finding the right roommate easier and safer.
+            <br />
+            Rate My Roommate helps students share honest, verified reviews to
+            make finding the right roommate easier and safer.
             <br />
             <br />
             All reviews are tied to .edu emails, so only real students can
@@ -222,14 +166,7 @@ export default function Home() {
             <br />
           </p>
         </div>
-      </div>
-
-      <div className="w-full flex justify-between px-32 -mt-0">
-        <div className="w-60 h-20 bg-[#2c2c30] rounded-bl-[40px] rounded-br-[40px]"></div>
-        <div className="w-60 h-20 bg-[#2c2c30] rounded-bl-[40px] rounded-br-[40px]"></div>
-      
-      </div>
+      </BottomFridge>
     </main>
-
   );
 }
