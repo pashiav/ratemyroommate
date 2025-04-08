@@ -12,10 +12,20 @@ export default function AuthHeader() {
       {isSignedIn ? (
         <UserButton />
       ) : (
-        <SignInButton 
-        mode="modal"
-        >
-          <Button className="bg-darkblue text-white px-6 text-lg py-2 font-lazyDog rounded-md z-50">
+        <SignInButton mode="modal">
+          <Button
+            className="
+            bg-darkblue
+            text-white 
+            px-6 
+            py-2 
+            text-lg 
+            font-lazyDog 
+            rounded-md 
+            z-50 
+          "
+          >
+            {" "}
             Log In
           </Button>
         </SignInButton>

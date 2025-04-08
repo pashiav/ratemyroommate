@@ -6,6 +6,9 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Rate My Roommate",
   description: "A simple app to rate and manage roommate responsibilities",
+  icons: {
+    icon: '/icon.png',
+  },
 };
 
 export default function RootLayout({
