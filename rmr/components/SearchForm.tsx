@@ -1,0 +1,71 @@
+// components/SearchForm.tsx
+import React from "react";
+
+type Props = {
+  searchType: string;
+  searchQuery: string;
+  locationQuery: string;
+  setSearchType: (value: string) => void;
+  setSearchQuery: (value: string) => void;
+  setLocationQuery: (value: string) => void;
+  onSearch: () => void;
+};
+
+export default function SearchForm({
+  searchType,
+  searchQuery,
+  locationQuery,
+  setSearchType,
+  setSearchQuery,
+  setLocationQuery,
+  onSearch,
+}: Props) {
+  return (
+    <div className="flex items-center gap-1">
+      <select
+        value={searchType}
+        onChange={(e) => setSearchType(e.target.value)}
+        className="px-4 py-2 rounded-md bg-[#d8e1ec] border text-darkblue"
+      >
+        <option value="roommate">Roommate</option>
+        <option value="housing">Housing</option>
+      </select>
+
+      <div className="w-[25rem] flex gap-1">
+        {searchType === "roommate" ? (
+          <>
+            <input
+              type="text"
+              placeholder="Roommate Name"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-1/2 px-4 py-2 border border-darkblue rounded-md"
+            />
+            <input
+              type="text"
+              placeholder="Housing Lived"
+              value={locationQuery}
+              onChange={(e) => setLocationQuery(e.target.value)}
+              className="w-1/2 px-4 py-2 border border-darkblue rounded-md"
+            />
+          </>
+        ) : (
+          <input
+            type="text"
+            placeholder="Apartment/Dorm Name"
+            value={locationQuery}
+            onChange={(e) => setLocationQuery(e.target.value)}
+            className="w-full px-4 py-2 border border-darkblue rounded-md"
+          />
+        )}
+      </div>
+
+      <button
+        onClick={onSearch}
+        className="bg-darkblue text-white px-6 py-2 rounded-lg font-bold font-lazyDog hover:bg-blue-800 hover:transition"
+      >
+        GO
+      </button>
+    </div>
+  );
+}

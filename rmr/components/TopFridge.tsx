@@ -12,9 +12,9 @@ export default function FridgeLayout({
       style={{ boxShadow: "0 4px 4px -2px rgba(0, 0, 0, 0.2)" }}
     >
       <img
-        src="/handle.png"
+        src="/handle-short.png"
         alt="Fridge Handle"
-        className="absolute left-0 ml-24 top-0 mt-24 w-36 h-auto object-contain z-10"
+        className="absolute left-0 ml-24 top-0 mt-40 w-36 h-auto object-contain z-10"
       />
       <img
         src="/shine-left-crop.png"
