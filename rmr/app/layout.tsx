@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { neobrutalism } from "@clerk/themes";
 import "./globals.css";
+import { PostHogProvider } from "../components/PostHogProvider";
 
 export const metadata: Metadata = {
   title: "Rate My Roommate",
@@ -10,9 +11,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <ClerkProvider
       appearance={{
@@ -42,7 +41,9 @@ export default function RootLayout({
     >
       <html lang="en">
         <body style={{ fontFamily: "'Lazy Dog', cursive" }}>
-          {children}
+          <PostHogProvider>
+            {children}
+          </PostHogProvider>
         </body>
       </html>
     </ClerkProvider>
