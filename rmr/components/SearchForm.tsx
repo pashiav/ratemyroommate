@@ -39,6 +39,11 @@ export default function SearchForm({
               placeholder="Roommate Name"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  onSearch();
+                }
+              }}
               className="w-1/2 px-4 py-2 border border-darkblue rounded-md"
             />
             <input
@@ -46,6 +51,11 @@ export default function SearchForm({
               placeholder="Housing Lived"
               value={locationQuery}
               onChange={(e) => setLocationQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  onSearch();
+                }
+              }}
               className="w-1/2 px-4 py-2 border border-darkblue rounded-md"
             />
           </>
@@ -55,6 +65,11 @@ export default function SearchForm({
             placeholder="Apartment/Dorm Name"
             value={locationQuery}
             onChange={(e) => setLocationQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                onSearch();
+              }
+            }}
             className="w-full px-4 py-2 border border-darkblue rounded-md"
           />
         )}

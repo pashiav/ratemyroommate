@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import TopFridge from "@/components/TopFridge";
 import AuthHeader from "@/components/AuthHeader";
 import SearchForm from "@/components/SearchForm";
+import Logo from "@/components/Logo"
 
 export default function SearchPage() {
   const [searchType, setSearchType] = useState("roommate");
@@ -58,14 +59,13 @@ export default function SearchPage() {
     <main className="min-h-screen bg-[#315d8d] pl-4 pr-4">
       <TopFridge>
         <AuthHeader></AuthHeader>
-        <div className="absolute top-0 left-0 mt-[3.5em] ml-[6rem] w-[7rem] h-auto z-50">
-          <img src="logo.png" alt="Logo"/>
-          </div>
+        <Logo></Logo>
+        
 
         {/* Search Form Inline */}
-        <div className="flex flex-col items-center gap-6 mt-[13rem] font-lazyDog">
+        <div className="flex flex-col items-center gap-6 mt-[13rem]">
           {/* Heading */}
-          <h1 className="text-[9rem] font-lazyDog text-darkblue text-center leading-none">
+          <h1 className="text-[9rem] text-darkblue text-center leading-none">
             Search
           </h1>
           <p className="text-lg text-darkblue italic text-center -mt-7">
