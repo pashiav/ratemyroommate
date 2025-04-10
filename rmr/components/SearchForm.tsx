@@ -28,7 +28,7 @@ export default function SearchForm({
         className="px-4 py-2 rounded-md bg-[#d8e1ec] border text-darkblue"
       >
         <option value="roommate">Roommate</option>
-        <option value="housing">Housing</option>
+        <option value="places">Housing</option>
       </select>
 
       <div className="w-[25rem] flex gap-1">
