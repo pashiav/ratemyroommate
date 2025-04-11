@@ -105,7 +105,7 @@ export default function SearchResultsClient() {
           {loading ? (
             <p className="text-gray-500">Loading...</p>
           ) : results.length > 0 ? (
-            <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-[40rem]">
+            <ul className="gap-4 w-[40rem] space-y-3">
               {results.map((item, i) => (
                 <li
                   key={i}
@@ -116,21 +116,27 @@ export default function SearchResultsClient() {
                       href={`/roommate/${item.rm_id}`}
                       className="block p-4 hover:bg-gray-200 transition-colors"
                     >
-                      <div className="text-left">
-                        <p className="font-semibold">{item.name}</p>
-                        <p className="text-sm text-gray-500">
-                          Unit {item.unit_end}
-                        </p>
-                        {item.places && (
+                      {/* Horizontal layout for roommate info and review info */}
+                      <div className="flex flex-col sm:flex-row justify-between gap-6 text-left">
+                        {/* Left side: roommate and place info */}
+                        <div className="flex-1">
+                          <p className="font-semibold">{item.name}</p>
                           <p className="text-sm text-gray-500">
-                            {item.places.name}
-                            {item.places.school && ` - ${item.places.school}`}
+                            Unit {item.unit_end}
                           </p>
-                        )}
+                          {item.places && (
+                            <p className="text-sm text-gray-500">
+                              {item.places.name}
+                              {item.places.school && ` - ${item.places.school}`}
+                            </p>
+                          )}
+                        </div>
 
-                        <div className="mt-2 pt-2 border-t border-gray-200">
+                        {/* Right side: review stats */}
+                        <div className="w-full sm:w-48">
                           {item.reviews && item.reviews.length > 0 ? (
                             <>
+                              {/* Star rating */}
                               <div className="flex items-center">
                                 <div className="flex">
                                   {[1, 2, 3, 4, 5].map((star) => {
@@ -164,11 +170,13 @@ export default function SearchResultsClient() {
                                 </span>
                               </div>
 
+                              {/* Recommendation percentage */}
                               <div className="text-xs text-gray-700 mt-1">
                                 {calculateRecommendPercentage(item.reviews)}%
                                 would recommend
                               </div>
 
+                              {/* Pet information */}
                               {item.reviews.some((r) => r.has_pets) && (
                                 <div className="text-xs text-gray-700 mt-1">
                                   Has pets
@@ -214,7 +222,6 @@ export default function SearchResultsClient() {
                 className="inline-block bg-navy-blue text-lazyDog text-white px-6 py-2 rounded-md bg-darkblue hover:bg-blue-800 hover:transition"
               >
                 Add a new {type === "roommate" ? "roommate" : "place"}
-
               </Link>
             </div>
           )}
