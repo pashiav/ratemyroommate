@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
 import TopFridge from "@/components/TopFridge";
 import AuthHeader from "@/components/AuthHeader";
-import Logo from "@/components/Logo";
 
 export default function AddPlacePage() {
   const { isSignedIn, getToken } = useAuth(); // Access isSignedIn and getToken from useAuth
