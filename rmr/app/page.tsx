@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { SignUpButton, useUser, UserButton } from "@clerk/nextjs";
+import { SignUpButton, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
-import TopFridge from "@/components/TopFridge";
+import LandingTopFridge from "@/components/LandingTopFridge";
 import BottomFridge from "@/components/BottomFridge";
 import AuthHeader from "@/components/AuthHeader";
 
@@ -50,7 +50,7 @@ export default function Home() {
     <main className="min-h-screen bg-[#315d8d] p-4">
       {/* To Do List Section */}
       <div className="relative z-20 flex justify-center w-full">
-        <div className="w-full max-w-[500px] mt-[50vh] absolute border-2 border-navy-blue rounded-lg p-6 pt-0 pb-[25vh] space-y-4 bg-[#fdfeff] shadow-lg">
+        <div className="w-full max-w-[500px] mt-[24em] absolute border-2 border-navy-blue rounded-lg p-6 pt-0 pb-[25vh] space-y-4 bg-[#fdfeff] shadow-lg">
           {/* Pink magnets */}
           <div
             className="absolute -left-10 -top-6 w-20 h-20 rounded-full border-2"
@@ -143,7 +143,7 @@ export default function Home() {
         </div>
       </div>
 
-      <TopFridge>
+      <LandingTopFridge>
         <AuthHeader />
         <div className="logo flex justify-center">
           <img
@@ -152,11 +152,11 @@ export default function Home() {
             className="w-[30rem] h-auto max-w-full"
           />
         </div>
-      </TopFridge>
+      </LandingTopFridge>
 
       <BottomFridge>
         <div className="mt-[30vh] bg-[#fdfeff] rounded-[10px] shadow-md p-8 max-w-xl mx-auto text-left text-[#315d8d] italic">
-          <h2 className="text-6xl font-bold mb-4 text-center">About RMR</h2>
+          <h2 className="text-6xl font-bold mb-4 text-center text-darkblue">About RMR</h2>
           <p className="text-md font-sans">
             We’ve all had unpredictable roommates - and wished we knew more
             before moving in.

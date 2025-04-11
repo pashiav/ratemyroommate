@@ -7,6 +7,9 @@ import { PostHogProvider } from "../components/PostHogProvider";
 export const metadata: Metadata = {
   title: "Rate My Roommate",
   description: "A simple app to rate and manage roommate responsibilities",
+  icons: {
+    icon: '/icon.png',
+  },
 };
 
 export default function RootLayout({
@@ -19,7 +22,7 @@ export default function RootLayout({
         variables: {
           colorPrimary: "#1e3a8a",
           borderRadius: "8px",
-          fontFamily: "'Lazy Dog', cursive",
+          fontFamily: "'Lazy Dog', sans-serif",
         },
       }}
       localization={{

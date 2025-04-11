@@ -60,7 +60,7 @@ export async function POST(req: Request) {
       });
 
       data = filtered;
-    } else if (searchType === "place") {
+    } else if (searchType === "places") {
       const { data: results, error } = await supabase
         .from("places")
         .select(`
