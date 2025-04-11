@@ -1,6 +1,6 @@
 # Rate My Roommate
 
-RateMyRoommate is a web app for college students to find and review roommates by name and location - with verified .edu emails for safety. 
+Rate My Roommate is a web app for college students to find and review roommates by name and location - with verified .edu emails for safety. 
 
 Built with:
 
