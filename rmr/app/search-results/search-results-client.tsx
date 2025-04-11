@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useUser, UserButton, SignInButton } from "@clerk/nextjs";
 import TopFridge from "@/components/TopFridge";
 import AuthHeader from "@/components/AuthHeader";
-import Logo from "@/components/Logo";
 
 // Types
 interface Review {
@@ -91,8 +90,7 @@ export default function SearchResultsClient() {
   return (
     <main className="min-h-screen bg-[#315d8d] pl-4 pr-4">
       <TopFridge>
-        <AuthHeader></AuthHeader>
-        <Logo></Logo>
+        <AuthHeader />
 
         <div className="flex flex-col items-center gap-6 mt-[13rem]">
           <h1 className="text-[5rem] text-darkblue text-center leading-none">
@@ -107,7 +105,7 @@ export default function SearchResultsClient() {
           {loading ? (
             <p className="text-gray-500">Loading...</p>
           ) : results.length > 0 ? (
-            <ul className="space-y-4">
+            <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-[40rem]">
               {results.map((item, i) => (
                 <li
                   key={i}
@@ -190,9 +188,9 @@ export default function SearchResultsClient() {
                     </Link>
                   )}
 
-                  {type === "place" && "places_id" in item && (
+                  {type === "places" && "places_id" in item && (
                     <Link
-                      href={`/place/${item.places_id}/roommates`}
+                      href={`/place/${item.places_id}`}
                       className="block p-4 text-left hover:bg-gray-200 transition-colors"
                     >
                       <p className="font-semibold">{item.name}</p>
@@ -215,7 +213,8 @@ export default function SearchResultsClient() {
                 href={type === "roommate" ? "/roommate/new" : "/place/new"}
                 className="inline-block bg-navy-blue text-lazyDog text-white px-6 py-2 rounded-md bg-darkblue hover:bg-blue-800 hover:transition"
               >
-                Add a new {type}
+                Add a new {type === "roommate" ? "roommate" : "place"}
+
               </Link>
             </div>
           )}

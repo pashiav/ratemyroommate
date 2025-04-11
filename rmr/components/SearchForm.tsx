@@ -48,7 +48,7 @@ export default function SearchForm({
             />
             <input
               type="text"
-              placeholder="Housing Lived"
+              placeholder="Housing Lived At"
               value={locationQuery}
               onChange={(e) => setLocationQuery(e.target.value)}
               onKeyDown={(e) => {

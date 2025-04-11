@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
-import TopFridge from "@/components/TopFridge";
+import LandingTopFridge from "@/components/LandingTopFridge";
 import BottomFridge from "@/components/BottomFridge";
 import AuthHeader from "@/components/AuthHeader";
 
@@ -143,7 +143,7 @@ export default function Home() {
         </div>
       </div>
 
-      <TopFridge>
+      <LandingTopFridge>
         <AuthHeader />
         <div className="logo flex justify-center">
           <img
@@ -152,7 +152,7 @@ export default function Home() {
             className="w-[30rem] h-auto max-w-full"
           />
         </div>
-      </TopFridge>
+      </LandingTopFridge>
 
       <BottomFridge>
         <div className="mt-[30vh] bg-[#fdfeff] rounded-[10px] shadow-md p-8 max-w-xl mx-auto text-left text-[#315d8d] italic">

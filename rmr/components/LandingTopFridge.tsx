@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function TopFridge({
+export default function LandingTopFridge({
   children,
 }: {
   children: React.ReactNode;
@@ -27,11 +27,6 @@ export default function TopFridge({
         className="absolute right-0 top-0 mt-3 mr-3 w-xs h-auto object-contain z-10"
       />
       {children}
-
-      {/* Logo in left corner */}
-      <div className="absolute top-0 left-0 mt-[3.5em] ml-[6rem] w-[7rem] h-auto z-50">
-        <img src="/logo.png" alt="Logo" />
-      </div>
     </div>
   );
 }
