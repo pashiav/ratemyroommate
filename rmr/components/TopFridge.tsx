@@ -37,7 +37,7 @@ export default function TopFridge({ children, showSearchBar = true }: Props) {
 
       {/* Only show the search bar if showSearchBar is true */}
       {showSearchBar && (
-        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 mt-[3.5rem] z-50">
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 mt-[3rem] z-50">
           <SearchBar />
         </div>
       )}

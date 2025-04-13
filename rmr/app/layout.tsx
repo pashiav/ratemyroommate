@@ -43,7 +43,7 @@ export default function RootLayout({
       afterSignUpUrl="/search"
     >
       <html lang="en">
-        <body style={{ fontFamily: "'Lazy Dog', cursive" }}>
+        <body style={{ fontFamily: "'Lazy Dog', sans-serif" }}>
           <PostHogProvider>
             {children}
           </PostHogProvider>
