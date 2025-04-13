@@ -20,12 +20,12 @@ export default function BottomFridge({
         <img
           src="/shine-left.png"
           alt="shine"
-          className="absolute left-0 top-0 mt-3 ml-4 w-xs h-auto object-contain z-0"
+          className="absolute left-0 top-0 mt-1 ml-1 w-xs h-auto object-contain z-0"
         />
         <img
           src="/shine-right.png"
           alt="shine"
-          className="absolute right-0 top-0 mt-3 mr-4 w-xs h-auto object-contain z-0"
+          className="absolute right-0 top-0 mt-1 mr-1 w-xs h-auto object-contain z-0"
         />
 
         {children}

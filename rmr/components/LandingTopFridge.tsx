@@ -19,12 +19,12 @@ export default function LandingTopFridge({
       <img
         src="/shine-left-crop.png"
         alt="shine"
-        className="absolute left-0 top-0 mt-3 ml-3 w-xs h-auto object-contain z-10"
+        className="absolute left-0 top-0 mt-2 ml-1 w-xs h-auto object-contain z-10"
       />
       <img
         src="/shine-right-crop.png"
         alt="shine"
-        className="absolute right-0 top-0 mt-3 mr-3 w-xs h-auto object-contain z-10"
+        className="absolute right-0 top-0 mt-1 mr-1 w-xs h-auto object-contain z-10"
       />
       {children}
     </div>

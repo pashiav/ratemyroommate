@@ -92,7 +92,7 @@ export default function SearchResultsClient() {
       <TopFridge>
         <AuthHeader />
 
-        <div className="flex flex-col items-center gap-6 mt-[13rem]">
+        <div className="flex flex-col items-center gap-6 mt-[12rem]">
           <h1 className="text-[5rem] text-darkblue text-center leading-none">
             Search Results
           </h1>

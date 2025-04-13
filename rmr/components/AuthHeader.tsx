@@ -8,7 +8,7 @@ export default function AuthHeader() {
   const { isSignedIn } = useUser();
 
   return (
-    <div className="absolute top-20 right-28 z-50">
+    <div className="absolute top-0 right-0 mt-[4rem] mr-[6rem] z-50">
       {isSignedIn ? (
         <UserButton />
       ) : (
