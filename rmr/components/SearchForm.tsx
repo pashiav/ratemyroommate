@@ -21,11 +21,11 @@ export default function SearchForm({
   onSearch,
 }: Props) {
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center gap-1 h-full">
       <select
+        className="h-full px-4 py-2 rounded-md bg-[#d8e1ec] border text-darkblue text-base leading-none"
         value={searchType}
         onChange={(e) => setSearchType(e.target.value)}
-        className="px-4 py-2 rounded-md bg-[#d8e1ec] border text-darkblue"
       >
         <option value="roommate">Roommate</option>
         <option value="places">Housing</option>
