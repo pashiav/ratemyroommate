@@ -21,15 +21,33 @@ export default function SearchForm({
   onSearch,
 }: Props) {
   return (
-    <div className="flex items-center gap-1">
-      <select
-        value={searchType}
-        onChange={(e) => setSearchType(e.target.value)}
-        className="px-4 py-2 rounded-md bg-[#d8e1ec] border text-darkblue"
-      >
-        <option value="roommate">Roommate</option>
-        <option value="places">Housing</option>
-      </select>
+    <div className="flex items-center gap-1 h-full">
+      <div className="relative inline-block min-w-fit">
+        {" "}
+        <select
+          className="h-10 px-4 pr-10 text-center rounded-md bg-[#d8e1ec] border text-darkblue text-base leading-tight appearance-none"
+          value={searchType}
+          onChange={(e) => setSearchType(e.target.value)}
+        >
+          <option value="roommate">Roommate</option>
+          <option value="places">Housing</option>
+        </select>
+        <div className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 flex items-center">
+          <svg
+            className="w-4 h-4 text-darkblue"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </div>
+      </div>
 
       <div className="w-[25rem] flex gap-1">
         {searchType === "roommate" ? (

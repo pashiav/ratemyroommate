@@ -89,11 +89,11 @@ export default function SearchResultsClient() {
 
   return (
     <main className="min-h-screen bg-[#315d8d] pl-4 pr-4">
-      <TopFridge>
+      <TopFridge showSearchBar={true}>
         <AuthHeader />
 
-        <div className="flex flex-col items-center gap-6 mt-[13rem]">
-          <h1 className="text-[5rem] text-darkblue text-center leading-none">
+        <div className="flex flex-col items-center gap-5 mt-[9rem]">
+          <h1 className="text-[3rem] text-darkblue text-center leading-none">
             Search Results
           </h1>
           <p className="text-lg text-darkBlue text-sans mb-6">

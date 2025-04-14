@@ -56,7 +56,7 @@ export default function AddRoommatePage() {
 
   return (
     <main className="min-h-screen bg-[#315d8d] pl-4 pr-4">
-      <TopFridge>
+      <TopFridge showSearchBar={true}>
         <AuthHeader />
 
         <div className="flex flex-col items-center gap- mt-[13rem] font-lazyDog">
