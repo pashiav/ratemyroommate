@@ -196,11 +196,11 @@ export default function Home() {
       </LandingTopFridge>
 
       <BottomFridge>
-        <div className="mt-[5rem] bg-[#fdfeff] rounded-[10px] shadow-md p-8 max-w-xl mx-auto text-left text-[#315d8d] italic">
+        <div className="mt-[5rem] bg-[#fdfeff] rounded-[10px] shadow-md p-8 max-w-xl mx-auto text-left text-[#315d8d]">
           <h2 className="text-6xl font-bold mb-4 text-center text-darkblue">
             About RMR
           </h2>
-          <p className="text-md font-sans">
+          <p className="text-md font-sans italic">
             We’ve all had unpredictable roommates - and wished we knew more
             before moving in.
             <br />
