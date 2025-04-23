@@ -82,14 +82,14 @@ export default function Home() {
             className="absolute -left-10 -top-6 w-20 h-20 rounded-full border-2"
             style={{
               background:
-                "radial-gradient(circle at center, #e3a4a4 50%, #cd9292 98%)",
+                "radial-gradient(circle at center, #fac3c3 50%, #cd9292 99%)",
             }}
           />
           <div
             className="absolute -right-10 -top-9 w-20 h-20 rounded-full border-2"
             style={{
               background:
-                "radial-gradient(circle at center, #e3a4a4 50%, #cd9292 98%)",
+                "radial-gradient(circle at center, #fac3c3 50%, #cd9292 99%)",
             }}
           />
           {/* TO DO Heading */}
@@ -118,31 +118,39 @@ export default function Home() {
                 {todoItems[0].label}
               </label>
 
-              <div className="flex flex-col gap-2">
+
+
+              <div className="flex flex-col mt-4">
                 {/* Text line*/}
-                <p className="text-md text-darkblue">
+                <p className="text-xl text-darkblue">
                   Be the first to know when we launch.
+                </p>
+
+                <p className="text-[0.5rem] text-darkblue mt-0 italic font-sans bold text-left">
+                  By submitting your email, you agree to be notified about our
+                  launch. Your information will not be shared or sold.
                 </p>
 
                 <form
                   onSubmit={handleGoClick}
-                  className="flex flex-col sm:flex-row sm:items-center gap-2"
+                  className="flex flex-col sm:flex-row sm:items-center gap-2 mt-3"
                 >
                   <Input
                     placeholder="you@school.edu"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     readOnly={submitted}
-                    className="border-2 border-darkblue rounded-md py-2 px-4"
+                    className="border-2 border-darkblue rounded-xl py-2 px-4"
                   />
                   <Button
                     type="submit"
-                    className="bg-darkblue text-white rounded-md px-6"
+                    className="bg-darkblue text-white rounded-xl px-4"
                     disabled={submitted}
                   >
-                    GO
+                    Notify Me
                   </Button>
                 </form>
+                
               </div>
 
               {showError && (
