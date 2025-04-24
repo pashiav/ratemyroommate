@@ -29,14 +29,15 @@ export default function Home() {
     }
   }, [isSignedIn]);
 
-  const handleGoClick = (e: React.MouseEvent) => {
+  const handleGoClick = (e: React.FormEvent) => {
+    e.preventDefault(); // always prevent full form submit
     if (!email.endsWith(".edu")) {
-      e.preventDefault(); // prevent modal from opening
-      setShowError(true); // show error message
+      setShowError(true);
     } else {
-      setShowError(false); // clear error if valid
+      setShowError(false);
     }
   };
+
 
   const handleToggle = (id: string) => {
     setTodoItems((prev) =>
@@ -89,8 +90,8 @@ export default function Home() {
               >
                 {todoItems[0].label}
               </label>
-
-              <div className="flex">
+            
+              <form className="flex" onSubmit={handleGoClick}>
                 <Input
                   placeholder="Enter your .edu email address"
                   value={email}
@@ -117,7 +118,7 @@ export default function Home() {
                     email address!
                   </p>
                 )}
-              </div>
+              </form>
             </div>
           </div>
 
