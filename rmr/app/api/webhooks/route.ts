@@ -1,0 +1,45 @@
+import { verifyWebhook } from '@clerk/nextjs/webhooks'
+import { createClient } from '@supabase/supabase-js'
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY! // must have insert permission
+)
+
+export async function POST(req: Request) {
+  try {
+    const evt = await verifyWebhook(req)
+    const eventType = evt.type
+
+    if (eventType === 'user.created') {
+      const user = evt.data
+
+      const user_id = user.id
+      const email = user.email_addresses?.[0]?.email_address.toLowerCase() ?? ''
+      const created_at = new Date(user.created_at).toISOString()
+      const is_verified = true
+      const accepted_privacy_terms = false
+
+      const { error } = await supabase.from('users').insert({
+        user_id,
+        email,
+        created_at,
+        is_verified,
+        accepted_privacy_terms,
+        // leave the rest as null/default
+      })
+
+      if (error) {
+        console.error('Supabase insert error:', error)
+        return new Response('Supabase insert failed', { status: 500 })
+      }
+
+      console.log('User inserted into Supabase:', user_id)
+    }
+
+    return new Response('Webhook handled', { status: 200 })
+  } catch (err) {
+    console.error('Webhook verification failed:', err)
+    return new Response('Error verifying webhook', { status: 400 })
+  }
+}

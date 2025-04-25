@@ -1,6 +1,6 @@
 // middleware.ts (root)
 import { clerkMiddleware } from '@clerk/nextjs/server';
-import { updateSession } from '@/utils/supabase/middleware';
+import { updateSession } from '@/lib/supabase/middleware';
 import { type NextRequest } from 'next/server';
 
 const mergedMiddleware = clerkMiddleware(async (auth, request: NextRequest) => {
@@ -12,5 +12,6 @@ export default mergedMiddleware;
 export const config = {
   matcher: [
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/api/webhooks(.*)',
   ],
 };
