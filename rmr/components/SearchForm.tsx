@@ -1,4 +1,3 @@
-// components/SearchForm.tsx
 import React from "react";
 
 type Props = {
