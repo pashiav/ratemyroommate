@@ -39,8 +39,6 @@ export default function RootLayout({
           },
         },
       }}
-      afterSignInUrl="/search"
-      afterSignUpUrl="/search"
     >
       <html lang="en">
         <body style={{ fontFamily: "'Lazy Dog', sans-serif" }}>
