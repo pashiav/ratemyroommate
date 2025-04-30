@@ -31,7 +31,7 @@ export default function TopFridge({ children, showSearchBar = true }: Props) {
       {children}
 
       {/* Logo in left corner */}
-      <div className="absolute top-0 left-0 mt-[2.5rem] ml-[6rem] w-[7rem] h-auto z-50">
+      <div className="absolute top-0 left-0 mt-[2.5rem] ml-[6rem] w-[7rem] h-auto z-20">
         <img src="/logo.png" alt="Logo" />
       </div>
 
