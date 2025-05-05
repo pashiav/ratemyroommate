@@ -1,4 +1,3 @@
-// components/BottomFridge.tsx
 import React from "react";
 
 export default function BottomFridge({
