@@ -8,7 +8,7 @@ export default function BottomFridge({
   return (
     <div className="w-full">
       <div
-        className="bg-[#f5f5f5] rounded-[96px] mt-0 shadow-lg p-10 min-h-[55rem] w-[100%] mx-auto relative"
+        className="bg-lightGray rounded-[96px] mt-0 shadow-lg p-10 min-h-[55rem] w-[100%] mx-auto relative"
         style={{ boxShadow: "0 -4px 4px -2px rgba(0, 0, 0, 0.2)" }}
       >
         <img

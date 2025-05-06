@@ -8,7 +8,7 @@ export default function LandingTopFridge({
   return (
     // add the top part of the fridge, the shine on the left and right, the handle, and the content in the middle
     <div
-      className="bg-[#f5f5f5] rounded-[96px] shadow-lg p-8 min-h-[50rem] relative z-0 overflow-hidden"
+      className="bg-lightGray rounded-[96px] shadow-lg p-8 min-h-[50rem] relative z-0 overflow-hidden"
       style={{ boxShadow: "0 4px 4px -2px rgba(0, 0, 0, 0.2)" }}
     >
       <img
