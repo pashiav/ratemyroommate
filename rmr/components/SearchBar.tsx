@@ -21,22 +21,6 @@ export default function SearchBar() {
     if (searchType === "places" && !location) return;
 
     try {
-      const res = await fetch("/api/search", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          searchType,
-          roommateName: searchType === "roommate" ? query : undefined,
-          location: searchType === "places" ? location : location || undefined,
-        }),
-      });
-
-      if (!res.ok) {
-        const err = await res.json();
-        console.error("Search failed:", err);
-        return;
-      }
-
       const queryParams = new URLSearchParams();
       queryParams.append("type", searchType);
       if (searchType === "roommate") {

@@ -52,13 +52,15 @@ export default function SearchResultsClient() {
   useEffect(() => {
     async function fetchResults() {
       try {
-        const res = await fetch("/api/search", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ searchType: type, roommateName, location }),
-        });
+        const queryParams = new URLSearchParams();
+        if (type) queryParams.append("type", type);
+        if (roommateName) queryParams.append("roommateName", roommateName);
+        if (location) queryParams.append("location", location);
+
+        const res = await fetch(`/api/search?${queryParams.toString()}`);
 
         const data = await res.json();
+        console.log("API returned:", data);
         setResults(data || []);
       } catch (err) {
         console.error("Search failed", err);
