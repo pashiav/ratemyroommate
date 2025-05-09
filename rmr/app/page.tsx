@@ -74,7 +74,7 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-[#315d8d] p-0">
+    <main className="min-h-screen bg-[#315d8d] pl-4 pr-4">
       <div className="relative z-20 flex justify-center w-full">
         <div className="w-full max-w-[500px] mt-[24em] absolute border-2 border-darkblue rounded-lg p-6 pt-0 pb-[25vh] space-y-4 bg-paper shadow-lg">
           {/* Magnets with more natural highlights */}
