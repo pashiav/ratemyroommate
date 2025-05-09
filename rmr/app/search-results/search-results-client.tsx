@@ -17,7 +17,7 @@ interface Review {
   comments: string;
 }
 
-interface Place {
+interface Housing {
   name: string;
   school?: string;
 }
@@ -26,18 +26,18 @@ interface Roommate {
   rm_id: string;
   name: string;
   unit_end: number;
-  places?: Place;
+  housing?: Housing;
   reviews?: Review[];
 }
 
-interface PlaceResult {
-  places_id: string;
+interface HousingResult {
+  housing_id: string;
   name: string;
   school?: string;
   roommates?: { count: number };
 }
 
-type SearchResult = Roommate | PlaceResult;
+type SearchResult = Roommate | HousingResult;
 
 export default function SearchResultsClient() {
   const searchParams = useSearchParams();
@@ -60,7 +60,7 @@ export default function SearchResultsClient() {
         const res = await fetch(`/api/search?${queryParams.toString()}`);
 
         const data = await res.json();
-        console.log("API returned:", data);
+        console.table("API returned:", data);
         setResults(data || []);
       } catch (err) {
         console.error("Search failed", err);
@@ -126,10 +126,10 @@ export default function SearchResultsClient() {
                           <p className="text-sm text-gray-500">
                             Unit {item.unit_end}
                           </p>
-                          {item.places && (
+                          {item.housing && (
                             <p className="text-sm text-gray-500">
-                              {item.places.name}
-                              {item.places.school && ` - ${item.places.school}`}
+                              {item.housing.name}
+                              {item.housing.school && ` - ${item.housing.school}`}
                             </p>
                           )}
                         </div>
@@ -198,9 +198,9 @@ export default function SearchResultsClient() {
                     </Link>
                   )}
 
-                  {type === "places" && "places_id" in item && (
+                  {type === "housing" && "housing_id" in item && (
                     <Link
-                      href={`/place/${item.places_id}`}
+                      href={`/place/${item.housing_id}`}
                       className="block p-4 text-left hover:bg-gray-200 transition-colors"
                     >
                       <p className="font-semibold">{item.name}</p>

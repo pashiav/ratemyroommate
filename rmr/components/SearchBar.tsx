@@ -18,7 +18,7 @@ export default function SearchBar() {
     const location = locationQuery.trim();
 
     if (searchType === "roommate" && !query && !location) return;
-    if (searchType === "places" && !location) return;
+    if (searchType === "housing" && !location) return;
 
     try {
       const queryParams = new URLSearchParams();
