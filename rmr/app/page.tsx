@@ -76,7 +76,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#315d8d] p-0">
       <div className="relative z-20 flex justify-center w-full">
-        <div className="w-full max-w-[500px] mt-[24em] absolute border-4 border-darkblue rounded-lg p-6 pt-0 pb-[25vh] space-y-4 bg-paper shadow-lg">
+        <div className="w-full max-w-[500px] mt-[24em] absolute border-2 border-darkblue rounded-lg p-6 pt-0 pb-[25vh] space-y-4 bg-paper shadow-lg">
           {/* Magnets with more natural highlights */}
           {/* Left pink circle */}
           <div className="absolute -left-12 -top-7 w-24 h-24 rounded-full bg-rosepink">
@@ -202,7 +202,7 @@ export default function Home() {
       </LandingTopFridge>
 
       <BottomFridge>
-        <div className="mt-[7rem] bg-paper rounded-[10px] shadow-md p-10 max-w-xl mx-auto text-left text-[#315d8d] border-4 border-darkblue h-[25rem]">
+        <div className="mt-[7rem] bg-paper rounded-[10px] shadow-md p-10 max-w-xl mx-auto text-left text-[#315d8d] border-2 border-darkblue h-[25rem]">
           <h2 className="text-6xl font-bold mb-4 text-center text-darkblue">
             About RMR
           </h2>
