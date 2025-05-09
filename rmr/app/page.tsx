@@ -74,24 +74,25 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-[#315d8d] p-4">
+    <main className="min-h-screen bg-[#315d8d] p-0">
       <div className="relative z-20 flex justify-center w-full">
-        <div className="w-full max-w-[500px] mt-[24em] absolute border-2 border-navy-blue rounded-lg p-6 pt-0 pb-[25vh] space-y-4 bg-[#fdfeff] shadow-lg">
-          {/* Magnets */}
-          <div
-            className="absolute -left-10 -top-6 w-20 h-20 rounded-full border-2"
-            style={{
-              background:
-                "radial-gradient(circle at center, #fac3c3 50%, #cd9292 99%)",
-            }}
-          />
-          <div
-            className="absolute -right-10 -top-9 w-20 h-20 rounded-full border-2"
-            style={{
-              background:
-                "radial-gradient(circle at center, #fac3c3 50%, #cd9292 99%)",
-            }}
-          />
+        <div className="w-full max-w-[500px] mt-[24em] absolute border-4 border-darkblue rounded-lg p-6 pt-0 pb-[25vh] space-y-4 bg-paper shadow-lg">
+          {/* Magnets with more natural highlights */}
+          {/* Left pink circle */}
+          <div className="absolute -left-12 -top-7 w-24 h-24 rounded-full bg-rosepink">
+            <div className="absolute top-3 left-7 w-4 h-1.5 bg-white rounded-full transform -rotate-[20deg] opacity-80"></div>
+            <div className="absolute top-6 left-4 w-1.5 h-1 bg-white rounded-full transform -rotate-45 opacity-80"></div>
+            <div className="absolute bottom-3 right-7 w-3 h-1.5 bg-white rounded-full transform -rotate-[20deg] opacity-80"></div>
+          </div>
+
+          {/* Right pink circle */}
+          <div className="absolute -right-12 -top-10 w-24 h-24 rounded-full bg-rosepink">
+            <div className="absolute top-3 left-7 w-4 h-1.5 bg-white rounded-full transform -rotate-[20deg] opacity-80"></div>
+            <div className="absolute top-6 left-4 w-1.5 h-1 bg-white rounded-full transform -rotate-45 opacity-80"></div>
+            <div className="absolute top-3 left-7 w-4 h-1.5 bg-white rounded-full transform -rotate-[20deg] opacity-80"></div>
+            <div className="absolute bottom-3 right-7 w-3 h-1.5 bg-white rounded-full transform -rotate-[20deg] opacity-80"></div>
+          </div>
+
           {/* TO DO Heading */}
           <h2
             className="text-xl font-medium text-center underline"
@@ -117,8 +118,6 @@ export default function Home() {
               >
                 {todoItems[0].label}
               </label>
-
-
 
               <div className="flex flex-col mt-4">
                 {/* Text line*/}
@@ -150,7 +149,6 @@ export default function Home() {
                     Notify Me
                   </Button>
                 </form>
-                
               </div>
 
               {showError && (
@@ -204,7 +202,7 @@ export default function Home() {
       </LandingTopFridge>
 
       <BottomFridge>
-        <div className="mt-[5rem] bg-[#fdfeff] rounded-[10px] shadow-md p-8 max-w-xl mx-auto text-left text-[#315d8d]">
+        <div className="mt-[7rem] bg-paper rounded-[10px] shadow-md p-10 max-w-xl mx-auto text-left text-[#315d8d] border-4 border-darkblue h-[25rem]">
           <h2 className="text-6xl font-bold mb-4 text-center text-darkblue">
             About RMR
           </h2>
