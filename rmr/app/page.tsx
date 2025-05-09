@@ -80,17 +80,17 @@ export default function Home() {
           {/* Magnets with more natural highlights */}
           {/* Left pink circle */}
           <div className="absolute -left-12 -top-7 w-24 h-24 rounded-full bg-rosepink">
-            <div className="absolute top-3 left-7 w-4 h-1.5 bg-white rounded-full transform -rotate-[20deg] opacity-80"></div>
-            <div className="absolute top-6 left-4 w-1.5 h-1 bg-white rounded-full transform -rotate-45 opacity-80"></div>
-            <div className="absolute bottom-3 right-7 w-3 h-1.5 bg-white rounded-full transform -rotate-[20deg] opacity-80"></div>
+            <div className="absolute top-3 left-7 w-4 h-1.5 bg-[#f9e1e1] rounded-full transform -rotate-[20deg]"></div>
+            <div className="absolute top-6 left-4 w-1.5 h-1 bg-[#f9e1e1] rounded-full transform -rotate-45"></div>
+            <div className="absolute bottom-3 right-7 w-3 h-1.5 bg-[#f9e1e1] rounded-full transform -rotate-[20deg]"></div>
           </div>
 
           {/* Right pink circle */}
           <div className="absolute -right-12 -top-10 w-24 h-24 rounded-full bg-rosepink">
-            <div className="absolute top-3 left-7 w-4 h-1.5 bg-white rounded-full transform -rotate-[20deg] opacity-80"></div>
-            <div className="absolute top-6 left-4 w-1.5 h-1 bg-white rounded-full transform -rotate-45 opacity-80"></div>
-            <div className="absolute top-3 left-7 w-4 h-1.5 bg-white rounded-full transform -rotate-[20deg] opacity-80"></div>
-            <div className="absolute bottom-3 right-7 w-3 h-1.5 bg-white rounded-full transform -rotate-[20deg] opacity-80"></div>
+            <div className="absolute top-3 left-7 w-4 h-1.5 bg-[#f9e1e1] rounded-full transform -rotate-[20deg]"></div>
+            <div className="absolute top-6 left-4 w-1.5 h-1 bg-[#f9e1e1] rounded-full transform -rotate-45"></div>
+            <div className="absolute top-3 left-7 w-4 h-1.5 bg-[#f9e1e1] rounded-full transform -rotate-[20deg]"></div>
+            <div className="absolute bottom-3 right-7 w-3 h-1.5 bg-[#f9e1e1] rounded-full transform -rotate-[20deg]"></div>
           </div>
 
           {/* TO DO Heading */}
