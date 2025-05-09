@@ -28,8 +28,9 @@ const config = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        rosePink: '#e2a3a4',
+        rosepink: '#e2a3a4',
         darkblue: '#123964',
+        paper: '#fdfeff',
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
