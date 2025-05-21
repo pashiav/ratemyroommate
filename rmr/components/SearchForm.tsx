@@ -84,20 +84,18 @@ export default function SearchForm({
           </>
         ) : (
           <input
-            type="text"
-            placeholder="Apartment/Dorm Name"
-            value={locationQuery}
-            onChange={(e) => {
-              const value = e.target.value;
-              if (!value.includes(";")) {
-                setSearchQuery(value);
-              }
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                onSearch();
-              }
-            }}
+              type="text"
+              placeholder="Housing Lived At"
+              value={locationQuery}
+              onChange={(e) => {
+                const sanitized = e.target.value.replace(/[0-9;]/g, "");
+                setLocationQuery(sanitized);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  onSearch();
+                }
+              }}
             className="w-full px-4 py-2 border border-darkblue rounded-md"
           />
         )}
