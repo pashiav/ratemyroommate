@@ -29,7 +29,7 @@ export default function SearchForm({
           onChange={(e) => setSearchType(e.target.value)}
         >
           <option value="roommate">Roommate</option>
-          <option value="places">Housing</option>
+          <option value="housing">Housing</option>
         </select>
         <div className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 flex items-center">
           <svg
@@ -55,7 +55,10 @@ export default function SearchForm({
               type="text"
               placeholder="Roommate Name"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                const sanitized = e.target.value.replace(/[0-9;]/g, "");
+                setSearchQuery(sanitized);
+              }}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   onSearch();
@@ -67,7 +70,10 @@ export default function SearchForm({
               type="text"
               placeholder="Housing Lived At"
               value={locationQuery}
-              onChange={(e) => setLocationQuery(e.target.value)}
+              onChange={(e) => {
+                const sanitized = e.target.value.replace(/[0-9;]/g, "");
+                setLocationQuery(sanitized);
+              }}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   onSearch();
@@ -78,15 +84,18 @@ export default function SearchForm({
           </>
         ) : (
           <input
-            type="text"
-            placeholder="Apartment/Dorm Name"
-            value={locationQuery}
-            onChange={(e) => setLocationQuery(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                onSearch();
-              }
-            }}
+              type="text"
+              placeholder="Housing Lived At"
+              value={locationQuery}
+              onChange={(e) => {
+                const sanitized = e.target.value.replace(/[0-9;]/g, "");
+                setLocationQuery(sanitized);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  onSearch();
+                }
+              }}
             className="w-full px-4 py-2 border border-darkblue rounded-md"
           />
         )}

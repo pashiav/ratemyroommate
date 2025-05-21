@@ -1,6 +1,12 @@
-import RoommateDetails from './roommate-details-client';
+import RoommateDetails from "@/components/RoommateDetailsClient";
 
-export default function RoommatePage(props: any) {
-  // Just pass the ID directly without destructuring
-  return <RoommateDetails id={props.params.id} />;
+// app/roommate/[id]/page.tsx
+export default async function RoommatePage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  // Await the params to get the actual id
+  const { id } = await params;
+  return <RoommateDetails id={id} />;
 }

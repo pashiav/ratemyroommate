@@ -8,36 +8,14 @@ import TopFridge from "@/components/TopFridge";
 import AuthHeader from "@/components/AuthHeader";
 
 // Types
-interface Review {
-  rating: number;
-  would_recommend: boolean;
-  has_pets: boolean;
-  pet_friendly: boolean;
-  years_lived: number;
-  comments: string;
-}
-
-interface Place {
-  name: string;
-  school?: string;
-}
-
-interface Roommate {
+interface RoommateViewResult {
   rm_id: string;
-  name: string;
-  unit_end: number;
-  places?: Place;
-  reviews?: Review[];
+  full_name: string;
+  housing_name: string | null;
+  unit_suffix: string | null;
+  avg_rating: number | null;
+  recommendation_percentage: number | null;
 }
-
-interface PlaceResult {
-  places_id: string;
-  name: string;
-  school?: string;
-  roommates?: { count: number };
-}
-
-type SearchResult = Roommate | PlaceResult;
 
 export default function SearchResultsClient() {
   const searchParams = useSearchParams();
@@ -45,20 +23,21 @@ export default function SearchResultsClient() {
   const location = searchParams.get("location");
   const type = searchParams.get("type");
 
-  const [results, setResults] = useState<SearchResult[]>([]);
+  const [results, setResults] = useState<RoommateViewResult[]>([]);
   const [loading, setLoading] = useState(true);
   const { isSignedIn } = useUser();
 
   useEffect(() => {
     async function fetchResults() {
       try {
-        const res = await fetch("/api/search", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ searchType: type, roommateName, location }),
-        });
+        const queryParams = new URLSearchParams();
+        if (type) queryParams.append("type", type);
+        if (roommateName) queryParams.append("roommateName", roommateName);
+        if (location) queryParams.append("location", location);
 
+        const res = await fetch(`/api/search?${queryParams.toString()}`);
         const data = await res.json();
+        console.table("API returned:", data);
         setResults(data || []);
       } catch (err) {
         console.error("Search failed", err);
@@ -71,35 +50,25 @@ export default function SearchResultsClient() {
     if (type) fetchResults();
   }, [type, roommateName, location]);
 
-  const calculateAverageRating = (reviews: Review[] | undefined): number => {
-    if (!reviews || reviews.length === 0) return 0;
-    return (
-      reviews.reduce((sum, review) => sum + (review.rating || 0), 0) /
-      reviews.length
-    );
-  };
-
-  const calculateRecommendPercentage = (
-    reviews: Review[] | undefined
-  ): number => {
-    if (!reviews || reviews.length === 0) return 0;
-    const recommendCount = reviews.filter((r) => r.would_recommend).length;
-    return Math.round((recommendCount / reviews.length) * 100);
-  };
-
   return (
     <main className="min-h-screen bg-[#315d8d] pl-4 pr-4">
       <TopFridge showSearchBar={true}>
         <AuthHeader />
 
-        <div className="flex flex-col items-center gap-5 mt-[9rem]">
+        <div className="flex flex-col items-center gap-3 mt-[9rem]">
           <h1 className="text-[3rem] text-darkblue text-center leading-none">
             Search Results
           </h1>
-          <p className="text-lg text-darkBlue text-sans mb-6">
+          <p className="text-lg text-gray-500 mb-6">
             Showing results for <strong>{type}</strong>
-            {type === "roommate" && roommateName && `: ${roommateName}`}
-            {location && ` @ ${location}`}
+            {type === "roommate" && roommateName && (
+              <span className="italic font-sans font-bold">
+                : {roommateName}
+              </span>
+            )}
+            {location && (
+              <span className="italic font-sans font-bold"> @ {location}</span>
+            )}
           </p>
 
           {loading ? (
@@ -111,80 +80,72 @@ export default function SearchResultsClient() {
                   key={i}
                   className="bg-gray-100 rounded-md shadow-sm overflow-hidden"
                 >
-                  {type === "roommate" && "unit_end" in item && (
+                  {type === "roommate" && (
                     <Link
                       href={`/roommate/${item.rm_id}`}
                       className="block p-4 hover:bg-gray-200 transition-colors"
                     >
-                      {/* Horizontal layout for roommate info and review info */}
                       <div className="flex flex-col sm:flex-row justify-between gap-6 text-left">
-                        {/* Left side: roommate and place info */}
+                        {/* Left side */}
                         <div className="flex-1">
-                          <p className="font-semibold">{item.name}</p>
-                          <p className="text-sm text-gray-500">
-                            Unit {item.unit_end}
+                          <p className="font-semibold text-lg">
+                            {item.full_name}
                           </p>
-                          {item.places && (
-                            <p className="text-sm text-gray-500">
-                              {item.places.name}
-                              {item.places.school && ` - ${item.places.school}`}
-                            </p>
+                          {item.avg_rating !== null && (
+                            <>
+                              <p className="text-sm text-gray-700 font-sans font-bold italic">
+                                Most recent review:
+                              </p>
+                              {item.housing_name && (
+                                <p className="text-sm text-gray-500">
+                                  <span className="font-sans font-bold italic">
+                                    Housing:
+                                  </span>{" "}
+                                  {item.housing_name}
+                                </p>
+                              )}
+                              {item.unit_suffix && (
+                                <p className="text-sm text-gray-500">
+                                  <span className="font-sans font-bold italic">
+                                    Unit end:
+                                  </span>{" "}
+                                  {item.unit_suffix}
+                                </p>
+                              )}
+                            </>
                           )}
                         </div>
 
-                        {/* Right side: review stats */}
+                        {/* Right side */}
                         <div className="w-full sm:w-48">
-                          {item.reviews && item.reviews.length > 0 ? (
+                          {item.avg_rating !== null ? (
                             <>
-                              {/* Star rating */}
                               <div className="flex items-center">
                                 <div className="flex">
-                                  {[1, 2, 3, 4, 5].map((star) => {
-                                    const avgRating = calculateAverageRating(
-                                      item.reviews
-                                    );
-                                    return (
-                                      <svg
-                                        key={star}
-                                        className={`w-4 h-4 ${
-                                          star <= Math.round(avgRating)
-                                            ? "text-yellow-400"
-                                            : "text-gray-300"
-                                        }`}
-                                        fill="currentColor"
-                                        viewBox="0 0 20 20"
-                                      >
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                      </svg>
-                                    );
-                                  })}
+                                  {[1, 2, 3, 4, 5].map((star) => (
+                                    <svg
+                                      key={star}
+                                      className={`w-4 h-4 ${
+                                        star <= Math.round(item.avg_rating ?? 0)
+                                          ? "text-yellow-400"
+                                          : "text-gray-300"
+                                      }`}
+                                      fill="currentColor"
+                                      viewBox="0 0 20 20"
+                                    >
+                                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                    </svg>
+                                  ))}
                                 </div>
                                 <span className="ml-2 text-sm font-medium text-gray-700">
-                                  {calculateAverageRating(item.reviews).toFixed(
-                                    1
-                                  )}
-                                  <span className="ml-1 text-xs text-gray-500">
-                                    ({item.reviews.length} review
-                                    {item.reviews.length !== 1 ? "s" : ""})
-                                  </span>
+                                  {item.avg_rating?.toFixed(1)}
                                 </span>
                               </div>
 
-                              {/* Recommendation percentage */}
                               <div className="text-xs text-gray-700 mt-1">
-                                {calculateRecommendPercentage(item.reviews)}%
-                                would recommend
+                                {item.recommendation_percentage ?? 0}% would
+                                recommend
                               </div>
-
-                              {/* Pet information */}
-                              {item.reviews.some((r) => r.has_pets) && (
-                                <div className="text-xs text-gray-700 mt-1">
-                                  Has pets
-                                  {item.reviews.some((r) => r.pet_friendly)
-                                    ? " • Pet friendly"
-                                    : ""}
-                                </div>
-                              )}
                             </>
                           ) : (
                             <p className="text-xs text-gray-500">
@@ -193,22 +154,6 @@ export default function SearchResultsClient() {
                           )}
                         </div>
                       </div>
-                    </Link>
-                  )}
-
-                  {type === "places" && "places_id" in item && (
-                    <Link
-                      href={`/place/${item.places_id}`}
-                      className="block p-4 text-left hover:bg-gray-200 transition-colors"
-                    >
-                      <p className="font-semibold">{item.name}</p>
-                      {item.school && (
-                        <p className="text-sm text-gray-500">{item.school}</p>
-                      )}
-                      <p className="text-sm text-gray-500 mt-1">
-                        {item.roommates?.count || 0} roommate
-                        {(item.roommates?.count || 0) !== 1 ? "s" : ""}
-                      </p>
                     </Link>
                   )}
                 </li>
@@ -228,7 +173,7 @@ export default function SearchResultsClient() {
 
           <div className="mt-8">
             <Link
-              href="/"
+              href="/search"
               className="inline-flex items-center text-navy-blue hover:underline"
             >
               <svg

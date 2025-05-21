@@ -18,25 +18,9 @@ export default function SearchBar() {
     const location = locationQuery.trim();
 
     if (searchType === "roommate" && !query && !location) return;
-    if (searchType === "places" && !location) return;
+    if (searchType === "housing" && !location) return;
 
     try {
-      const res = await fetch("/api/search", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          searchType,
-          roommateName: searchType === "roommate" ? query : undefined,
-          location: searchType === "places" ? location : location || undefined,
-        }),
-      });
-
-      if (!res.ok) {
-        const err = await res.json();
-        console.error("Search failed:", err);
-        return;
-      }
-
       const queryParams = new URLSearchParams();
       queryParams.append("type", searchType);
       if (searchType === "roommate") {
