@@ -1,7 +1,15 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { auth } from "@clerk/nextjs/server";
 
 export async function GET(req: Request) {
+  // Check if the request is authenticated
+  const { userId } = await auth();
+  if (!userId) {
+    console.warn("Unauthorized access attempt");
+    return NextResponse.json({ error: "Unauthorized access attempt" }, { status: 401 });
+  }
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
   const supabase = createClient(supabaseUrl, supabaseKey);
@@ -28,6 +36,7 @@ export async function GET(req: Request) {
   }
 
   const { data, error } = await query;
+
 
   if (error) {
     console.error("Search error:", error);
