@@ -1,10 +1,12 @@
 import RoommateDetails from "@/components/RoommateDetailsClient";
 
+// app/roommate/[id]/page.tsx
 export default async function RoommatePage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  // Await the params to get the actual id
   const { id } = await params;
   return <RoommateDetails id={id} />;
 }
