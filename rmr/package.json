@@ -3,6 +3,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "next-sitemap",
     "start": "next start"
   },
   "dependencies": {
@@ -19,6 +20,7 @@
     "clsx": "^2.1.1",
     "lucide-react": "^0.468.0",
     "next": "^15.2.4",
+    "next-sitemap": "^4.2.3",
     "next-themes": "^0.4.3",
     "posthog-js": "^1.235.0",
     "posthog-node": "^4.11.3",
