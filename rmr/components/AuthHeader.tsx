@@ -165,7 +165,7 @@ export default function AuthHeader() {
         </>
       ) : (
         <SignInButton mode="modal">
-          <Button className="bg-darkblue text-white px-6 py-2 text-lg font-lazyDog rounded-md">
+          <Button className="bg-darkBlue text-white px-6 py-2 text-lg font-lazyDog rounded-md">
             Log In
           </Button>
         </SignInButton>

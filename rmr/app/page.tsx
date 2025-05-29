@@ -87,7 +87,7 @@ export default function Home() {
             <div className="flex-1">
               <label
                 htmlFor="signup"
-                className="text-5xl mt-5 block font-bold text-darkblue"
+                className="text-5xl mt-5 block font-bold text-darkBlue"
               >
                 {todoItems[0].label}
               </label>
@@ -97,7 +97,7 @@ export default function Home() {
                   placeholder="Enter your .edu email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="border-2 border-darkblue rounded-md py-2 px-4"
+                  className="border-2 border-darkBlue rounded-md py-2 px-4"
                 />
                 <SignUpButton
                   mode="modal"
@@ -107,7 +107,7 @@ export default function Home() {
                 >
                   <Button
                     onClick={handleGoClick}
-                    className="ml-2 bg-darkblue text-white rounded-md px-4"
+                    className="ml-2 bg-darkBlue text-white rounded-md px-4"
                     disabled={!email.endsWith(".edu")}
                   >
                     GO
@@ -156,7 +156,7 @@ export default function Home() {
       </LandingTopFridge>
       <BottomFridge>
         <div className="mt-[30vh] bg-[#fdfeff] rounded-[10px] shadow-md p-8 max-w-xl mx-auto text-left text-[#315d8d] italic">
-          <h2 className="text-6xl font-bold mb-4 text-center text-darkblue">
+          <h2 className="text-6xl font-bold mb-4 text-center text-darkBlue">
             About RMR
           </h2>
           <p className="text-md font-sans">
