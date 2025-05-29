@@ -10,10 +10,10 @@ export default function SearchPage() {
       <TopFridge showSearchBar={false}>
         <AuthHeader />
         <div className="flex flex-col items-center gap-6 mt-[13.5rem]">
-          <h1 className="text-[8rem] text-darkblue text-center leading-none">
+          <h1 className="text-[8rem] text-darkBlue text-center leading-none">
             Search
           </h1>
-          <p className="text-lg text-darkblue text-center -mt-7">
+          <p className="text-lg text-darkBlue text-center -mt-7">
             Search for a roommate or housing.
           </p>
           <SearchBar />
