@@ -81,7 +81,7 @@ export default function RoommateDetails({ id }: { id: string }) {
     : 0;
 
   return (
-    <main className="min-h-screen bg-[#315d8d] pl-4 pr-4 font-lazyDog">
+    <main className="min-h-screen bg-[#315d8d] pl-[0.75rem] pr-[0.75rem] font-lazyDog">
       <TopFridge showSearchBar={true}>
         <AuthHeader />
 
@@ -129,7 +129,7 @@ export default function RoommateDetails({ id }: { id: string }) {
 
                 <Link
                   href={`/roommate/${id}/review/new`}
-                  className="inline-block bg-darkblue text-white px-6 py-2 mt-4 rounded-md hover:bg-blue-800"
+                  className="inline-block bg-darkBlue text-white px-6 py-2 mt-4 rounded-md hover:bg-blue-800"
                 >
                   Leave a Review
                 </Link>

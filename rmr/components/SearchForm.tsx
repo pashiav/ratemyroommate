@@ -1,4 +1,6 @@
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 type Props = {
   searchType: string;
@@ -24,7 +26,7 @@ export default function SearchForm({
       <div className="relative inline-block min-w-fit">
         {" "}
         <select
-          className="h-10 px-4 pr-10 text-center rounded-md bg-[#d8e1ec] border text-darkblue text-base leading-tight appearance-none"
+          className="h-10 px-4 pr-10 text-center rounded-md bg-[#d8e1ec] border text-darkBlue text-base leading-tight appearance-none"
           value={searchType}
           onChange={(e) => setSearchType(e.target.value)}
         >
@@ -33,7 +35,7 @@ export default function SearchForm({
         </select>
         <div className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 flex items-center">
           <svg
-            className="w-4 h-4 text-darkblue"
+            className="w-4 h-4 text-darkBlue"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -64,7 +66,7 @@ export default function SearchForm({
                   onSearch();
                 }
               }}
-              className="w-1/2 px-4 py-2 border border-darkblue rounded-md"
+              className="w-1/2 px-4 py-2 border border-darkBlue rounded-md"
             />
             <input
               type="text"
@@ -79,33 +81,33 @@ export default function SearchForm({
                   onSearch();
                 }
               }}
-              className="w-1/2 px-4 py-2 border border-darkblue rounded-md"
+              className="w-1/2 px-4 py-2 border border-darkBlue rounded-md"
             />
           </>
         ) : (
           <input
-              type="text"
-              placeholder="Housing Lived At"
-              value={locationQuery}
-              onChange={(e) => {
-                const sanitized = e.target.value.replace(/[0-9;]/g, "");
-                setLocationQuery(sanitized);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  onSearch();
-                }
-              }}
-            className="w-full px-4 py-2 border border-darkblue rounded-md"
+            type="text"
+            placeholder="Housing Lived At"
+            value={locationQuery}
+            onChange={(e) => {
+              const sanitized = e.target.value.replace(/[0-9;]/g, "");
+              setLocationQuery(sanitized);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                onSearch();
+              }
+            }}
+            className="w-full px-4 py-2 border border-darkBlue rounded-md"
           />
         )}
       </div>
 
       <button
         onClick={onSearch}
-        className="bg-darkblue text-white px-6 py-2 rounded-lg font-bold font-lazyDog hover:bg-blue-800 hover:transition"
+        className="bg-darkBlue text-white px-4 py-[0.375rem] rounded-lg font-bold font-lazyDog hover:bg-blue-800 hover:transition"
       >
-        GO
+        <FontAwesomeIcon icon={faMagnifyingGlass} className="w-5 h-5 mt-1" />
       </button>
     </div>
   );

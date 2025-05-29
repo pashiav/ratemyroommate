@@ -38,7 +38,6 @@ export default function Home() {
     }
   };
 
-
   const handleToggle = (id: string) => {
     setTodoItems((prev) =>
       prev.map((item) =>
@@ -48,25 +47,27 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-[#315d8d] p-4">
+    <main className="min-h-screen bg-[#315d8d] pl-[0.75rem] pr-[0.75rem]">
+      {" "}
       {/* To Do List Section */}
       <div className="relative z-20 flex justify-center w-full">
         <div className="w-full max-w-[500px] mt-[24em] absolute border-2 border-navy-blue rounded-lg p-6 pt-0 pb-[25vh] space-y-4 bg-[#fdfeff] shadow-lg">
-          {/* Pink magnets */}
-          <div
-            className="absolute -left-10 -top-6 w-20 h-20 rounded-full border-2"
-            style={{
-              background:
-                "radial-gradient(circle at center, #e3a4a4 50%, #cd9292 98%)",
-            }}
-          />
-          <div
-            className="absolute -right-10 -top-9 w-20 h-20 rounded-full border-2"
-            style={{
-              background:
-                "radial-gradient(circle at center, #e3a4a4 50%, #cd9292 98%)",
-            }}
-          />
+          {/* Magnets with more natural highlights */}
+          {/* Left pink circle */}
+          <div className="absolute -left-12 -top-7 w-24 h-24 rounded-full bg-rosePink">
+            <div className="absolute top-3 left-7 w-4 h-1.5 bg-[#f9e1e1] rounded-full transform -rotate-[20deg]"></div>
+            <div className="absolute top-6 left-4 w-1.5 h-1 bg-[#f9e1e1] rounded-full transform -rotate-45"></div>
+            <div className="absolute bottom-3 right-7 w-3 h-1.5 bg-[#f9e1e1] rounded-full transform -rotate-[20deg]"></div>
+          </div>
+
+          {/* Right pink circle */}
+          <div className="absolute -right-12 -top-10 w-24 h-24 rounded-full bg-rosePink">
+            <div className="absolute top-3 left-7 w-4 h-1.5 bg-[#f9e1e1] rounded-full transform -rotate-[20deg]"></div>
+            <div className="absolute top-6 left-4 w-1.5 h-1 bg-[#f9e1e1] rounded-full transform -rotate-45"></div>
+            <div className="absolute top-3 left-7 w-4 h-1.5 bg-[#f9e1e1] rounded-full transform -rotate-[20deg]"></div>
+            <div className="absolute bottom-3 right-7 w-3 h-1.5 bg-[#f9e1e1] rounded-full transform -rotate-[20deg]"></div>
+          </div>
+
           {/* TO DO Heading */}
           <h2
             className="text-xl font-medium text-center underline"
@@ -86,17 +87,17 @@ export default function Home() {
             <div className="flex-1">
               <label
                 htmlFor="signup"
-                className="text-5xl mt-5 block font-bold text-darkblue"
+                className="text-5xl mt-5 block font-bold text-darkBlue"
               >
                 {todoItems[0].label}
               </label>
-            
+
               <form className="flex" onSubmit={handleGoClick}>
                 <Input
                   placeholder="Enter your .edu email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="border-2 border-darkblue rounded-md py-2 px-4"
+                  className="border-2 border-darkBlue rounded-md py-2 px-4"
                 />
                 <SignUpButton
                   mode="modal"
@@ -106,7 +107,7 @@ export default function Home() {
                 >
                   <Button
                     onClick={handleGoClick}
-                    className="ml-2 bg-darkblue text-white rounded-md px-4"
+                    className="ml-2 bg-darkBlue text-white rounded-md px-4"
                     disabled={!email.endsWith(".edu")}
                   >
                     GO
@@ -143,21 +144,21 @@ export default function Home() {
           ))}
         </div>
       </div>
-
       <LandingTopFridge>
         <AuthHeader />
         <div className="logo flex justify-center">
           <img
             src="/logo.png"
             alt="Logo"
-            className="w-[30rem] h-auto max-w-full"
+            className="w-[30rem] h-auto max-w-full z-0 pointer-events-none"
           />
         </div>
       </LandingTopFridge>
-
       <BottomFridge>
         <div className="mt-[30vh] bg-[#fdfeff] rounded-[10px] shadow-md p-8 max-w-xl mx-auto text-left text-[#315d8d] italic">
-          <h2 className="text-6xl font-bold mb-4 text-center text-darkblue">About RMR</h2>
+          <h2 className="text-6xl font-bold mb-4 text-center text-darkBlue">
+            About RMR
+          </h2>
           <p className="text-md font-sans">
             We’ve all had unpredictable roommates - and wished we knew more
             before moving in.

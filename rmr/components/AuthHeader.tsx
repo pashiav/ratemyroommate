@@ -44,7 +44,7 @@ export default function AuthHeader() {
   
 
   return (
-    <div className="absolute top-0 right-0 mt-[3.5rem] mr-[6rem] z-50">
+    <div className="absolute top-0 right-0 mt-[3.5rem] mr-[6rem] z-100">
       {isSignedIn ? (
         <>
           <Button
@@ -165,7 +165,7 @@ export default function AuthHeader() {
         </>
       ) : (
         <SignInButton mode="modal">
-          <Button className="bg-darkblue text-white px-6 py-2 text-lg font-lazyDog rounded-md">
+          <Button className="bg-darkBlue text-white px-6 py-2 text-lg font-lazyDog rounded-md z-1000">
             Log In
           </Button>
         </SignInButton>
