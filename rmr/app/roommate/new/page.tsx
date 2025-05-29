@@ -55,7 +55,7 @@ export default function AddRoommatePage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#315d8d] pl-4 pr-4">
+    <main className="min-h-screen bg-[#315d8d] pl-[0.75rem] pr-[0.75rem]">
       <TopFridge showSearchBar={true}>
         <AuthHeader />
 

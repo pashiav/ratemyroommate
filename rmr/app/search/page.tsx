@@ -6,7 +6,7 @@ import SearchBar from "@/components/SearchBar";
 
 export default function SearchPage() {
   return (
-    <main className="min-h-screen bg-[#315d8d] pl-4 pr-4">
+    <main className="min-h-screen bg-[#315d8d] pl-[0.75rem] pr-[0.75rem]">
       <TopFridge showSearchBar={false}>
         <AuthHeader />
         <div className="flex flex-col items-center gap-6 mt-[13.5rem]">

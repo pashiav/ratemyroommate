@@ -44,12 +44,12 @@ export default function AddPlacePage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#315d8d] pl-4 pr-4">
+    <main className="min-h-screen bg-[#315d8d] pl-[0.75rem] pr-[0.75rem]">
       <TopFridge showSearchBar={true}>
         <AuthHeader />
 
         <div className="flex flex-col items-center gap- mt-[13rem]">
-          <h1 className="text-[4rem] text-darkblue text-center leading-none">
+          <h1 className="text-[4rem] text-darkBlue text-center leading-none">
             Add a New Place
           </h1>
 
@@ -69,7 +69,7 @@ export default function AddPlacePage() {
 
           <button
             onClick={handleSubmit}
-            className="bg-darkblue hover:bg-blue-800 text-white px-4 py-2 rounded-md"
+            className="bg-darkBlue hover:bg-blue-800 text-white px-4 py-2 rounded-md"
           >
             Add Place
           </button>

@@ -47,7 +47,7 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-[#315d8d] pl-2 pr-2">
+    <main className="min-h-screen bg-[#315d8d] pl-[0.75rem] pr-[0.75rem]]">
       {" "}
       {/* To Do List Section */}
       <div className="relative z-20 flex justify-center w-full">
@@ -150,7 +150,7 @@ export default function Home() {
           <img
             src="/logo.png"
             alt="Logo"
-            className="w-[30rem] h-auto max-w-full"
+            className="w-[30rem] h-auto max-w-full z-0 pointer-events-none"
           />
         </div>
       </LandingTopFridge>

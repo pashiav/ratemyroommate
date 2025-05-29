@@ -81,7 +81,7 @@ export default function RoommateDetails({ id }: { id: string }) {
     : 0;
 
   return (
-    <main className="min-h-screen bg-[#315d8d] pl-4 pr-4 font-lazyDog">
+    <main className="min-h-screen bg-[#315d8d] pl-[0.75rem] pr-[0.75rem] font-lazyDog">
       <TopFridge showSearchBar={true}>
         <AuthHeader />
 
