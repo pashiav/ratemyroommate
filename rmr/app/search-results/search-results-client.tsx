@@ -56,7 +56,7 @@ export default function SearchResultsClient() {
         <AuthHeader />
 
         <div className="flex flex-col items-center gap-3 mt-[9rem]">
-          <h1 className="text-[3rem] text-darkblue text-center leading-none">
+          <h1 className="text-[3rem] text-darkBlue text-center leading-none">
             Search Results
           </h1>
           <p className="text-lg text-gray-500 mb-6">
@@ -164,7 +164,7 @@ export default function SearchResultsClient() {
               <p className="text-gray-500 mb-4">No results found.</p>
               <Link
                 href={type === "roommate" ? "/roommate/new" : "/place/new"}
-                className="inline-block bg-navy-blue text-lazyDog text-white px-6 py-2 rounded-md bg-darkblue hover:bg-blue-800 hover:transition"
+                className="inline-block bg-navy-blue text-lazyDog text-white px-6 py-2 rounded-md bg-darkBlue hover:bg-blue-800 hover:transition"
               >
                 Add a new {type === "roommate" ? "roommate" : "place"}
               </Link>
