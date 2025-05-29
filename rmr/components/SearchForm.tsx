@@ -1,4 +1,6 @@
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 type Props = {
   searchType: string;
@@ -84,18 +86,18 @@ export default function SearchForm({
           </>
         ) : (
           <input
-              type="text"
-              placeholder="Housing Lived At"
-              value={locationQuery}
-              onChange={(e) => {
-                const sanitized = e.target.value.replace(/[0-9;]/g, "");
-                setLocationQuery(sanitized);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  onSearch();
-                }
-              }}
+            type="text"
+            placeholder="Housing Lived At"
+            value={locationQuery}
+            onChange={(e) => {
+              const sanitized = e.target.value.replace(/[0-9;]/g, "");
+              setLocationQuery(sanitized);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                onSearch();
+              }
+            }}
             className="w-full px-4 py-2 border border-darkBlue rounded-md"
           />
         )}
@@ -103,9 +105,9 @@ export default function SearchForm({
 
       <button
         onClick={onSearch}
-        className="bg-darkBlue text-white px-6 py-2 rounded-lg font-bold font-lazyDog hover:bg-blue-800 hover:transition"
+        className="bg-darkBlue text-white px-4 py-[0.375rem] rounded-lg font-bold font-lazyDog hover:bg-blue-800 hover:transition"
       >
-        GO
+        <FontAwesomeIcon icon={faMagnifyingGlass} className="w-5 h-5 mt-1" />
       </button>
     </div>
   );
