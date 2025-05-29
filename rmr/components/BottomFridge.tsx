@@ -46,6 +46,8 @@ export default function BottomFridge({
           clipPath: "ellipse(25% 25% at 70% 30%)",
         }}
       ></div>{" "}
+      <div className="absolute right-[1.25rem] top-[6.5em] h-[75%] w-[8.5px] bg-white rounded-full"></div>
+      <div className="absolute right-[6.5rem] top-[.8rem] w-[3rem] h-[7px] bg-white rounded-full"></div>
 
         {children}
       </div>
