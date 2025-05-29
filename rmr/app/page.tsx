@@ -47,7 +47,7 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-[#315d8d] pl-[0.75rem] pr-[0.75rem]]">
+    <main className="min-h-screen bg-[#315d8d] pl-[0.75rem] pr-[0.75rem]">
       {" "}
       {/* To Do List Section */}
       <div className="relative z-20 flex justify-center w-full">
