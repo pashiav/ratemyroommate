@@ -2,125 +2,120 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useUser, UserButton, SignInButton } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 import TopFridge from "@/components/TopFridge";
 import AuthHeader from "@/components/AuthHeader";
 
 export default function AddRoommatePage() {
   const router = useRouter();
-  const { isSignedIn } = useUser();
-  const [name, setName] = useState("");
-  const [unitEnding, setUnitEnding] = useState("");
-  const [school, setSchool] = useState(""); // Add state for school
-  const [places, setPlaces] = useState<any[]>([]);
-  const [selectedPlace, setSelectedPlace] = useState("");
+  const { user } = useUser();
+
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [schoolName, setSchoolName] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoadingSchool, setIsLoadingSchool] = useState(true);
 
   useEffect(() => {
-    // Fetch available places from the backend
-    const fetchPlaces = async () => {
-      const res = await fetch("/api/places");
+    const fetchSchool = async () => {
+      if (!user?.id) return;
+
+      const res = await fetch(`/api/user-info?user_id=${user.id}`);
       const data = await res.json();
-      setPlaces(data);
+
+      if (res.ok && data.school_name) {
+        setSchoolName(data.school_name);
+      }
+
+      setIsLoadingSchool(false);
     };
 
-    fetchPlaces();
-  }, []);
+    fetchSchool();
+  }, [user]);
 
   const handleSubmit = async () => {
-    const payload = {
-      name,
-      unitEnding,
-      placeId: selectedPlace,
-    };
-
-    // Only add school if it's not empty
-    if (school.trim()) {
-      Object.assign(payload, { school });
+    if (!user?.id || !firstName.trim() || !lastName.trim()) {
+      alert("Please fill in all required fields.");
+      return;
     }
 
-    const res = await fetch("/api/roommates", {
+    setIsSubmitting(true);
+
+    const res = await fetch("/api/roommates/new", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        first_name: firstName.trim(),
+        last_name: lastName.trim(),
+        user_id: user.id,
+      }),
     });
 
-    if (res.ok) {
-      router.push("/search");
-    } else {
+    setIsSubmitting(false);
+
+    if (!res.ok) {
       const errorData = await res.json();
       alert(`Failed to add roommate: ${errorData.error || "Unknown error"}`);
+      return;
     }
+
+    const result = await res.json();
+    const roommateId = result.data?.[0]?.rm_id;
+
+    if (!roommateId) {
+      alert("Roommate created, but could not get their ID.");
+      return;
+    }
+
+    router.push(`/roommate/${roommateId}`);
   };
 
   return (
-    <main className="min-h-screen bg-[#315d8d] pl-[0.75rem] pr-[0.75rem]">
+    <main className="min-h-screen bg-[#315d8d] pl-[0.75rem] pr-[0.75rem] relative">
       <TopFridge showSearchBar={true}>
         <AuthHeader />
 
-        <div className="flex flex-col items-center gap- mt-[13rem] font-lazyDog">
-          <h1 className="text-[4rem] font-lazyDog text-darkBlue text-center leading-none">
-            Add a New Roommate
-          </h1>
+        {isLoadingSchool ? (
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <p className="text-darkBlue text-2xl font-lazyDog">Loading...</p>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center mt-[13rem] font-lazyDog">
+            <h1 className="w-1/2 text-[2rem] text-darkBlue text-center leading-none">
+              Add a New Roommate
+            </h1>
+            <p className="w-1/2 text-darkBlue text-center mt-4">
+              @ <strong>{schoolName}</strong>
+            </p>
 
-          {/* Name */}
-          <input
-            type="text"
-            placeholder="Roommate name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-1/3 p-3 border border-darkBlue rounded-md mb-4 mt-8"
-          />
+            {/* First Name */}
+            <input
+              type="text"
+              placeholder="First name"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              className="w-1/3 p-3 border border-darkBlue rounded-md mb-4 mt-8"
+            />
 
-          {/* Unit Ending */}
-          <input
-            type="text"
-            placeholder="Unit ending (e.g. 204)"
-            value={unitEnding}
-            onChange={(e) => setUnitEnding(e.target.value)}
-            className="w-1/3 p-3 border border-darkBlue rounded-md mb-4"
-          />
+            {/* Last Name */}
+            <input
+              type="text"
+              placeholder="Last name"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              className="w-1/3 p-3 border border-darkBlue rounded-md mb-4"
+            />
 
-          {/* School (Optional) */}
-          <input
-            type="text"
-            placeholder="School (optional)"
-            value={school}
-            onChange={(e) => setSchool(e.target.value)}
-            className="w-1/3 p-3 border border-darkBlue rounded-md mb-4"
-          />
-
-          {/* Apartment/Dorm Select */}
-          <select
-            value={selectedPlace}
-            onChange={(e) => {
-              const value = e.target.value;
-              if (value === "add-new") {
-                router.push("/place/new");
-              } else {
-                setSelectedPlace(value);
-              }
-            }}
-            className="w-1/3 p-3 border border-darkBlue rounded-md mb-4"
-          >
-            <option value="">Select Apartment/Dorm</option>
-            {places.map((place) => (
-              <option key={place.places_id} value={place.places_id}>
-                {place.name}
-              </option>
-            ))}
-            <option value="add-new">+ Add New Place</option>
-          </select>
-
-          {/* Submit Button */}
-          <button
-            onClick={handleSubmit}
-            className="w-1/3 bg-darkbBue text-white font-semibold py-2 px-4 rounded-md hover:transition hover:bg-blue-800"
-          >
-            Add Roommate
-          </button>
-        </div>
+            {/* Submit */}
+            <button
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+              className="w-1/3 bg-darkBlue text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-800 transition disabled:opacity-50"
+            >
+              {isSubmitting ? "Adding..." : "Add Roommate"}
+            </button>
+          </div>
+        )}
       </TopFridge>
     </main>
   );
