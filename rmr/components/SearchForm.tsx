@@ -105,9 +105,9 @@ export default function SearchForm({
 
       <button
         onClick={onSearch}
-        className="bg-darkBlue text-white px-4 py-[0.375rem] rounded-lg font-bold font-lazyDog hover:bg-blue-800 hover:transition"
+        className="bg-darkBlue text-white w-10 h-10 rounded-lg hover:bg-blue-800 flex items-center justify-center transition"
       >
-        <FontAwesomeIcon icon={faMagnifyingGlass} className="w-5 h-5 mt-1" />
+        <FontAwesomeIcon icon={faMagnifyingGlass} className="w-5 h-5" />
       </button>
     </div>
   );

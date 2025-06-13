@@ -8,18 +8,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserCog } from "@fortawesome/free-solid-svg-icons";
 
 export default function AuthHeader() {
-  const { isSignedIn, user } = useUser();
+  const { isSignedIn, isLoaded, user } = useUser();
   const { signOut } = useClerk();
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [showAccountModal, setShowAccountModal] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const [newPassword, setNewPassword] = useState("");
   const [passwordSuccess, setPasswordSuccess] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [sessions, setSessions] = useState<any[]>([]);
-
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -41,7 +39,8 @@ export default function AuthHeader() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showDropdown, showAccountModal]);
-  
+
+  if (!isLoaded) return null;
 
   return (
     <div className="absolute top-0 right-0 mt-[3.5rem] mr-[6rem] z-100">
