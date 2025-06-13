@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: "Rate My Roommate",
   description: "A simple app to rate and manage roommate responsibilities",
   icons: {
-    icon: '/icon.png',
+    icon: "/icon.png",
   },
 };
 
@@ -41,10 +41,17 @@ export default function RootLayout({
       }}
     >
       <html lang="en">
+        <head>
+          <link
+            rel="preload"
+            href="/fonts/LazyDog.otf"
+            as="font"
+            type="font/otf"
+            crossOrigin="anonymous"
+          />
+        </head>
         <body style={{ fontFamily: "'Lazy Dog', sans-serif" }}>
-          <PostHogProvider>
-            {children}
-          </PostHogProvider>
+          <PostHogProvider>{children}</PostHogProvider>
         </body>
       </html>
     </ClerkProvider>
