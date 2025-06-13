@@ -21,13 +21,6 @@ export default function Home() {
   ]);
 
   const { isSignedIn } = useUser();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (isSignedIn) {
-      router.push("/search");
-    }
-  }, [isSignedIn]);
 
   const handleGoClick = (e: React.FormEvent) => {
     e.preventDefault(); // always prevent full form submit
@@ -50,7 +43,7 @@ export default function Home() {
     <main className="min-h-screen bg-[#315d8d] pl-[0.75rem] pr-[0.75rem]">
       {" "}
       {/* To Do List Section */}
-      <div className="relative z-20 flex justify-center w-full">
+      <div className="relative z-[2] flex justify-center w-full">
         <div className="w-full max-w-[500px] mt-[24em] absolute border-2 border-navy-blue rounded-lg p-6 pt-0 pb-[25vh] space-y-4 bg-[#fdfeff] shadow-lg">
           {/* Magnets with more natural highlights */}
           {/* Left pink circle */}
@@ -85,41 +78,53 @@ export default function Home() {
               className="text-3xl font-bold text-primary mt-7"
             />
             <div className="flex-1">
-              <label
-                htmlFor="signup"
-                className="text-5xl mt-5 block font-bold text-darkBlue"
-              >
-                {todoItems[0].label}
-              </label>
-
-              <form className="flex" onSubmit={handleGoClick}>
-                <Input
-                  placeholder="Enter your .edu email address"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="border-2 border-darkBlue rounded-md py-2 px-4"
-                />
-                <SignUpButton
-                  mode="modal"
-                  initialValues={{
-                    emailAddress: email,
-                  }}
+              {isSignedIn ? (
+                <button
+                  onClick={() => (window.location.href = "/search")}
+                  className="mt-5 w-full rounded-xl bg-[#e4f1ff] px-6 py-4 text-3xl font-lazyDog font-bold text-darkBlue shadow-md border-2 border-darkBlue border-r-8 border-b-8 hover:bg-[#f4f9ff] transition-all duration-200"
                 >
-                  <Button
-                    onClick={handleGoClick}
-                    className="ml-2 bg-darkBlue text-white rounded-md px-4"
-                    disabled={!email.endsWith(".edu")}
+                  SEARCH FOR ROOMMATES
+                </button>
+              ) : (
+                <>
+                  <label
+                    htmlFor="signup"
+                    className="text-5xl mt-5 block font-bold text-darkBlue"
                   >
-                    GO
-                  </Button>
-                </SignUpButton>
-                {showError && (
-                  <p className="text-red-600 text-sm ml-1">
-                    Please enter a valid <span className="underline">.edu</span>{" "}
-                    email address!
-                  </p>
-                )}
-              </form>
+                    {todoItems[0].label}
+                  </label>
+
+                  <form className="flex" onSubmit={handleGoClick}>
+                    <Input
+                      placeholder="Enter your .edu email address"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="border-2 border-darkBlue rounded-md py-2 px-4"
+                    />
+                    <SignUpButton
+                      mode="modal"
+                      initialValues={{
+                        emailAddress: email,
+                      }}
+                    >
+                      <Button
+                        onClick={handleGoClick}
+                        className="ml-2 bg-darkBlue text-white rounded-md px-4"
+                        disabled={!email.endsWith(".edu")}
+                      >
+                        GO
+                      </Button>
+                    </SignUpButton>
+                  </form>
+
+                  {showError && (
+                    <p className="text-red-600 text-sm ml-1">
+                      Please enter a valid{" "}
+                      <span className="underline">.edu</span> email address!
+                    </p>
+                  )}
+                </>
+              )}
             </div>
           </div>
 
@@ -155,11 +160,11 @@ export default function Home() {
         </div>
       </LandingTopFridge>
       <BottomFridge>
-        <div className="mt-[30vh] bg-[#fdfeff] rounded-[10px] shadow-md p-8 max-w-xl mx-auto text-left text-[#315d8d] italic">
+        <div className="mt-[30vh] bg-[#fdfeff] rounded-[10px] shadow-md p-8 max-w-xl mx-auto text-left text-[#315d8d]">
           <h2 className="text-6xl font-bold mb-4 text-center text-darkBlue">
             About RMR
           </h2>
-          <p className="text-md font-sans">
+          <p className="text-md font-sans italic">
             We’ve all had unpredictable roommates - and wished we knew more
             before moving in.
             <br />
