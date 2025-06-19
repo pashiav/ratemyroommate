@@ -7,7 +7,10 @@ export async function GET(req: Request) {
   const { userId } = await auth();
   if (!userId) {
     console.warn("Unauthorized access attempt");
-    return NextResponse.json({ error: "Unauthorized access attempt" }, { status: 401 });
+    return NextResponse.json(
+      { error: "Unauthorized access attempt" },
+      { status: 401 }
+    );
   }
 
   // Supabase client
@@ -32,17 +35,12 @@ export async function GET(req: Request) {
     if (location) {
       query = query.ilike("housing_name", `%${location}%`);
     }
-
   } else if (type === "housing") {
     query = supabase.from("housing_search_view").select("*");
 
     if (location) {
       query = query.ilike("housing_name", `%${location}%`);
     }
-    console.log("Searching housing with location:", location);
-    
-
-
   } else {
     return NextResponse.json([], { status: 200 });
   }
