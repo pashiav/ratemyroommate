@@ -36,13 +36,6 @@ export async function POST(req: NextRequest) {
           console.error("Supabase school lookup error:", schoolError);
           return new Response("Supabase school lookup failed", { status: 500 });
         }
-
-        if (school) {
-          school_id = school.school_id;
-          console.log(`✅ Found matching school: ${school_id}`);
-        } else {
-          console.log(`❌ No matching school found for domain: ${domain}`);
-        }
       }
 
       const { error } = await supabase.from("users").insert({

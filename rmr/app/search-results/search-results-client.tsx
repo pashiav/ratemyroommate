@@ -17,13 +17,24 @@ interface RoommateViewResult {
   recommendation_percentage: number | null;
 }
 
+interface HousingViewResult {
+  housing_id: string;
+  housing_name: string;
+  school_name: string;
+  is_verified: boolean;
+  latitude?: number;
+  longitude?: number;
+}
+
 export default function SearchResultsClient() {
   const searchParams = useSearchParams();
   const roommateName = searchParams.get("roommateName");
   const location = searchParams.get("location");
   const type = searchParams.get("type");
 
-  const [results, setResults] = useState<RoommateViewResult[]>([]);
+  const [results, setResults] = useState<
+    (RoommateViewResult | HousingViewResult)[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const { isSignedIn } = useUser();
 
@@ -49,6 +60,15 @@ export default function SearchResultsClient() {
 
     if (type) fetchResults();
   }, [type, roommateName, location]);
+
+  function isRoommate(item: RoommateViewResult | HousingViewResult): item is RoommateViewResult {
+  return "rm_id" in item && "full_name" in item;
+}
+
+function isHousing(item: RoommateViewResult | HousingViewResult): item is HousingViewResult {
+  return "housing_id" in item && "is_verified" in item;
+}
+
 
   return (
     <main className="min-h-screen bg-[#315d8d] pl-[0.75rem] pr-[0.75rem]">
@@ -80,7 +100,7 @@ export default function SearchResultsClient() {
                   key={i}
                   className="bg-gray-100 rounded-md shadow-sm overflow-hidden"
                 >
-                  {type === "roommate" && (
+                  {isRoommate(item) && type === "roommate" && (
                     <Link
                       href={`/roommate/${item.rm_id}`}
                       className="block p-4 hover:bg-gray-200 transition-colors"
@@ -156,6 +176,37 @@ export default function SearchResultsClient() {
                       </div>
                     </Link>
                   )}
+                  {isHousing(item) && type === "housing" && (
+                    <Link
+                      href={`/housing/${item.housing_id}`}
+                      className="block p-4 hover:bg-gray-200 transition-colors"
+                    >
+                      <div className="flex flex-col sm:flex-row justify-between gap-6 text-left">
+                        {/* Left side */}
+                        <div className="flex-1">
+                          <p className="font-semibold text-lg">
+                            {item.housing_name}
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            {item.school_name}
+                          </p>
+                        </div>
+
+                        {/* Right side */}
+                        <div className="w-full sm:w-48">
+                          {item.is_verified ? (
+                            <span className="text-green-600 font-bold">
+                              Verified
+                            </span>
+                          ) : (
+                            <span className="text-red-600 font-bold">
+                              Not Verified
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
@@ -163,10 +214,10 @@ export default function SearchResultsClient() {
             <div className="mt-6">
               <p className="text-gray-500 mb-4">No results found.</p>
               <Link
-                href={type === "roommate" ? "/roommate/new" : "/place/new"}
+                href={type === "roommate" ? "/roommate/new" : "/housing/new"}
                 className="inline-block bg-navy-blue text-lazyDog text-white px-6 py-2 rounded-md bg-darkBlue hover:bg-blue-800 hover:transition"
               >
-                Add a new {type === "roommate" ? "roommate" : "place"}
+                Add a new {type === "roommate" ? "roommate" : "housing"}
               </Link>
             </div>
           )}
