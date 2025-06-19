@@ -178,7 +178,7 @@ function isHousing(item: RoommateViewResult | HousingViewResult): item is Housin
                   )}
                   {isHousing(item) && type === "housing" && (
                     <Link
-                      href={`/place/${item.housing_id}`}
+                      href={`/housing/${item.housing_id}`}
                       className="block p-4 hover:bg-gray-200 transition-colors"
                     >
                       <div className="flex flex-col sm:flex-row justify-between gap-6 text-left">
@@ -214,10 +214,10 @@ function isHousing(item: RoommateViewResult | HousingViewResult): item is Housin
             <div className="mt-6">
               <p className="text-gray-500 mb-4">No results found.</p>
               <Link
-                href={type === "roommate" ? "/roommate/new" : "/place/new"}
+                href={type === "roommate" ? "/roommate/new" : "/housing/new"}
                 className="inline-block bg-navy-blue text-lazyDog text-white px-6 py-2 rounded-md bg-darkBlue hover:bg-blue-800 hover:transition"
               >
-                Add a new {type === "roommate" ? "roommate" : "place"}
+                Add a new {type === "roommate" ? "roommate" : "housing"}
               </Link>
             </div>
           )}
