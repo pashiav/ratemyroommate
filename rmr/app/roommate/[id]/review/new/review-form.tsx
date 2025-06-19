@@ -149,7 +149,8 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
       {successMessage && (
         <p className="text-green-600 mb-4">{successMessage}</p>
       )}
-      {/* Rating */}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Rating */}
       <div>
         <label className="block text-gray-700 text-lg mb-2">
           Rating
@@ -176,7 +177,29 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
           <span className="ml-2 self-center text-gray-600">{rating}/5</span>
         </div>
       </div>
-      <form onSubmit={handleSubmit} className="space-y-6">
+
+      <div>
+  <label className="block font-medium mb-1 items-center gap-1">
+    Would you recommend?
+    <InfoTip message="Would you live with this person again or recommend them to someone else?" />
+  </label>
+  <div className="flex gap-4">
+    <button
+      type="button"
+      className={`px-4 py-2 rounded-md ${wouldRecommend === true ? "bg-green-600 text-white" : "bg-gray-200"}`}
+      onClick={() => setWouldRecommend(true)}
+    >
+      Yes
+    </button>
+    <button
+      type="button"
+      className={`px-4 py-2 rounded-md ${wouldRecommend === false ? "bg-red-600 text-white" : "bg-gray-200"}`}
+      onClick={() => setWouldRecommend(false)}
+    >
+      No
+    </button>
+  </div>
+</div>
         <div className="grid grid-cols-2 gap-x-6 gap-y-6">
           {[
             {
@@ -381,7 +404,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
 
           <div>
             <label className="block font-medium mb-1 items-center gap-1">
-              Unit #...? (Optional)
+              Unit End #...? (Optional)
               <InfoTip message={"e.g. Unit #993C → C\ne.g. Unit #4381 → 1"} />
             </label>
             <input
