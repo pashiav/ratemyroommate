@@ -1,10 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-import { clerkClient } from '@clerk/clerk-sdk-node'; // ✅ Correct Clerk import for server-side use
+import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseServiceKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+const supabase = createClient(supabaseUrl, supabaseServiceKey, {
   auth: {
     autoRefreshToken: false,
     persistSession: false,
@@ -13,75 +12,98 @@ const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
 
 export async function POST(request: NextRequest) {
   try {
+    const body = await request.json();
+
     const {
+      reviewer_id,
+      rm_id,
+      housing_id,
       rating,
       would_recommend,
       has_pets,
       pet_friendly,
       years_lived,
       comments,
-      rm_id,
-      reviewer_id, // Clerk user ID (text)
-    } = await request.json();
+      unit_suffix,
+      noise_level,
+      cleanliness,
+      communication,
+      responsibility,
+      sleep_pattern,
+      guest_frequency,
+      study_compatibility,
+      pet_type,
+      pet_impact,
+    } = body;
 
-    if (!rm_id || typeof rating !== 'number' || !reviewer_id) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
+    // Validate required fields
+    if (
+      !reviewer_id ||
+      !rm_id ||
+      !housing_id ||
+      typeof rating !== "number" ||
+      typeof would_recommend !== "boolean" ||
+      typeof has_pets !== "boolean" ||
+      !years_lived ||
+      !comments ||
+      typeof noise_level !== "number" ||
+      typeof cleanliness !== "number" ||
+      typeof communication !== "number" ||
+      typeof responsibility !== "number" ||
+      !sleep_pattern ||
+      !guest_frequency ||
+      !study_compatibility
+    ) {
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    // ✅ Get user info from Clerk
-    const clerkUser = await clerkClient.users.getUser(reviewer_id);
-    const email = clerkUser.emailAddresses[0]?.emailAddress || null;
-    const name = clerkUser.firstName || '';
-    const school = clerkUser.publicMetadata?.school || null;
-    const living_place = clerkUser.publicMetadata?.living_place || null;
+    // Fetch school_id using your existing user-info API logic
+    const { data: userRow, error: userError } = await supabase
+      .from("users")
+      .select("school_id")
+      .eq("user_id", reviewer_id)
+      .maybeSingle();
 
-    // ✅ Upsert into Users table
-    const { error: userUpsertError } = await supabaseAdmin.from('Users').upsert({
-      user_id: reviewer_id,
-      email,
-      name,
-      school,
-      living_place,
-    });
-
-    if (userUpsertError) {
-      console.error('User upsert error:', userUpsertError);
-      return NextResponse.json(
-        { error: 'Failed to create or update user: ' + userUpsertError.message },
-        { status: 500 }
-      );
+    if (userError || !userRow?.school_id) {
+      console.error("Failed to fetch user's school_id:", userError);
+      return NextResponse.json({ error: "Could not resolve user's school ID" }, { status: 400 });
     }
 
-    // ✅ Insert review using RLS bypass function
-    const { data, error } = await supabaseAdmin
-      .rpc('insert_review_bypass_rls', {
-        p_rating: rating,
-        p_would_recommend: would_recommend,
-        p_has_pets: has_pets,
-        p_pet_friendly: pet_friendly,
-        p_years_lived: years_lived,
-        p_comments: comments,
-        p_rm_id: rm_id,
-        p_temp_reviewer_id: reviewer_id,
-      });
+    const school_id = userRow.school_id;
+
+    // Insert the review
+    const { data, error } = await supabase.from("reviews").insert([
+      {
+        rm_id,
+        school_id,
+        housing_id,
+        rating,
+        would_recommend,
+        has_pets,
+        pet_friendly,
+        years_lived,
+        comments,
+        unit_suffix,
+        noise_level,
+        cleanliness,
+        communication,
+        responsibility,
+        sleep_pattern,
+        guest_frequency,
+        study_compatibility,
+        pet_type,
+        pet_impact,
+      },
+    ]);
 
     if (error) {
-      console.error('RPC error:', error);
-      return NextResponse.json(
-        { error: 'Failed to submit review: ' + error.message },
-        { status: 500 }
-      );
+      console.error("Insert error:", error);
+      return NextResponse.json({ error: "Failed to submit review: " + error.message }, { status: 500 });
     }
 
-    return NextResponse.json({ success: true, review: data[0] }, { status: 201 });
+    return NextResponse.json({ success: true, review: data?.[0] }, { status: 201 });
   } catch (error) {
-    console.error('Unexpected error:', error);
-    return NextResponse.json(
-      { error: 'An unexpected error occurred' },
-      { status: 500 }
-    );
+    console.error("Unexpected error:", error);
+    return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
   }
 }

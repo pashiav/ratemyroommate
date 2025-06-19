@@ -9,7 +9,7 @@ export default async function NewReviewPage({ params }: { params: Promise<{ id: 
     <main className="min-h-screen bg-[#315d8d] pl-[0.75rem] pr-[0.75rem] font-lazyDog">
       <TopFridge showSearchBar={true}>
         <AuthHeader />
-        <div className="mt-[8rem]">
+        <div className="mt-[7rem]">
         <ReviewForm roommate_id={id} />
         </div>
       </TopFridge>
