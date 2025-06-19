@@ -85,3 +85,36 @@
   font-style: normal;
   font-display: swap;
 }
+
+input[type="range"].slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 0.75rem;
+  background-color: #e5e7eb;
+  border-radius: 9999px;
+  outline: none;
+}
+
+input[type="range"].slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 1.5rem;
+  width: 1.5rem;
+  background-color: #e2a3a4;
+  border-radius: 9999px;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 0 0 2px #e2a3a4;
+  margin-top: 0rem;
+}
+
+input[type="range"].slider::-moz-range-thumb {
+  height: 1.5rem;
+  width: 1.5rem;
+  background-color: #e2a3a4;
+  border-radius: 9999px;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 0 0 2px #e2a3a4;
+}
