@@ -61,6 +61,15 @@ export default function SearchResultsClient() {
     if (type) fetchResults();
   }, [type, roommateName, location]);
 
+  function isRoommate(item: RoommateViewResult | HousingViewResult): item is RoommateViewResult {
+  return "rm_id" in item && "full_name" in item;
+}
+
+function isHousing(item: RoommateViewResult | HousingViewResult): item is HousingViewResult {
+  return "housing_id" in item && "is_verified" in item;
+}
+
+
   return (
     <main className="min-h-screen bg-[#315d8d] pl-[0.75rem] pr-[0.75rem]">
       <TopFridge showSearchBar={true}>
@@ -91,7 +100,7 @@ export default function SearchResultsClient() {
                   key={i}
                   className="bg-gray-100 rounded-md shadow-sm overflow-hidden"
                 >
-                  {type === "roommate" && (
+                  {isRoommate(item) && type === "roommate" && (
                     <Link
                       href={`/roommate/${item.rm_id}`}
                       className="block p-4 hover:bg-gray-200 transition-colors"
@@ -167,7 +176,7 @@ export default function SearchResultsClient() {
                       </div>
                     </Link>
                   )}
-                  {type === "housing" && (
+                  {isHousing(item) && type === "housing" && (
                     <Link
                       href={`/place/${item.housing_id}`}
                       className="block p-4 hover:bg-gray-200 transition-colors"
