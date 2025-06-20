@@ -35,33 +35,38 @@ export async function GET(
   }
 
   // Get their reviews
+  const { searchParams } = new URL(request.url);
+  const housing_id = searchParams.get("housing_id");
+  const unit_suffix = searchParams.get("unit_suffix");
+
   const { data: reviews, error: reviewsError } = await supabase
     .from("reviews")
     .select(
       `
-      rv_id,
-      rating,
-      would_recommend,
-      has_pets,
-      pet_friendly,
-      years_lived,
-      comments,
-      created_at,
-      unit_suffix,
-      noise_level,
-      cleanliness,
-      communication,
-      responsibility,
-      sleep_pattern,
-      guest_frequency,
-      study_compatibility,
-      pet_type,
-      pet_impact,
-      housing_id
-    )
-    `
+    rv_id,
+    rating,
+    would_recommend,
+    has_pets,
+    pet_friendly,
+    years_lived,
+    comments,
+    created_at,
+    unit_suffix,
+    noise_level,
+    cleanliness,
+    communication,
+    responsibility,
+    sleep_pattern,
+    guest_frequency,
+    study_compatibility,
+    pet_type,
+    pet_impact,
+    housing_id
+  `
     )
     .eq("rm_id", id)
+    .eq("housing_id", housing_id)
+    .eq("unit_suffix", unit_suffix)
     .eq("is_deleted", false)
     .order("created_at", { ascending: false });
 

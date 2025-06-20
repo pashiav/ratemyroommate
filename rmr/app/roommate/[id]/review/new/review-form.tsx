@@ -98,7 +98,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
           rm_id: roommate_id,
           reviewer_id: userId,
           housing_id: housingId,
-          unit_suffix: unitSuffix || null,
+          unit_suffix: unitSuffix,
           noise_level: noiseLevel,
           cleanliness: cleanliness,
           communication: communication,
@@ -404,12 +404,13 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
 
           <div>
             <label className="block font-medium mb-1 items-center gap-1">
-              Unit End #...? (Optional)
+              Unit End #...?
               <InfoTip message={"e.g. Unit #993C → C\ne.g. Unit #4381 → 1"} />
             </label>
             <input
               type="text"
               value={unitSuffix}
+              required
               onChange={(e) => {
                 const sanitized = e.target.value
                   .toLowerCase()
