@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useAuth } from "@clerk/nextjs";
 import Link from "next/link";
 import TopFridge from "@/components/TopFridge";
@@ -49,6 +49,17 @@ export default function RoommateDetails({ id }: { id: string }) {
     latitude: number;
     longitude: number;
   } | null>(null);
+  const reviewsRef = useRef<HTMLDivElement>(null);
+  const [expandedReviews, setExpandedReviews] = useState<
+    Record<string, boolean>
+  >({});
+
+  const toggleExpanded = (rv_id: string) => {
+    setExpandedReviews((prev) => ({
+      ...prev,
+      [rv_id]: !prev[rv_id],
+    }));
+  };
 
   useEffect(() => {
     async function fetchRoommate() {
@@ -240,11 +251,24 @@ export default function RoommateDetails({ id }: { id: string }) {
                     {/* right side: bars and text */}
                     <p className="text-[1.25rem] text-lightBlue">
                       Based on{" "}
-                      <a href="#" className="underline">
-                        {roommate.reviews.length}
-                      </a>{" "}
-                      review
-                      {roommate.reviews.length !== 1 ? "s" : ""}
+                      <a
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (reviewsRef.current) {
+                            const offset = -80; // adjust this value as needed
+                            const y =
+                              reviewsRef.current.getBoundingClientRect().top +
+                              window.scrollY +
+                              offset;
+                            window.scrollTo({ top: y, behavior: "smooth" });
+                          }
+                        }}
+                        className="underline cursor-pointer"
+                      >
+                        {roommate.reviews.length} review
+                        {roommate.reviews.length !== 1 ? "s" : ""}
+                      </a>
                     </p>
                     {[5, 4, 3, 2, 1].map((star) => {
                       const count = roommate.reviews.filter(
@@ -319,7 +343,10 @@ export default function RoommateDetails({ id }: { id: string }) {
       </TopFridge>
 
       <BottomFridge>
-        <div className="max-w-3xl mx-auto w-full text-lazyDog space-y-6">
+        <div
+          ref={reviewsRef}
+          className="max-w-3xl mx-auto w-full text-lazyDog space-y-6"
+        >
           <h2 className="text-[2rem] text-darkBlue font-bold">
             Reviews ({roommate?.reviews.length || 0})
           </h2>
@@ -331,74 +358,87 @@ export default function RoommateDetails({ id }: { id: string }) {
               Write a Review
             </Link>
           )}
-        {roommate?.reviews.map((review) => (
-          <div
-            key={review.rv_id}
-            className="bg-[#f9f9f9] border border-gray-300 rounded-xl px-6 py-4 mb-6 shadow-md"
-          >
-            <div className="flex justify-between text-sm text-gray-500 mb-2">
-              <span>Rating: <strong>{review.rating}★</strong></span>
-              <span>
-                {new Date(review.created_at).toLocaleDateString()}
-              </span>
-            </div>
+          {roommate?.reviews.map((review) => (
+            <div
+              key={review.rv_id}
+              className="bg-[#f9f9f9] border border-gray-300 rounded-xl px-6 py-4 mb-6 shadow-md"
+            >
+              <div className="flex justify-between text-sm text-gray-500 mb-2">
+                <span>
+                  Rating: <strong>{review.rating}★</strong>
+                </span>
+                <span>{new Date(review.created_at).toLocaleDateString()}</span>
+              </div>
 
-
-            <div className="grid grid-cols-2 gap-2 text-sm text-gray-800">
-              <p>
-                <strong>Would Recommend:</strong>{" "}
-                {review.would_recommend ? "Yes" : "No"}
-              </p>
-              <p>
-                <strong>Has Pets:</strong> {review.has_pets ? "Yes" : "No"}
-              </p>
-              {review.has_pets && (
-                <>
-                  <p>
-                    <strong>Pet Friendly:</strong> {review.pet_friendly}
-                  </p>
-                  <p>
-                    <strong>Pet Type:</strong> {review.pet_type ?? "N/A"}
-                  </p>
-                  <p>
-                    <strong>Pet Impact:</strong> {review.pet_impact ?? "N/A"}
-                  </p>
-                </>
-              )}
-              <p>
-                <strong>Years Lived:</strong> {review.years_lived}
-              </p>
-              <p>
-                <strong>Cleanliness:</strong> {review.cleanliness}/5
-              </p>
-              <p>
-                <strong>Communication:</strong> {review.communication}/5
-              </p>
-              <p>
-                <strong>Responsibility:</strong> {review.responsibility}/5
-              </p>
-              <p>
-                <strong>Noise Level:</strong> {review.noise_level}/5
-              </p>
-              <p>
-                <strong>Sleep Pattern:</strong> {review.sleep_pattern}
-              </p>
-              <p>
-                <strong>Guest Frequency:</strong> {review.guest_frequency}
-              </p>
-              <p>
-                <strong>Study Compatibility:</strong>{" "}
-                {review.study_compatibility}
-              </p>
-              {review.unit_suffix && (
+              <div className="grid grid-cols-2 gap-2 text-sm text-gray-800">
                 <p>
-                  <strong>Unit #:</strong> {review.unit_suffix}
+                  <strong>Would Recommend:</strong>{" "}
+                  {review.would_recommend ? "Yes" : "No"}
                 </p>
-              )}
+                <p>
+                  <strong>Has Pets:</strong> {review.has_pets ? "Yes" : "No"}
+                </p>
+                {review.has_pets && (
+                  <>
+                    <p>
+                      <strong>Pet Friendly:</strong> {review.pet_friendly}
+                    </p>
+                    <p>
+                      <strong>Pet Type:</strong> {review.pet_type ?? "N/A"}
+                    </p>
+                    <p>
+                      <strong>Pet Impact:</strong> {review.pet_impact ?? "N/A"}
+                    </p>
+                  </>
+                )}
+                <p>
+                  <strong>Years Lived:</strong> {review.years_lived}
+                </p>
+                <p>
+                  <strong>Cleanliness:</strong> {review.cleanliness}/5
+                </p>
+                <p>
+                  <strong>Communication:</strong> {review.communication}/5
+                </p>
+                <p>
+                  <strong>Responsibility:</strong> {review.responsibility}/5
+                </p>
+                <p>
+                  <strong>Noise Level:</strong> {review.noise_level}/5
+                </p>
+                <p>
+                  <strong>Sleep Pattern:</strong> {review.sleep_pattern}
+                </p>
+                <p>
+                  <strong>Guest Frequency:</strong> {review.guest_frequency}
+                </p>
+                <p>
+                  <strong>Study Compatibility:</strong>{" "}
+                  {review.study_compatibility}
+                </p>
+                {review.unit_suffix && (
+                  <p>
+                    <strong>Unit #:</strong> {review.unit_suffix}
+                  </p>
+                )}
+              </div>
+              <div className="mb-2 mt-4 text-lightBlue">
+                "
+                {expandedReviews[review.rv_id] || review.comments.length <= 150
+                  ? review.comments
+                  : `${review.comments.slice(0, 225)}...`}
+                "
+                {review.comments.length > 150 && (
+                  <button
+                    onClick={() => toggleExpanded(review.rv_id)}
+                    className="ml-2 text-darkBlue underline font-semibold"
+                  >
+                    {expandedReviews[review.rv_id] ? "See less" : "See more"}
+                  </button>
+                )}
+              </div>
             </div>
-            <p className="mb-2 mt-4 text-lightBlue">"{review.comments}"</p>
-          </div>
-        ))}
+          ))}
         </div>
       </BottomFridge>
     </main>
