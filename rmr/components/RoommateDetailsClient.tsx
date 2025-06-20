@@ -1,10 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useAuth } from "@clerk/nextjs";
 import Link from "next/link";
 import TopFridge from "@/components/TopFridge";
+import BottomFridge from "@/components/BottomFridge";
 import AuthHeader from "@/components/AuthHeader";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHouse } from "@fortawesome/free-solid-svg-icons";
 
 interface Review {
   rv_id: string;
@@ -13,7 +16,7 @@ interface Review {
   created_at: string;
   would_recommend: boolean;
   has_pets: boolean;
-  pet_friendly: boolean;
+  pet_friendly: boolean | string | null;
   years_lived: string;
   noise_level: number;
   cleanliness: number;
@@ -24,9 +27,8 @@ interface Review {
   study_compatibility: string;
   pet_type: string | null;
   pet_impact: string | null;
-  housing: {
-    housing_name: string;
-  };
+  unit_suffix: string | null;
+  housing_id: string | null;
 }
 
 interface Roommate {
@@ -40,6 +42,24 @@ export default function RoommateDetails({ id }: { id: string }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { isSignedIn, getToken } = useAuth();
+  const [housingInfo, setHousingInfo] = useState<{
+    housing_name: string;
+    school_name: string;
+    is_verified: boolean;
+    latitude: number;
+    longitude: number;
+  } | null>(null);
+  const reviewsRef = useRef<HTMLDivElement>(null);
+  const [expandedReviews, setExpandedReviews] = useState<
+    Record<string, boolean>
+  >({});
+
+  const toggleExpanded = (rv_id: string) => {
+    setExpandedReviews((prev) => ({
+      ...prev,
+      [rv_id]: !prev[rv_id],
+    }));
+  };
 
   useEffect(() => {
     async function fetchRoommate() {
@@ -63,6 +83,17 @@ export default function RoommateDetails({ id }: { id: string }) {
         });
 
         const json = await res.json();
+        if (json.roommate?.reviews?.[0]?.housing_id) {
+          const housingId = json.roommate.reviews[0].housing_id;
+          const housingRes = await fetch(`/api/housing/${housingId}`);
+          const housingJson = await housingRes.json();
+          if (housingRes.ok) {
+            setHousingInfo(housingJson);
+          } else {
+            console.warn("Failed to load housing info", housingJson.error);
+          }
+        }
+
         if (!res.ok) throw new Error(json.error || "Unknown error");
 
         setRoommate(json.roommate);
@@ -77,8 +108,45 @@ export default function RoommateDetails({ id }: { id: string }) {
   }, [id, isSignedIn, getToken]);
 
   const averageRating = roommate?.reviews?.length
-    ? roommate.reviews.reduce((sum, r) => sum + r.rating, 0) / roommate.reviews.length
+    ? roommate.reviews.reduce((sum, r) => sum + r.rating, 0) /
+      roommate.reviews.length
     : 0;
+
+  function TraitBar({ label, value }: { label: string; value: number }) {
+    return (
+      <div className="flex items-center gap-2 text-[#6d4d55]">
+        <span className="w-[7rem]">{label}</span>
+        <div className="flex-1 bg-[#ebebeb] h-5 rounded-full">
+          <div
+            className="h-5 bg-[#c4adb9] rounded-full"
+            style={{ width: `${(value / 5) * 100}%` }}
+          />
+        </div>
+        <span>{value.toFixed(1)}</span>
+      </div>
+    );
+  }
+
+  function Tag({ text, color }: { text: string; color: string }) {
+    const bg =
+      {
+        red: "bg-[#ff5757]",
+        green: "bg-[#7ed957]",
+      }[color] || "bg-gray-200";
+
+    return (
+      <span className={`text-sm text-white px-3 py-2 rounded font-bold ${bg}`}>
+        {text}
+      </span>
+    );
+  }
+
+  const avgTrait = (key: keyof Review): number => {
+    return roommate?.reviews?.length
+      ? roommate.reviews.reduce((sum, r) => sum + Number(r[key] ?? 0), 0) /
+          roommate.reviews.length
+      : 0;
+  };
 
   return (
     <main className="min-h-screen bg-[#315d8d] pl-[0.75rem] pr-[0.75rem] font-lazyDog">
@@ -89,92 +157,290 @@ export default function RoommateDetails({ id }: { id: string }) {
           {loading ? (
             <p>Loading roommate details...</p>
           ) : error ? (
-            <div className="bg-white rounded-3xl shadow-lg p-8 text-center">
+            <div className="bg-[#fafafa] rounded-3xl shadow-lg p-8 text-center">
               <p className="text-red-500 mb-4">{error}</p>
-              <Link href="/" className="inline-block bg-navy-blue text-white px-6 py-2 rounded-md hover:bg-blue-700">
+              <Link
+                href="/"
+                className="inline-block bg-navy-blue text-white px-6 py-2 rounded-md hover:bg-blue-700"
+              >
                 Back to Search
               </Link>
             </div>
           ) : roommate ? (
-            <div className="bg-white rounded-3xl shadow-lg p-8">
-              <h1 className="text-4xl font-bold text-gray-800">{roommate.full_name}</h1>
-
-              {roommate.reviews[0]?.housing?.housing_name && (
-                <p className="text-lg text-gray-600 mt-1">
-                  <span className="font-bold">Housing:</span> {roommate.reviews[0].housing.housing_name}
+            <div className="flex flex-col items-center -mt-6">
+              <p className="text-[.8rem] italic text-center text-gray-500 -mt-4 mb-2 font-sans">
+                Reviews are grouped by name and living location. If this seems
+                like multiple people,{" "}
+                <a href="#" className="underline">
+                  let us know
+                </a>
+                .
+              </p>
+              <div className="w-[50rem] bg-white rounded-[2rem] shadow-xl pt-4 pr-16 pl-16 pb-16 border-[0.90rem] border-darkBlue text-darkBlue font-lazyDog">
+                <h1 className="text-[3.25rem] text-center">
+                  {roommate.full_name}
+                </h1>
+                <p className="text-center text-md -mt-2 pb-2 text-gray-600">
+                  <FontAwesomeIcon icon={faHouse} className="pr-2" />
+                  {housingInfo?.housing_name ?? "Unknown Housing"}
+                  {roommate.reviews[0]?.unit_suffix &&
+                    ` — Unit #...${roommate.reviews[0].unit_suffix}`}
+                  {" — 2025"}
                 </p>
-              )}
 
-              <div className="mt-4 mb-8">
-                <div className="flex items-center">
-                  <div className="flex">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <svg
-                        key={star}
-                        className={`w-6 h-6 ${star <= Math.round(averageRating) ? "text-yellow-400" : "text-gray-300"}`}
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                      </svg>
-                    ))}
-                  </div>
-                  <span className="ml-2 text-xl font-medium text-gray-700">
-                    {averageRating.toFixed(1)}
-                  </span>
-                  <span className="ml-2 text-sm text-gray-500">
-                    ({roommate.reviews.length} review{roommate.reviews.length !== 1 ? "s" : ""})
-                  </span>
-                </div>
-
-                <Link
-                  href={`/roommate/${id}/review/new`}
-                  className="inline-block bg-darkBlue text-white px-6 py-2 mt-4 rounded-md hover:bg-blue-800"
-                >
-                  Leave a Review
-                </Link>
-              </div>
-
-              <h2 className="text-2xl font-bold mb-4 border-b pb-2">Reviews</h2>
-
-              {roommate.reviews.length > 0 ? (
-                <div className="space-y-6">
-                  {roommate.reviews.map((review) => (
-                    <div key={review.rv_id} className="border-b pb-4">
-                      <div className="flex justify-between text-sm text-gray-600 mb-1">
-                        <span>{new Date(review.created_at).toLocaleDateString()}</span>
-                        <span>{review.rating}/5</span>
+                <div className="flex flex-col md:flex-row my-6 w-full">
+                  <div className="w-full md:w-1/2 flex flex-col items-center justify-center">
+                    {/* left side: averageRating and stars */}
+                    <div className="text-center">
+                      <div className="text-[4.5rem] leading-none">
+                        {averageRating.toFixed(2)}
+                        <span className="text-gray-400 text-[1.75rem] relative -top-8 ml-1 tracking-[.25rem]">
+                          /5
+                        </span>
                       </div>
-                      <p className="text-gray-700 mb-2">{review.comments}</p>
-                      <div className="flex flex-wrap gap-2 text-xs">
-                        {review.would_recommend && <Badge text="Would recommend" color="green" />}
-                        {review.has_pets && <Badge text="Has pets" color="blue" />}
-                        {review.pet_friendly && <Badge text="Pet friendly" color="purple" />}
-                        {review.years_lived && <Badge text={`Lived ${review.years_lived} years`} color="gray" />}
-                        {review.sleep_pattern && <Badge text={`Sleeps: ${review.sleep_pattern}`} color="gray" />}
-                        {review.guest_frequency && <Badge text={`Guests: ${review.guest_frequency}`} color="gray" />}
-                        {review.study_compatibility && <Badge text={`Study: ${review.study_compatibility}`} color="gray" />}
-                        {review.pet_type && <Badge text={`Pet: ${review.pet_type}`} color="gray" />}
-                        {review.pet_impact && <Badge text={`Impact: ${review.pet_impact}`} color="gray" />}
+                      <div className="flex justify-center mb-2">
+                        {[1, 2, 3, 4, 5].map((star) => {
+                          const full = star <= Math.floor(averageRating);
+                          const half =
+                            !full &&
+                            star - 1 < averageRating &&
+                            averageRating < star;
+
+                          return (
+                            <div key={star} className="relative w-10 h-10">
+                              {/* Empty star in background */}
+                              <svg
+                                className="absolute top-0 left-0 w-10 h-10 text-gray-300"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                              </svg>
+
+                              {/* Full or Half star in foreground */}
+                              {full && (
+                                <svg
+                                  className="absolute top-0 left-0 w-10 h-10 text-gold"
+                                  fill="currentColor"
+                                  viewBox="0 0 20 20"
+                                >
+                                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
+                              )}
+
+                              {half && (
+                                <svg
+                                  className="absolute top-0 left-0 w-10 h-10 text-gold overflow-hidden"
+                                  fill="currentColor"
+                                  viewBox="0 0 20 20"
+                                  style={{ clipPath: "inset(0 50% 0 0)" }}
+                                >
+                                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
+                              )}
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
-                  ))}
+                  </div>
+
+                  <div className="w-[1px] bg-[#70768d] ml-8" />
+
+                  <div className="w-full ml-8 md:w-1/2 px-4">
+                    {/* right side: bars and text */}
+                    <p className="text-[1.25rem] text-lightBlue">
+                      Based on{" "}
+                      <a
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (reviewsRef.current) {
+                            const offset = -80; // adjust this value as needed
+                            const y =
+                              reviewsRef.current.getBoundingClientRect().top +
+                              window.scrollY +
+                              offset;
+                            window.scrollTo({ top: y, behavior: "smooth" });
+                          }
+                        }}
+                        className="underline cursor-pointer"
+                      >
+                        {roommate.reviews.length} review
+                        {roommate.reviews.length !== 1 ? "s" : ""}
+                      </a>
+                    </p>
+                    {[5, 4, 3, 2, 1].map((star) => {
+                      const count = roommate.reviews.filter(
+                        (r) => r.rating === star
+                      ).length;
+                      return (
+                        <div key={star} className="flex items-center gap-2">
+                          <span className="w-6">
+                            {star}
+                            <span className="text-[.85rem] relative -top-[0.1rem]">
+                              ★
+                            </span>
+                          </span>
+                          <div className="h-5 bg-lightGray rounded-full w-2/3 border-darkBlue border-2">
+                            <div
+                              className="h-4 bg-[#c1ccd8] rounded-full"
+                              style={{
+                                width: `${(count / roommate.reviews.length) * 100}%`,
+                              }}
+                            />
+                          </div>
+                          <span className="text-[1rem]">{count}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-              ) : (
-                <p className="text-gray-500 text-center mt-8">No reviews yet.</p>
-              )}
+
+                <hr className="mt-[1rem] border-t border-[#70768d]" />
+
+                <div className="flex flex-col md:flex-row w-full mt-6 gap-6">
+                  {/* Left: Trait Bars */}
+                  <div className="w-full md:w-1/2 flex flex-col justify-center">
+                    {/* Trait Bars */}
+                    <div className="grid grid-cols-1 gap-2 text-sm mt-[1rem] mb-8">
+                      <TraitBar
+                        label="Cleanliness"
+                        value={avgTrait("cleanliness")}
+                      />
+                      <TraitBar
+                        label="Communication"
+                        value={avgTrait("communication")}
+                      />
+                      <TraitBar
+                        label="Responsibility"
+                        value={avgTrait("responsibility")}
+                      />
+                      <TraitBar
+                        label="Noise-Level"
+                        value={avgTrait("noise_level")}
+                      />
+                    </div>
+                  </div>
+                  {/* Divider */}
+                  <div className="hidden md:block w-[1px] bg-[#70768d] mx-4" />
+                  {/* Right: Tags and Aliases */}
+                  <div className="w-full md:w-1/2 flex flex-col justify-center">
+                    <div className="flex flex-col gap-1 mb-4">
+                      <p className="text-[1.5rem] text-lightBlue">Tags:</p>
+                      {/* Tags */}
+                      <div className="flex gap-2 flex-wrap mt-2 mb-4">
+                        <Tag text="PETS" color="red" />
+                        <Tag text="PET-FRIENDLY" color="green" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           ) : null}
         </div>
       </TopFridge>
-    </main>
-  );
-}
 
-function Badge({ text, color }: { text: string; color: string }) {
-  return (
-    <span className={`bg-${color}-100 text-${color}-800 font-medium px-2 py-0.5 rounded`}>
-      {text}
-    </span>
+      <BottomFridge>
+        <div
+          ref={reviewsRef}
+          className="max-w-3xl mx-auto w-full text-lazyDog space-y-6"
+        >
+          <h2 className="text-[2rem] text-darkBlue font-bold">
+            Reviews ({roommate?.reviews.length || 0})
+          </h2>
+          {isSignedIn && (
+            <Link
+              href={`/roommate/${id}/review/new`}
+              className="bg-lightBlue text-white px-4 py-2 rounded-md hover:bg-blue-800 transition-colors border-r-4 border-b-4 border-darkBlue"
+            >
+              Write a Review
+            </Link>
+          )}
+          {roommate?.reviews.map((review) => (
+            <div
+              key={review.rv_id}
+              className="bg-[#f9f9f9] border border-gray-300 rounded-xl px-6 py-4 mb-6 shadow-md"
+            >
+              <div className="flex justify-between text-sm text-gray-500 mb-2">
+                <span>
+                  Rating: <strong>{review.rating}★</strong>
+                </span>
+                <span>{new Date(review.created_at).toLocaleDateString()}</span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 text-sm text-gray-800">
+                <p>
+                  <strong>Would Recommend:</strong>{" "}
+                  {review.would_recommend ? "Yes" : "No"}
+                </p>
+                <p>
+                  <strong>Has Pets:</strong> {review.has_pets ? "Yes" : "No"}
+                </p>
+                {review.has_pets && (
+                  <>
+                    <p>
+                      <strong>Pet Friendly:</strong> {review.pet_friendly}
+                    </p>
+                    <p>
+                      <strong>Pet Type:</strong> {review.pet_type ?? "N/A"}
+                    </p>
+                    <p>
+                      <strong>Pet Impact:</strong> {review.pet_impact ?? "N/A"}
+                    </p>
+                  </>
+                )}
+                <p>
+                  <strong>Years Lived:</strong> {review.years_lived}
+                </p>
+                <p>
+                  <strong>Cleanliness:</strong> {review.cleanliness}/5
+                </p>
+                <p>
+                  <strong>Communication:</strong> {review.communication}/5
+                </p>
+                <p>
+                  <strong>Responsibility:</strong> {review.responsibility}/5
+                </p>
+                <p>
+                  <strong>Noise Level:</strong> {review.noise_level}/5
+                </p>
+                <p>
+                  <strong>Sleep Pattern:</strong> {review.sleep_pattern}
+                </p>
+                <p>
+                  <strong>Guest Frequency:</strong> {review.guest_frequency}
+                </p>
+                <p>
+                  <strong>Study Compatibility:</strong>{" "}
+                  {review.study_compatibility}
+                </p>
+                {review.unit_suffix && (
+                  <p>
+                    <strong>Unit #:</strong> {review.unit_suffix}
+                  </p>
+                )}
+              </div>
+              <div className="mb-2 mt-4 text-lightBlue">
+                "
+                {expandedReviews[review.rv_id] || review.comments.length <= 150
+                  ? review.comments
+                  : `${review.comments.slice(0, 225)}...`}
+                "
+                {review.comments.length > 150 && (
+                  <button
+                    onClick={() => toggleExpanded(review.rv_id)}
+                    className="ml-2 text-darkBlue underline font-semibold"
+                  >
+                    {expandedReviews[review.rv_id] ? "See less" : "See more"}
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </BottomFridge>
+    </main>
   );
 }

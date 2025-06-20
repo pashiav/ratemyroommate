@@ -20,7 +20,7 @@ const config = {
     extend: {
       fontFamily: {
         lazyDog: ['Lazy Dog', 'sans-serif'],
-        sans: ["IBM Plex Sans", "sans-serif"],
+        sans: ["Inter", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -30,7 +30,9 @@ const config = {
         foreground: "hsl(var(--foreground))",
         rosePink: '#e2a3a4',
         darkBlue: '#123964',
+        lightBlue: '#315d8d',
         lightGray: '#f5f5f5',
+        gold: '#ffac33',
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
