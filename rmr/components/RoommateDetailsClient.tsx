@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import Link from "next/link";
 import TopFridge from "@/components/TopFridge";
+import BottomFridge from "@/components/BottomFridge";
 import AuthHeader from "@/components/AuthHeader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHouse } from "@fortawesome/free-solid-svg-icons";
@@ -275,59 +276,131 @@ export default function RoommateDetails({ id }: { id: string }) {
                 <hr className="mt-[1rem] border-t border-[#70768d]" />
 
                 <div className="flex flex-col md:flex-row w-full mt-6 gap-6">
-  {/* Left: Trait Bars */}
-  <div className="w-full md:w-1/2 flex flex-col justify-center">
-                  {/* Trait Bars */}
-                  <div className="grid grid-cols-1 gap-2 text-sm mt-[1rem] mb-8">
-                    <TraitBar
-                      label="Cleanliness"
-                      value={avgTrait("cleanliness")}
-                    />
-                    <TraitBar
-                      label="Communication"
-                      value={avgTrait("communication")}
-                    />
-                    <TraitBar
-                      label="Responsibility"
-                      value={avgTrait("responsibility")}
-                    />
-                    <TraitBar
-                      label="Noise-Level"
-                      value={avgTrait("noise_level")}
-                    />
-                  </div>
+                  {/* Left: Trait Bars */}
+                  <div className="w-full md:w-1/2 flex flex-col justify-center">
+                    {/* Trait Bars */}
+                    <div className="grid grid-cols-1 gap-2 text-sm mt-[1rem] mb-8">
+                      <TraitBar
+                        label="Cleanliness"
+                        value={avgTrait("cleanliness")}
+                      />
+                      <TraitBar
+                        label="Communication"
+                        value={avgTrait("communication")}
+                      />
+                      <TraitBar
+                        label="Responsibility"
+                        value={avgTrait("responsibility")}
+                      />
+                      <TraitBar
+                        label="Noise-Level"
+                        value={avgTrait("noise_level")}
+                      />
+                    </div>
                   </div>
                   {/* Divider */}
                   <div className="hidden md:block w-[1px] bg-[#70768d] mx-4" />
                   {/* Right: Tags and Aliases */}
                   <div className="w-full md:w-1/2 flex flex-col justify-center">
                     <div className="flex flex-col gap-1 mb-4">
-  <p className="text-[1.5rem] text-lightBlue">Tags:</p>
-  {/* Tags */}
-  <div className="flex gap-2 flex-wrap mt-2 mb-4">
-    <Tag text="PETS" color="red" />
-    <Tag text="PET-FRIENDLY" color="green" />
-  </div>
-</div>
+                      <p className="text-[1.5rem] text-lightBlue">Tags:</p>
+                      {/* Tags */}
+                      <div className="flex gap-2 flex-wrap mt-2 mb-4">
+                        <Tag text="PETS" color="red" />
+                        <Tag text="PET-FRIENDLY" color="green" />
                       </div>
                     </div>
                   </div>
                 </div>
-                
-              
+              </div>
+            </div>
           ) : null}
         </div>
       </TopFridge>
-    </main>
-  );
-}
 
-function Badge({ text, color }: { text: string; color: string }) {
-  return (
-    <span
-      className={`bg-${color}-100 text-${color}-800 font-medium px-2 py-0.5 rounded`}
-    >
-      {text}
-    </span>
+      <BottomFridge>
+        <div className="max-w-3xl mx-auto w-full text-lazyDog space-y-6">
+          <h2 className="text-[2rem] text-darkBlue font-bold">
+            Reviews ({roommate?.reviews.length || 0})
+          </h2>
+          {isSignedIn && (
+            <Link
+              href={`/roommate/${id}/review/new`}
+              className="bg-lightBlue text-white px-4 py-2 rounded-md hover:bg-blue-800 transition-colors border-r-4 border-b-4 border-darkBlue"
+            >
+              Write a Review
+            </Link>
+          )}
+        {roommate?.reviews.map((review) => (
+          <div
+            key={review.rv_id}
+            className="bg-[#f9f9f9] border border-gray-300 rounded-xl px-6 py-4 mb-6 shadow-md"
+          >
+            <div className="flex justify-between text-sm text-gray-500 mb-2">
+              <span>Rating: <strong>{review.rating}★</strong></span>
+              <span>
+                {new Date(review.created_at).toLocaleDateString()}
+              </span>
+            </div>
+
+
+            <div className="grid grid-cols-2 gap-2 text-sm text-gray-800">
+              <p>
+                <strong>Would Recommend:</strong>{" "}
+                {review.would_recommend ? "Yes" : "No"}
+              </p>
+              <p>
+                <strong>Has Pets:</strong> {review.has_pets ? "Yes" : "No"}
+              </p>
+              {review.has_pets && (
+                <>
+                  <p>
+                    <strong>Pet Friendly:</strong> {review.pet_friendly}
+                  </p>
+                  <p>
+                    <strong>Pet Type:</strong> {review.pet_type ?? "N/A"}
+                  </p>
+                  <p>
+                    <strong>Pet Impact:</strong> {review.pet_impact ?? "N/A"}
+                  </p>
+                </>
+              )}
+              <p>
+                <strong>Years Lived:</strong> {review.years_lived}
+              </p>
+              <p>
+                <strong>Cleanliness:</strong> {review.cleanliness}/5
+              </p>
+              <p>
+                <strong>Communication:</strong> {review.communication}/5
+              </p>
+              <p>
+                <strong>Responsibility:</strong> {review.responsibility}/5
+              </p>
+              <p>
+                <strong>Noise Level:</strong> {review.noise_level}/5
+              </p>
+              <p>
+                <strong>Sleep Pattern:</strong> {review.sleep_pattern}
+              </p>
+              <p>
+                <strong>Guest Frequency:</strong> {review.guest_frequency}
+              </p>
+              <p>
+                <strong>Study Compatibility:</strong>{" "}
+                {review.study_compatibility}
+              </p>
+              {review.unit_suffix && (
+                <p>
+                  <strong>Unit #:</strong> {review.unit_suffix}
+                </p>
+              )}
+            </div>
+            <p className="mb-2 mt-4 text-lightBlue">"{review.comments}"</p>
+          </div>
+        ))}
+        </div>
+      </BottomFridge>
+    </main>
   );
 }
