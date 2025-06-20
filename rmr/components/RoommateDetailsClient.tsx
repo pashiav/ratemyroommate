@@ -145,7 +145,7 @@ export default function RoommateDetails({ id }: { id: string }) {
           {loading ? (
             <p>Loading roommate details...</p>
           ) : error ? (
-            <div className="bg-white rounded-3xl shadow-lg p-8 text-center">
+            <div className="bg-[#fafafa] rounded-3xl shadow-lg p-8 text-center">
               <p className="text-red-500 mb-4">{error}</p>
               <Link
                 href="/"
