@@ -50,7 +50,7 @@ export default function SearchForm({
         </div>
       </div>
 
-      <div className="w-[25rem] flex gap-1">
+      <div className="w-[25rem] h-[2.4rem] flex gap-1 italic font-sans text-[0.75rem] bg-transparent">
         {searchType === "roommate" ? (
           <>
             <input
@@ -66,11 +66,11 @@ export default function SearchForm({
                   onSearch();
                 }
               }}
-              className="w-1/2 px-4 py-2 border border-darkBlue rounded-md"
+              className="w-1/2 px-4 py-2 border border-darkBlue rounded-md italic font-sans"
             />
             <input
               type="text"
-              placeholder="Housing Lived At"
+              placeholder="Housing Name Lived At"
               value={locationQuery}
               onChange={(e) => {
                 const sanitized = e.target.value.replace(/[0-9;]/g, "");
@@ -81,13 +81,13 @@ export default function SearchForm({
                   onSearch();
                 }
               }}
-              className="w-1/2 px-4 py-2 border border-darkBlue rounded-md"
+              className="w-1/2 px-4 py-2 border border-darkBlue rounded-md italic font-sans"
             />
           </>
         ) : (
           <input
             type="text"
-            placeholder="Housing Lived At"
+            placeholder="Housing Name Lived At"
             value={locationQuery}
             onChange={(e) => {
               const sanitized = e.target.value.replace(/[0-9;]/g, "");
@@ -98,16 +98,16 @@ export default function SearchForm({
                 onSearch();
               }
             }}
-            className="w-full px-4 py-2 border border-darkBlue rounded-md"
+            className="w-full px-4 py-2 border border-darkBlue rounded-md italic font-sans"
           />
         )}
       </div>
 
       <button
         onClick={onSearch}
-        className="bg-darkBlue text-white w-10 h-10 rounded-lg hover:bg-blue-800 flex items-center justify-center transition"
+        className="bg-darkBlue text-white w-[2.4rem] h-[2.4rem] rounded-md hover:bg-blue-900 flex items-center justify-center transition"
       >
-        <FontAwesomeIcon icon={faMagnifyingGlass} className="w-5 h-5" />
+        <FontAwesomeIcon icon={faMagnifyingGlass} className="w-4 h-4" />
       </button>
     </div>
   );
