@@ -8,6 +8,8 @@ import BottomFridge from "@/components/BottomFridge";
 import AuthHeader from "@/components/AuthHeader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHouse } from "@fortawesome/free-solid-svg-icons";
+import { useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 
 interface Review {
   rv_id: string;
@@ -37,7 +39,7 @@ interface Roommate {
   reviews: Review[];
 }
 
-export default function RoommateDetails({ id }: { id: string }) {
+export default function RoommateDetails() {
   const [roommate, setRoommate] = useState<Roommate | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -53,6 +55,14 @@ export default function RoommateDetails({ id }: { id: string }) {
   const [expandedReviews, setExpandedReviews] = useState<
     Record<string, boolean>
   >({});
+  const params = useParams();
+const searchParams = useSearchParams();
+
+const rm_id = params.id as string;
+const housing_id = searchParams.get("housing_id");
+const unit_suffix = searchParams.get("unit_suffix");
+
+
 
   const toggleExpanded = (rv_id: string) => {
     setExpandedReviews((prev) => ({
@@ -75,12 +85,15 @@ export default function RoommateDetails({ id }: { id: string }) {
 
       try {
         const token = await getToken();
-        const res = await fetch(`/api/roommates/${id}`, {
-          headers: {
-            "Content-Type": "application/json",
-            ...(token && { Authorization: `Bearer ${token}` }),
-          },
-        });
+        const res = await fetch(
+          `/api/reviews?rm_id=${rm_id}&housing_id=${housing_id}&unit_suffix=${unit_suffix}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              ...(token && { Authorization: `Bearer ${token}` }),
+            },
+          }
+        );
 
         const json = await res.json();
         if (json.roommate?.reviews?.[0]?.housing_id) {
@@ -105,7 +118,7 @@ export default function RoommateDetails({ id }: { id: string }) {
     }
 
     fetchRoommate();
-  }, [id, isSignedIn, getToken]);
+  }, [rm_id, isSignedIn, getToken]);
 
   const averageRating = roommate?.reviews?.length
     ? roommate.reviews.reduce((sum, r) => sum + r.rating, 0) /
@@ -352,7 +365,7 @@ export default function RoommateDetails({ id }: { id: string }) {
           </h2>
           {isSignedIn && (
             <Link
-              href={`/roommate/${id}/review/new`}
+              href={`/roommate/${rm_id}/review/new`}
               className="bg-lightBlue text-white px-4 py-2 rounded-md hover:bg-blue-800 transition-colors border-r-4 border-b-4 border-darkBlue"
             >
               Write a Review
