@@ -8,5 +8,5 @@ export default async function RoommatePage({
 }) {
   // Await the params to get the actual id
   const { id } = await params;
-  return <RoommateDetails id={id} />;
+  return <RoommateDetails />;
 }
