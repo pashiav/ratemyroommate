@@ -146,7 +146,7 @@ export default function SearchResultsClient() {
                             <p className="text-gray-700 text-sm">
                               <span className="underline">
                                 <FontAwesomeIcon icon={faLocationDot} />{" "}
-                                {item.housing_name ?? "Unknown housing"}
+                                {item.housing_name ?? "N/A"}
                               </span>{" "}
                               · Unit #...{item.unit_suffix ?? "?"} ·{" "}
                               {item.review_year ?? "N/A"}
@@ -189,7 +189,7 @@ export default function SearchResultsClient() {
                               </div>
                             ) : (
                               <p className="text-sm text-gray-500">
-                                No reviews
+                                No reviews yet
                               </p>
                             )}
                           </div>
