@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { auth } from "@clerk/nextjs/server";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -10,10 +11,80 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey, {
   },
 });
 
+export async function GET(request: NextRequest) {
+  const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { searchParams } = new URL(request.url);
+  const rm_id = searchParams.get("rm_id");
+  const housing_id = searchParams.get("housing_id");
+  const unit_suffix = searchParams.get("unit_suffix");
+
+  if (!rm_id || !housing_id || !unit_suffix) {
+    return NextResponse.json({ error: "Missing parameters" }, { status: 400 });
+  }
+
+  const { data: roommate, error: roommateError } = await supabase
+    .from("roommates")
+    .select("rm_id, full_name")
+    .eq("rm_id", rm_id.trim())
+    .maybeSingle();
+
+  if (roommateError || !roommate) {
+    return NextResponse.json(
+      { error: roommateError?.message ?? "Roommate not found" },
+      { status: roommateError ? 500 : 404 }
+    );
+  }
+
+  const { data: reviews, error: reviewsError } = await supabase
+    .from("reviews")
+    .select(
+      `
+      rv_id,
+      rating,
+      would_recommend,
+      has_pets,
+      pet_friendly,
+      years_lived,
+      comments,
+      created_at,
+      unit_suffix,
+      noise_level,
+      cleanliness,
+      communication,
+      responsibility,
+      sleep_pattern,
+      guest_frequency,
+      study_compatibility,
+      pet_type,
+      pet_impact,
+      housing_id
+    `
+    )
+    .eq("rm_id", rm_id)
+    .eq("housing_id", housing_id)
+    .eq("unit_suffix", unit_suffix)
+    .eq("is_deleted", false)
+    .order("created_at", { ascending: false });
+
+  if (reviewsError) {
+    return NextResponse.json({ error: reviewsError.message }, { status: 500 });
+  }
+
+  return NextResponse.json({
+    roommate: {
+      ...roommate,
+      reviews: reviews ?? [],
+    },
+  });
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-
     const {
       reviewer_id,
       rm_id,
@@ -36,7 +107,6 @@ export async function POST(request: NextRequest) {
       pet_impact,
     } = body;
 
-    // Validate required fields
     if (
       !reviewer_id ||
       !rm_id ||
@@ -57,7 +127,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    // Fetch school_id using your existing user-info API logic
     const { data: userRow, error: userError } = await supabase
       .from("users")
       .select("school_id")
@@ -69,13 +138,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Could not resolve user's school ID" }, { status: 400 });
     }
 
-    const school_id = userRow.school_id;
-
-    // Insert the review
     const { data, error } = await supabase.from("reviews").insert([
       {
         rm_id,
-        school_id,
+        school_id: userRow.school_id,
         housing_id,
         rating,
         would_recommend,
