@@ -14,7 +14,7 @@ export async function GET(
 
   // Note the change here - we need to await params
   const { id } = await params;
-  
+
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -37,7 +37,8 @@ export async function GET(
   // Get their reviews
   const { data: reviews, error: reviewsError } = await supabase
     .from("reviews")
-    .select(`
+    .select(
+      `
       rv_id,
       rating,
       would_recommend,
@@ -46,7 +47,7 @@ export async function GET(
       years_lived,
       comments,
       created_at,
-      housing:housing_id(housing_name),
+      unit_suffix,
       noise_level,
       cleanliness,
       communication,
@@ -55,18 +56,19 @@ export async function GET(
       guest_frequency,
       study_compatibility,
       pet_type,
-      pet_impact
-    `)
+      pet_impact,
+      housing_id
+    )
+    `
+    )
     .eq("rm_id", id)
     .eq("is_deleted", false)
     .order("created_at", { ascending: false });
 
   if (reviewsError) {
-    return NextResponse.json(
-      { error: reviewsError.message },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: reviewsError.message }, { status: 500 });
   }
+  console.log("Fetched reviews:", reviews);
 
   return NextResponse.json({
     roommate: {
