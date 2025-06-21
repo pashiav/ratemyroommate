@@ -18,12 +18,18 @@ export async function GET(request: NextRequest) {
   }
 
   const { searchParams } = new URL(request.url);
-  const rm_id = searchParams.get("rm_id");
-  const housing_id = searchParams.get("housing_id");
-  const unit_suffix = searchParams.get("unit_suffix");
 
-  if (!rm_id || !housing_id || !unit_suffix) {
-    return NextResponse.json({ error: "Missing parameters" }, { status: 400 });
+  const raw_housing_id = searchParams.get("housing_id");
+  const raw_unit_suffix = searchParams.get("unit_suffix");
+
+  const housing_id =
+    raw_housing_id && raw_housing_id !== "null" ? raw_housing_id : null;
+  const unit_suffix =
+    raw_unit_suffix && raw_unit_suffix !== "null" ? raw_unit_suffix : null;
+  const rm_id = searchParams.get("rm_id");
+
+  if (!rm_id) {
+    return NextResponse.json({ error: "Missing rm_id" }, { status: 400 });
   }
 
   const { data: roommate, error: roommateError } = await supabase
@@ -39,36 +45,44 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const { data: reviews, error: reviewsError } = await supabase
+  let reviewQuery = supabase
     .from("reviews")
     .select(
       `
-      rv_id,
-      rating,
-      would_recommend,
-      has_pets,
-      pet_friendly,
-      years_lived,
-      comments,
-      created_at,
-      unit_suffix,
-      noise_level,
-      cleanliness,
-      communication,
-      responsibility,
-      sleep_pattern,
-      guest_frequency,
-      study_compatibility,
-      pet_type,
-      pet_impact,
-      housing_id
-    `
+    rv_id,
+    rating,
+    would_recommend,
+    has_pets,
+    pet_friendly,
+    years_lived,
+    comments,
+    created_at,
+    unit_suffix,
+    noise_level,
+    cleanliness,
+    communication,
+    responsibility,
+    sleep_pattern,
+    guest_frequency,
+    study_compatibility,
+    pet_type,
+    pet_impact,
+    housing_id
+  `
     )
     .eq("rm_id", rm_id)
-    .eq("housing_id", housing_id)
-    .eq("unit_suffix", unit_suffix)
-    .eq("is_deleted", false)
-    .order("created_at", { ascending: false });
+    .eq("is_deleted", false);
+
+  if (housing_id) {
+    reviewQuery = reviewQuery.eq("housing_id", housing_id);
+  }
+  if (unit_suffix) {
+    reviewQuery = reviewQuery.eq("unit_suffix", unit_suffix);
+  }
+
+  reviewQuery = reviewQuery.order("created_at", { ascending: false });
+
+  const { data: reviews, error: reviewsError } = await reviewQuery;
 
   if (reviewsError) {
     return NextResponse.json({ error: reviewsError.message }, { status: 500 });
@@ -124,7 +138,10 @@ export async function POST(request: NextRequest) {
       !guest_frequency ||
       !study_compatibility
     ) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      );
     }
 
     const { data: userRow, error: userError } = await supabase
@@ -135,7 +152,10 @@ export async function POST(request: NextRequest) {
 
     if (userError || !userRow?.school_id) {
       console.error("Failed to fetch user's school_id:", userError);
-      return NextResponse.json({ error: "Could not resolve user's school ID" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Could not resolve user's school ID" },
+        { status: 400 }
+      );
     }
 
     const { data, error } = await supabase.from("reviews").insert([
@@ -164,12 +184,21 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       console.error("Insert error:", error);
-      return NextResponse.json({ error: "Failed to submit review: " + error.message }, { status: 500 });
+      return NextResponse.json(
+        { error: "Failed to submit review: " + error.message },
+        { status: 500 }
+      );
     }
 
-    return NextResponse.json({ success: true, review: data?.[0] }, { status: 201 });
+    return NextResponse.json(
+      { success: true, review: data?.[0] },
+      { status: 201 }
+    );
   } catch (error) {
     console.error("Unexpected error:", error);
-    return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
+    return NextResponse.json(
+      { error: "An unexpected error occurred" },
+      { status: 500 }
+    );
   }
 }
