@@ -174,7 +174,7 @@ const unit_suffix = searchParams.get("unit_suffix");
               <p className="text-red-500 mb-4">{error}</p>
               <Link
                 href="/"
-                className="inline-block bg-navy-blue text-white px-6 py-2 rounded-md hover:bg-blue-700"
+                className="inline-block bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-blue-500"
               >
                 Back to Search
               </Link>
