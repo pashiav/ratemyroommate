@@ -56,13 +56,11 @@ export default function RoommateDetails() {
     Record<string, boolean>
   >({});
   const params = useParams();
-const searchParams = useSearchParams();
+  const searchParams = useSearchParams();
 
-const rm_id = params.id as string;
-const housing_id = searchParams.get("housing_id");
-const unit_suffix = searchParams.get("unit_suffix");
-
-
+  const rm_id = params.id as string;
+  const housing_id = searchParams.get("housing_id");
+  const unit_suffix = searchParams.get("unit_suffix");
 
   const toggleExpanded = (rv_id: string) => {
     setExpandedReviews((prev) => ({
@@ -178,6 +176,19 @@ const unit_suffix = searchParams.get("unit_suffix");
               >
                 Back to Search
               </Link>
+            </div>
+          ) : roommate && roommate.reviews.length === 0 ? (
+            <div className="bg-white text-darkBlue w-full max-w-2xl rounded-3xl shadow-xl border-[0.90rem] border-darkBlue px-8 py-12 text-center">
+              <h1 className="text-[3rem] mb-4">{roommate.full_name}</h1>
+              <p className="text-lg mb-6">No reviews yet for this roommate.</p>
+              {isSignedIn && (
+                <Link
+                  href={`/roommate/${rm_id}/review/new`}
+                  className="bg-lightBlue text-white px-6 py-3 rounded-md hover:bg-blue-800 transition-colors border-r-4 border-b-4 border-darkBlue"
+                >
+                  Write the First Review
+                </Link>
+              )}
             </div>
           ) : roommate ? (
             <div className="flex flex-col items-center -mt-6">
