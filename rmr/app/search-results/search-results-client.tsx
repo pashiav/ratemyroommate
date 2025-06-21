@@ -111,7 +111,7 @@ export default function SearchResultsClient() {
           {loading ? (
             <p className="text-gray-500">Loading...</p>
           ) : results.length > 0 ? (
-            <ul className="gap-4 w-full max-w-3xl space-y-6">
+            <ul className="gap-4 w-full max-w-3xl space-y-3">
               {type === "roommate"
                 ? Object.entries(groupedRoommates).map(([name, group]) => {
                     const hasNoReviews = group.length === 1 && group[0].review_count === 0;
