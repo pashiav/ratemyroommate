@@ -140,7 +140,7 @@ export default function SearchResultsClient() {
                           </div>
 
                           {/* Middle column - aligned with stars */}
-                          <div className="flex justify-center min-w-[160px] whitespace-nowrap">
+                          <div className="flex justify-center min-w-[160px] whitespace-nowrap mr-14">
                             {hasNoReviews && (
                               <p className="text-sm text-gray-500 italic">
                                 No reviews yet
