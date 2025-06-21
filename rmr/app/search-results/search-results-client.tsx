@@ -114,25 +114,29 @@ export default function SearchResultsClient() {
             <ul className="gap-4 w-full max-w-3xl space-y-3">
               {type === "roommate"
                 ? Object.entries(groupedRoommates).map(([name, group]) => {
-                    const hasNoReviews = group.length === 1 && group[0].review_count === 0;
+                    const hasNoReviews =
+                      group.length === 1 && group[0].review_count === 0;
 
                     return (
                       <li
                         key={name}
                         className="bg-[#fafafa] p-4 rounded-xl shadow flex flex-col gap-2 border-r-[.35rem] border-b-[.35rem] border-r-[#ebebeb] border-b-[#ebebeb] ml-8"
                       >
-                        <div className="grid grid-cols-[1fr_1fr_auto] items-center gap-x-4">
+                        <div className="grid grid-cols-[3fr_1fr_auto] items-center gap-x-4">
                           {/* Name and profile count */}
-                          <div className="flex items-center">
-                            <h2 className="text-[1.75rem]">{name}</h2>
-                            {group.length > 1 && group[0].review_count !== 1 && (
-                              <span className="text-[#8f8f8f] text-sm flex items-center ml-6">
-                                <FontAwesomeIcon icon={faUserFriends} />
-                                <span className="ml-2">
-                                  {group.length} profiles found with this name
+                          <div className="flex items-center flex-wrap">
+                            <h2 className="text-[1.75rem] whitespace-nowrap">
+                              {name}
+                            </h2>
+                            {group.length > 1 &&
+                              group[0].review_count !== 1 && (
+                                <span className="text-[#8f8f8f] text-sm flex items-center ml-6 whitespace-nowrap">
+                                  <FontAwesomeIcon icon={faUserFriends} />
+                                  <span className="ml-2">
+                                    {group.length} profiles found with this name
+                                  </span>
                                 </span>
-                              </span>
-                            )}
+                              )}
                           </div>
 
                           {/* Middle column - aligned with stars */}
@@ -146,14 +150,15 @@ export default function SearchResultsClient() {
 
                           {/* Right column - VIEW PROFILE button */}
                           <div className="flex justify-end">
-                            {group.length === 1 && group[0].review_count !== 1 && (
-                              <Link
-                                href={`/roommate/${group[0].rm_id}?housing_id=${group[0].housing_id}&unit_suffix=${group[0].unit_suffix}`}
-                                className="px-2 py-[0.2rem] bg-lightBlue text-white rounded-md hover:bg-blue-900 text-sm whitespace-nowrap"
-                              >
-                                VIEW PROFILE
-                              </Link>
-                            )}
+                            {group.length === 1 &&
+                              group[0].review_count !== 1 && (
+                                <Link
+                                  href={`/roommate/${group[0].rm_id}?housing_id=${group[0].housing_id}&unit_suffix=${group[0].unit_suffix}`}
+                                  className="px-2 py-[0.2rem] bg-lightBlue text-white rounded-md hover:bg-blue-900 text-sm whitespace-nowrap"
+                                >
+                                  VIEW PROFILE
+                                </Link>
+                              )}
                           </div>
                         </div>
 
