@@ -125,7 +125,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
 
       setSuccessMessage("Review submitted successfully!");
       setTimeout(() => {
-        router.push(`/roommate/${roommate_id}`);
+        router.push(`/roommate/${roommate_id}?housing_id=${housingId}&unit_suffix=${unitSuffix}`);
         router.refresh();
       }, 1500);
     } catch (err) {
