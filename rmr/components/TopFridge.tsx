@@ -72,7 +72,7 @@ export default function TopFridge({
       {children}
       {/* Logo in left corner */}
       <a href="/">
-        <div className="absolute top-0 left-0 mt-[2.5rem] ml-[5rem] w-[6.75rem] h-auto z-20">
+        <div className="absolute top-0 left-0 mt-[2.5rem] ml-[5rem] w-[4.75rem] h-auto z-20">
           <img src="/logo.png" alt="Logo" />
         </div>
       </a>
