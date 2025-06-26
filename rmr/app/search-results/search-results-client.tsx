@@ -111,7 +111,7 @@ export default function SearchResultsClient() {
           {loading ? (
             <p className="text-gray-500">Loading...</p>
           ) : results.length > 0 ? (
-            <ul className="gap-4 w-full max-w-3xl space-y-3">
+            <ul className="gap-4 w-full max-w-[55%] space-y-3">
               {type === "roommate"
                 ? Object.entries(groupedRoommates).map(([name, group]) => {
                     const hasNoReviews =
@@ -123,26 +123,26 @@ export default function SearchResultsClient() {
                         className="bg-[#fafafa] p-4 rounded-xl shadow flex flex-col gap-2 border-r-[.35rem] border-b-[.35rem] border-r-[#ebebeb] border-b-[#ebebeb] ml-8"
                       >
                         <div className="grid grid-cols-[3fr_1fr_auto] items-center gap-x-4">
-                          {/* Name and profile count */}
-                          <div className="flex items-center flex-wrap">
+                          {/* Left column: Name and profile count */}
+                          <div className="flex items-center flex-wrap relative">
                             <h2 className="text-[1.75rem] whitespace-nowrap">
                               {name}
-                            </h2>
-                            {group.length > 1 &&
-                              group[0].review_count !== 1 && (
-                                <span className="text-[#8f8f8f] text-sm flex items-center ml-6 whitespace-nowrap">
+
+                              {group.length > 1 && (
+                                <span className="absolute ml-8 top-2 text-[#8f8f8f] text-sm">
                                   <FontAwesomeIcon icon={faUserFriends} />
                                   <span className="ml-2">
                                     {group.length} profiles found with this name
                                   </span>
                                 </span>
                               )}
+                            </h2>
                           </div>
 
                           {/* Middle column - aligned with stars */}
                           <div className="flex justify-center min-w-[160px] whitespace-nowrap mr-14">
                             {hasNoReviews && (
-                              <p className="text-sm text-gray-500 italic">
+                              <p className="text-sm text-gray-500">
                                 No reviews yet
                               </p>
                             )}
@@ -167,7 +167,7 @@ export default function SearchResultsClient() {
                           group.map((item) => (
                             <div
                               key={item.rm_id + item.unit_suffix}
-                              className="grid grid-cols-[1fr_1fr_auto]"
+                              className="grid grid-cols-[1fr_1fr_auto] pl-3"
                             >
                               <div>
                                 <p className="text-gray-700 text-sm">
