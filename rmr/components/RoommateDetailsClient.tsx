@@ -161,7 +161,7 @@ export default function RoommateDetails() {
 
   return (
     <main className="min-h-screen bg-[#315d8d] pl-[0.75rem] pr-[0.75rem] font-lazyDog">
-      <TopFridge showSearchBar={true}>
+      <TopFridge showSearchBar={true} back={true}>
         <AuthHeader />
 
         <div className="max-w-3xl mx-auto w-full mt-[8rem] text-lazyDog">
@@ -192,7 +192,7 @@ export default function RoommateDetails() {
             </div>
           ) : roommate ? (
             <div className="flex flex-col items-center -mt-6">
-              <p className="text-[.8rem] italic text-center text-gray-500 -mt-4 mb-2 font-sans">
+              <p className="text-[.7rem] italic text-center text-gray-400 -mt-4 mb-2 font-sans">
                 Reviews are grouped by name and living location. If this seems
                 like multiple people,{" "}
                 <a href="#" className="underline">
@@ -200,7 +200,7 @@ export default function RoommateDetails() {
                 </a>
                 .
               </p>
-              <div className="w-[50rem] bg-white rounded-[2rem] shadow-xl pt-4 pr-16 pl-16 pb-16 border-[0.90rem] border-darkBlue text-darkBlue font-lazyDog">
+              <div className="w-[50vw] bg-white rounded-[2rem] shadow-xl pt-4 pr-16 pl-16 pb-16 border-[0.90rem] border-darkBlue text-darkBlue font-lazyDog">
                 <h1 className="text-[3.25rem] text-center">
                   {roommate.full_name}
                 </h1>

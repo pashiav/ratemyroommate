@@ -72,7 +72,7 @@ export default function AddRoommatePage() {
 
   return (
     <main className="min-h-screen bg-[#315d8d] pl-[0.75rem] pr-[0.75rem] relative">
-      <TopFridge showSearchBar={true}>
+      <TopFridge showSearchBar={true} back={true}>
         <AuthHeader />
 
         {isLoadingSchool ? (

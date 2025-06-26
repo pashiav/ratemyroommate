@@ -143,7 +143,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
   if (!isSignedIn) return <p>You must be signed in</p>;
 
   return (
-    <div className="bg-white p-8 rounded-2xl shadow max-w-2xl mx-auto">
+    <div className="bg-white p-8 rounded-2xl shadow w-[55%] mx-auto">
       <h1 className="text-2xl font-bold mb-6">Leave a Review</h1>
       {error && <p className="text-red-600 mb-4">{error}</p>}
       {successMessage && (
