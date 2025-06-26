@@ -1,12 +1,17 @@
 import React from "react";
 import SearchBar from "./SearchBar";
+import { useRouter } from "next/navigation";
 
 interface Props {
   children: React.ReactNode;
   showSearchBar?: boolean;
+  back?: boolean;
 }
 
-export default function TopFridge({ children, showSearchBar = true }: Props) {
+
+export default function TopFridge({ children, showSearchBar = true, back = false }: Props) {
+  const router = useRouter();
+
   return (
     // add the top part of the fridge, the shine on the left and right, the handle, and the content in the middle
     <div
@@ -48,8 +53,20 @@ export default function TopFridge({ children, showSearchBar = true }: Props) {
           clipPath: "ellipse(25% 25% at 70% 30%)",
         }}
       ></div>{" "}
-      <div className="absolute right-[1.25rem] top-[6.5em] h-[75%] w-[8.5px] bg-white rounded-full"></div>
+
+      {/* Only show the back button if back is true */}
+      {back && (
+        <button
+          onClick={() => router.back()}
+          className="absolute w-auto h-auto left-[25%] top-[7.5rem] text-black rounded-md hover:underline z-0"
+        >
+          ← Back
+        </button>
+      )}
+      
+      <div className="absolute right-[1.25rem] top-[0rem] h-[75%] w-[8.5px] bg-white rounded-full"></div>
       <div className="absolute right-[6.5rem] top-[.8rem] w-[3rem] h-[7px] bg-white rounded-full"></div>
+      
       {children}
       {/* Logo in left corner */}
       <a href="/">
@@ -63,6 +80,7 @@ export default function TopFridge({ children, showSearchBar = true }: Props) {
           <SearchBar />
         </div>
       )}
+      
     </div>
   );
 }
