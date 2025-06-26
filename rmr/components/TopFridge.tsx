@@ -8,8 +8,11 @@ interface Props {
   back?: boolean;
 }
 
-
-export default function TopFridge({ children, showSearchBar = true, back = false }: Props) {
+export default function TopFridge({
+  children,
+  showSearchBar = true,
+  back = false,
+}: Props) {
   const router = useRouter();
 
   return (
@@ -53,7 +56,6 @@ export default function TopFridge({ children, showSearchBar = true, back = false
           clipPath: "ellipse(25% 25% at 70% 30%)",
         }}
       ></div>{" "}
-
       {/* Only show the back button if back is true */}
       {back && (
         <button
@@ -63,10 +65,8 @@ export default function TopFridge({ children, showSearchBar = true, back = false
           ← Back
         </button>
       )}
-      
       <div className="absolute right-[1.25rem] top-[0rem] h-[75%] w-[8.5px] bg-white rounded-full"></div>
       <div className="absolute right-[6.5rem] top-[.8rem] w-[3rem] h-[7px] bg-white rounded-full"></div>
-      
       {children}
       {/* Logo in left corner */}
       <a href="/">
@@ -80,7 +80,6 @@ export default function TopFridge({ children, showSearchBar = true, back = false
           <SearchBar />
         </div>
       )}
-      
     </div>
   );
 }
