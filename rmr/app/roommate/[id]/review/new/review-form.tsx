@@ -70,6 +70,30 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
     fetchHousing();
   }, []);
 
+  const [roommateName, setRoommateName] = useState<string>("");
+
+  useEffect(() => {
+    async function fetchRoommateName() {
+      try {
+        const res = await fetch(`/api/roommates/${roommate_id}/name`);
+        const data = await res.json();
+
+        if (!res.ok || !data.full_name) {
+          throw new Error("Roommate not found");
+        }
+
+        setRoommateName(data.full_name);
+
+        setRoommateName(data.full_name);
+      } catch (err) {
+        console.error("Failed to fetch roommate name", err);
+        setRoommateName("Unknown Roommate");
+      }
+    }
+
+    fetchRoommateName();
+  }, [roommate_id]);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!isSignedIn || !userId) {
@@ -125,7 +149,9 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
 
       setSuccessMessage("Review submitted successfully!");
       setTimeout(() => {
-        router.push(`/roommate/${roommate_id}?housing_id=${housingId}&unit_suffix=${unitSuffix}`);
+        router.push(
+          `/roommate/${roommate_id}?housing_id=${housingId}&unit_suffix=${unitSuffix}`
+        );
         router.refresh();
       }, 1500);
     } catch (err) {
@@ -144,62 +170,64 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
 
   return (
     <div className="bg-white p-8 rounded-2xl shadow w-[55%] mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Leave a Review</h1>
+      <h1 className="text-2xl font-bold mb-6">
+        Leave a Review for <span className="text-darkBlue">{roommateName || "Loading..."}</span>
+      </h1>
       {error && <p className="text-red-600 mb-4">{error}</p>}
       {successMessage && (
         <p className="text-green-600 mb-4">{successMessage}</p>
       )}
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Rating */}
-      <div>
-        <label className="block text-gray-700 text-lg mb-2">
-          Rating
-          <InfoTip message="Overall roommate experience. 1 = very poor, 5 = excellent." />
-        </label>
-        <div className="flex mb-6">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <button
-              key={star}
-              type="button"
-              onClick={() => setRating(star)}
-              className="focus:outline-none mr-1"
-              aria-label={`Rate ${star} stars`}
-            >
-              <svg
-                className={`w-8 h-8 ${star <= rating ? "text-yellow-400" : "text-gray-300"}`}
-                fill="currentColor"
-                viewBox="0 0 20 20"
+        <div>
+          <label className="block text-gray-700 text-lg mb-2">
+            Rating
+            <InfoTip message="Overall roommate experience. 1 = very poor, 5 = excellent." />
+          </label>
+          <div className="flex mb-6">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <button
+                key={star}
+                type="button"
+                onClick={() => setRating(star)}
+                className="focus:outline-none mr-1"
+                aria-label={`Rate ${star} stars`}
               >
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-            </button>
-          ))}
-          <span className="ml-2 self-center text-gray-600">{rating}/5</span>
+                <svg
+                  className={`w-8 h-8 ${star <= rating ? "text-yellow-400" : "text-gray-300"}`}
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              </button>
+            ))}
+            <span className="ml-2 self-center text-gray-600">{rating}/5</span>
+          </div>
         </div>
-      </div>
 
-      <div>
-  <label className="block font-medium mb-1 items-center gap-1">
-    Would you recommend?
-    <InfoTip message="Would you live with this person again or recommend them to someone else?" />
-  </label>
-  <div className="flex gap-4">
-    <button
-      type="button"
-      className={`px-4 py-2 rounded-md ${wouldRecommend === true ? "bg-green-600 text-white" : "bg-gray-200"}`}
-      onClick={() => setWouldRecommend(true)}
-    >
-      Yes
-    </button>
-    <button
-      type="button"
-      className={`px-4 py-2 rounded-md ${wouldRecommend === false ? "bg-red-600 text-white" : "bg-gray-200"}`}
-      onClick={() => setWouldRecommend(false)}
-    >
-      No
-    </button>
-  </div>
-</div>
+        <div>
+          <label className="block font-medium mb-1 items-center gap-1">
+            Would you recommend?
+            <InfoTip message="Would you live with this person again or recommend them to someone else?" />
+          </label>
+          <div className="flex gap-4">
+            <button
+              type="button"
+              className={`px-4 py-2 rounded-md ${wouldRecommend === true ? "bg-green-600 text-white" : "bg-gray-200"}`}
+              onClick={() => setWouldRecommend(true)}
+            >
+              Yes
+            </button>
+            <button
+              type="button"
+              className={`px-4 py-2 rounded-md ${wouldRecommend === false ? "bg-red-600 text-white" : "bg-gray-200"}`}
+              onClick={() => setWouldRecommend(false)}
+            >
+              No
+            </button>
+          </div>
+        </div>
         <div className="grid grid-cols-2 gap-x-6 gap-y-6">
           {[
             {
@@ -414,7 +442,8 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
               onChange={(e) => {
                 const sanitized = e.target.value
                   .toLowerCase()
-                  .replace(/[^a-z0-9]/g, "").slice(0, 1);
+                  .replace(/[^a-z0-9]/g, "")
+                  .slice(0, 1);
                 setUnitSuffix(sanitized);
               }}
               className="w-full border rounded-md p-2"

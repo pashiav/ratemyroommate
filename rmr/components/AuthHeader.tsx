@@ -43,7 +43,7 @@ export default function AuthHeader() {
   if (!isLoaded) return null;
 
   return (
-    <div className="absolute top-0 right-0 mt-[3.5rem] mr-[6rem] z-100">
+    <div className="absolute top-0 right-0 mt-[3rem] mr-[6rem] z-100">
       {isSignedIn ? (
         <>
           <Button
