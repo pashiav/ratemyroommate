@@ -262,14 +262,15 @@ export default function SearchResultsClient() {
           ) : (
             <div className="mt-6">
               <p className="text-gray-500 mb-4">No results found.</p>
-              <Link
-                href={type === "roommate" ? "/roommate/new" : "/housing/new"}
-                className="inline-block bg-navy-blue text-lazyDog text-white px-6 py-2 rounded-md bg-darkBlue hover:bg-blue-800 hover:transition"
-              >
-                Add a new {type === "roommate" ? "roommate" : "housing"}
-              </Link>
             </div>
           )}
+
+          <Link
+            href={type === "roommate" ? "/roommate/new" : "/housing/new"}
+className="inline-block mt-4 bg-lightBlue text-lazyDog text-white px-6 py-2 rounded-md hover:bg-blue-900 hover:transition shadow-[3px_3px_0_0_#0c4a6e]"
+          >
+            Add a new {type === "roommate" ? "roommate" : "housing option"}
+          </Link>
 
           <div className="mt-8">
             <Link
