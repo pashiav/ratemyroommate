@@ -1,8 +1,10 @@
-"use client"
+"use client";
 
 import React from "react";
 import SearchBar from "./SearchBar";
 import { useRouter } from "next/navigation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 
 interface Props {
   children: React.ReactNode;
@@ -62,14 +64,17 @@ export default function TopFridge({
       {back && (
         <button
           onClick={() => router.back()}
-          className="absolute w-auto h-auto left-[25%] top-[7.5rem] text-black rounded-md hover:underline z-0"
+          className="absolute w-auto h-auto left-[25%] top-[7.5rem] text-black text-[1.25rem] rounded-md hover:underline z-0"
         >
-          ← Back
+          <FontAwesomeIcon
+            icon={faArrowLeftLong}
+            className="hover:text-gray-700"
+          />
         </button>
       )}
-      <div className="absolute right-[1.25rem] top-[0rem] h-[75%] w-[8.5px] bg-white rounded-full"></div>
+      <div className="absolute right-[1.25rem] top-[6.5em] h-[75%] w-[8.5px] bg-white rounded-full"></div>
       <div className="absolute right-[6.5rem] top-[.8rem] w-[3rem] h-[7px] bg-white rounded-full"></div>
-      {children}
+      <div className="pt-[0.5rem]">{children}</div>
       {/* Logo in left corner */}
       <a href="/">
         <div className="absolute top-0 left-0 mt-[2.5rem] ml-[5rem] w-[4.75rem] h-auto z-20">
