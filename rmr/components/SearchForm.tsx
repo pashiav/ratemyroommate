@@ -70,7 +70,7 @@ export default function SearchForm({
             />
             <input
               type="text"
-              placeholder="Housing Name Lived At"
+              placeholder="Apartment/Dorm Name"
               value={locationQuery}
               onChange={(e) => {
                 const sanitized = e.target.value.replace(/[0-9;]/g, "");
@@ -87,7 +87,7 @@ export default function SearchForm({
         ) : (
           <input
             type="text"
-            placeholder="Housing Name Lived At"
+            placeholder="Apartment/Dorm Name"
             value={locationQuery}
             onChange={(e) => {
               const sanitized = e.target.value.replace(/[0-9;]/g, "");
