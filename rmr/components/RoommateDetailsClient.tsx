@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHouse } from "@fortawesome/free-solid-svg-icons";
 import { useSearchParams } from "next/navigation";
 import { useParams } from "next/navigation";
+import Loading from "@/components/Loading";
 
 interface Review {
   rv_id: string;
@@ -164,9 +165,9 @@ export default function RoommateDetails() {
       <TopFridge showSearchBar={true} back={true}>
         <AuthHeader />
 
-        <div className="max-w-3xl mx-auto w-full mt-[8rem] text-lazyDog">
+        <div className="max-w-3xl mx-auto w-full text-lazyDog">
           {loading ? (
-            <p>Loading roommate details...</p>
+            <Loading text="Loading"/>
           ) : error ? (
             <div className="bg-[#fafafa] rounded-3xl shadow-lg p-8 text-center">
               <p className="text-red-500 mb-4">{error}</p>
@@ -178,7 +179,7 @@ export default function RoommateDetails() {
               </Link>
             </div>
           ) : roommate && roommate.reviews.length === 0 ? (
-            <div className="bg-white text-darkBlue w-full max-w-2xl rounded-3xl shadow-xl border-[0.90rem] border-darkBlue px-8 py-12 text-center">
+            <div className="mt-[8rem] bg-white text-darkBlue w-full max-w-2xl rounded-3xl shadow-xl border-[0.90rem] border-darkBlue px-8 py-12 text-center">
               <h1 className="text-[3rem] mb-4">{roommate.full_name}</h1>
               <p className="text-lg mb-6">No reviews yet for this roommate.</p>
               {isSignedIn && (
@@ -191,7 +192,7 @@ export default function RoommateDetails() {
               )}
             </div>
           ) : roommate ? (
-            <div className="flex flex-col items-center -mt-6">
+            <div className="mt-[6.75rem] flex flex-col items-center">
               <p className="text-[.7rem] italic text-center text-gray-400 -mt-4 mb-2 font-sans">
                 Reviews are grouped by name and living location. If this seems
                 like multiple people,{" "}

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
-import Link from "next/link";
+import Loading from "@/components/Loading";
 
 interface ReviewFormProps {
   roommate_id: string;
@@ -165,13 +165,21 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
     }
   }
 
-  if (!isLoaded) return <div>Loading...</div>;
-  if (!isSignedIn) return <p>You must be signed in</p>;
+  if (!isLoaded) return <Loading text="Loading" />;
+  if (!isSignedIn)
+    return (
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <p className="text-darkBlue text-2xl font-lazyDog">
+          You must be signed in
+        </p>
+      </div>
+    );
 
   return (
     <div className="bg-white p-6 rounded-2xl border-gray-200 border-4 w-[55%] mx-auto">
       <h1 className="text-[1.75rem] font-bold mb-6">
-        Leave a Review for <span className="text-darkBlue">{roommateName || "Roommate..."}</span>
+        Leave a Review for{" "}
+        <span className="text-darkBlue">{roommateName || "Roommate..."}</span>
       </h1>
       {error && <p className="text-red-600 mb-4">{error}</p>}
       {successMessage && (

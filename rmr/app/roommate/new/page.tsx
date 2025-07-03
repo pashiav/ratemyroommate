@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import TopFridge from "@/components/TopFridge";
 import AuthHeader from "@/components/AuthHeader";
+import Loading from "@/components/Loading";
 
 export default function AddRoommatePage() {
   const router = useRouter();
@@ -76,9 +77,7 @@ export default function AddRoommatePage() {
         <AuthHeader />
 
         {isLoadingSchool ? (
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-            <p className="text-darkBlue text-2xl font-lazyDog">Loading...</p>
-          </div>
+          <Loading text="Loading" />
         ) : (
           <div className="flex flex-col items-center mt-[13rem] font-lazyDog">
             <h1 className="w-1/2 text-[2rem] text-darkBlue text-center leading-none">
