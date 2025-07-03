@@ -169,8 +169,8 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
   if (!isSignedIn) return <p>You must be signed in</p>;
 
   return (
-    <div className="bg-white p-8 rounded-2xl shadow w-[55%] mx-auto">
-      <h1 className="text-2xl font-bold mb-6">
+    <div className="bg-white p-6 rounded-2xl border-gray-200 border-4 w-[55%] mx-auto">
+      <h1 className="text-[1.75rem] font-bold mb-6">
         Leave a Review for <span className="text-darkBlue">{roommateName || "Roommate..."}</span>
       </h1>
       {error && <p className="text-red-600 mb-4">{error}</p>}
@@ -194,7 +194,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
                 aria-label={`Rate ${star} stars`}
               >
                 <svg
-                  className={`w-8 h-8 ${star <= rating ? "text-yellow-400" : "text-gray-300"}`}
+                  className={`w-10 h-10 ${star <= rating ? "text-gold" : "text-gray-300"}`}
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -214,14 +214,14 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
           <div className="flex gap-4">
             <button
               type="button"
-              className={`px-4 py-2 rounded-md ${wouldRecommend === true ? "bg-green-600 text-white" : "bg-gray-200"}`}
+              className={`px-4 py-2 rounded-md ${wouldRecommend === true ? "bg-lightBlue text-white" : "bg-gray-200"}`}
               onClick={() => setWouldRecommend(true)}
             >
               Yes
             </button>
             <button
               type="button"
-              className={`px-4 py-2 rounded-md ${wouldRecommend === false ? "bg-red-600 text-white" : "bg-gray-200"}`}
+              className={`px-4 py-2 rounded-md ${wouldRecommend === false ? "bg-lightBlue text-white" : "bg-gray-200"}`}
               onClick={() => setWouldRecommend(false)}
             >
               No
@@ -341,7 +341,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
                 type="button"
                 className={`px-4 py-2 rounded-md ${
                   petFriendly === option
-                    ? "bg-green-600 text-white"
+                    ? "bg-lightBlue text-white"
                     : "bg-gray-200"
                 }`}
                 onClick={() => setPetFriendly(option)}
@@ -360,14 +360,14 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
           <div className="flex gap-4">
             <button
               type="button"
-              className={`px-4 py-2 rounded-md ${hasPets === true ? "bg-blue-600 text-white" : "bg-gray-200"}`}
+              className={`px-4 py-2 rounded-md ${hasPets === true ? "bg-lightBlue text-white" : "bg-gray-200"}`}
               onClick={() => setHasPets(true)}
             >
               Yes
             </button>
             <button
               type="button"
-              className={`px-4 py-2 rounded-md ${hasPets === false ? "bg-blue-600 text-white" : "bg-gray-200"}`}
+              className={`px-4 py-2 rounded-md ${hasPets === false ? "bg-lightBlue text-white" : "bg-gray-200"}`}
               onClick={() => setHasPets(false)}
             >
               No
@@ -468,7 +468,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full py-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
+          className="w-full py-3 rounded-md bg-lightBlue text-white hover:bg-blue-800 disabled:opacity-50 border-r-4 border-b-4 border-darkBlue transition duration-200"
         >
           {isSubmitting ? "Submitting..." : "Submit Review"}
         </button>
