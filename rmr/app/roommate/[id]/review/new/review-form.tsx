@@ -171,7 +171,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
   return (
     <div className="bg-white p-8 rounded-2xl shadow w-[55%] mx-auto">
       <h1 className="text-2xl font-bold mb-6">
-        Leave a Review for <span className="text-darkBlue">{roommateName || "Loading..."}</span>
+        Leave a Review for <span className="text-darkBlue">{roommateName || "Roommate..."}</span>
       </h1>
       {error && <p className="text-red-600 mb-4">{error}</p>}
       {successMessage && (
