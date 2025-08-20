@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { verifyWebhook } from "@clerk/nextjs/webhooks";
 import { createClient } from "@supabase/supabase-js";
 
+// Initialize Supabase client with service role key for admin operations
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -9,12 +10,15 @@ const supabase = createClient(
 
 export async function POST(req: NextRequest) {
   try {
+    // Verify webhook signature from Clerk
     const evt = await verifyWebhook(req);
     const eventType = evt.type;
 
+    // Handle user creation events
     if (eventType === "user.created") {
       const user = evt.data;
 
+      // Extract user information from Clerk event
       const user_id = user.id;
       const email = user.email_addresses?.[0]?.email_address.toLowerCase() ?? "";
       const created_at = new Date(user.created_at).toISOString();
@@ -24,7 +28,7 @@ export async function POST(req: NextRequest) {
 
       let school_id: string | null = null;
 
-      // Look up matching school in Supabase
+      // Look up matching school based on email domain
       if (domain) {
         const { data: school, error: schoolError } = await supabase
           .from("schools")
@@ -32,12 +36,14 @@ export async function POST(req: NextRequest) {
           .eq("domain", domain)
           .single();
 
+        // Handle case where no school is found (PGRST116 = no rows returned)
         if (schoolError && schoolError.code !== "PGRST116") {
           console.error("Supabase school lookup error:", schoolError);
           return new Response("Supabase school lookup failed", { status: 500 });
         }
       }
 
+      // Insert new user into Supabase database
       const { error } = await supabase.from("users").insert({
         user_id,
         email,

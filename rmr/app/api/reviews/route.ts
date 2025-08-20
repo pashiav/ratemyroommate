@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { auth } from "@clerk/nextjs/server";
 
+// Initialize Supabase client with service role key for admin operations
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey, {
@@ -12,16 +13,19 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey, {
 });
 
 export async function GET(request: NextRequest) {
+  // Verify user authentication using Clerk
   const { userId } = await auth();
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  // Extract query parameters for filtering reviews
   const { searchParams } = new URL(request.url);
 
   const raw_housing_id = searchParams.get("housing_id");
   const raw_unit_suffix = searchParams.get("unit_suffix");
 
+  // Parse and validate query parameters, handling null values
   const housing_id =
     raw_housing_id && raw_housing_id !== "null" ? raw_housing_id : null;
   const unit_suffix =
@@ -32,6 +36,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Missing rm_id" }, { status: 400 });
   }
 
+  // Fetch roommate information to validate existence
   const { data: roommate, error: roommateError } = await supabase
     .from("roommates")
     .select("rm_id, full_name")
@@ -45,6 +50,7 @@ export async function GET(request: NextRequest) {
     );
   }
 
+  // Build review query with comprehensive field selection
   let reviewQuery = supabase
     .from("reviews")
     .select(
@@ -73,6 +79,7 @@ export async function GET(request: NextRequest) {
     .eq("rm_id", rm_id)
     .eq("is_deleted", false);
 
+  // Apply optional filters for housing and unit
   if (housing_id) {
     reviewQuery = reviewQuery.eq("housing_id", housing_id);
   }
@@ -80,6 +87,7 @@ export async function GET(request: NextRequest) {
     reviewQuery = reviewQuery.eq("unit_suffix", unit_suffix);
   }
 
+  // Sort reviews by creation date (newest first)
   reviewQuery = reviewQuery.order("created_at", { ascending: false });
 
   const { data: reviews, error: reviewsError } = await reviewQuery;
@@ -98,6 +106,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    // Parse request body with all review fields
     const body = await request.json();
     const {
       reviewer_id,
@@ -121,6 +130,7 @@ export async function POST(request: NextRequest) {
       pet_impact,
     } = body;
 
+    // Validate all required fields with proper type checking
     if (
       !reviewer_id ||
       !rm_id ||
@@ -144,6 +154,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Fetch user's school ID to associate review with correct institution
     const { data: userRow, error: userError } = await supabase
       .from("users")
       .select("school_id")
@@ -158,6 +169,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Insert new review with all validated fields
     const { data, error } = await supabase.from("reviews").insert([
       {
         rm_id,
