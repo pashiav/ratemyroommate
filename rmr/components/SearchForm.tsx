@@ -2,6 +2,7 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
+// Props interface for the search form component
 type Props = {
   searchType: string;
   searchQuery: string;
@@ -12,6 +13,7 @@ type Props = {
   onSearch: () => void;
 };
 
+// Search form component with roommate and housing search options
 export default function SearchForm({
   searchType,
   searchQuery,
@@ -23,6 +25,7 @@ export default function SearchForm({
 }: Props) {
   return (
     <div className="flex items-center gap-1 h-full">
+      {/* Search Type Selector */}
       <div className="relative inline-block min-w-fit">
         {" "}
         <select
@@ -33,6 +36,7 @@ export default function SearchForm({
           <option value="roommate">Roommate</option>
           <option value="housing">Housing</option>
         </select>
+        {/* Custom dropdown arrow */}
         <div className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 flex items-center">
           <svg
             className="w-4 h-4 text-darkBlue"
@@ -50,14 +54,17 @@ export default function SearchForm({
         </div>
       </div>
 
+      {/* Search Input Fields */}
       <div className="w-[25rem] h-[2.4rem] flex gap-1 italic font-sans text-[0.75rem] bg-transparent">
         {searchType === "roommate" ? (
           <>
+            {/* Roommate name input field */}
             <input
               type="text"
               placeholder="Roommate Name"
               value={searchQuery}
               onChange={(e) => {
+                // Sanitize input to remove numbers and semicolons
                 const sanitized = e.target.value.replace(/[0-9;]/g, "");
                 setSearchQuery(sanitized);
               }}
@@ -68,11 +75,13 @@ export default function SearchForm({
               }}
               className="w-1/2 px-4 py-2 border border-darkBlue rounded-md italic font-sans"
             />
+            {/* Location input field for roommate search */}
             <input
               type="text"
               placeholder="Apartment/Dorm Name"
               value={locationQuery}
               onChange={(e) => {
+                // Sanitize input to remove numbers and semicolons
                 const sanitized = e.target.value.replace(/[0-9;]/g, "");
                 setLocationQuery(sanitized);
               }}
@@ -85,11 +94,13 @@ export default function SearchForm({
             />
           </>
         ) : (
+          /* Single location input field for housing search */
           <input
             type="text"
             placeholder="Apartment/Dorm Name"
             value={locationQuery}
             onChange={(e) => {
+              // Sanitize input to remove numbers and semicolons
               const sanitized = e.target.value.replace(/[0-9;]/g, "");
               setLocationQuery(sanitized);
             }}
@@ -103,6 +114,7 @@ export default function SearchForm({
         )}
       </div>
 
+      {/* Search Button */}
       <button
         onClick={onSearch}
         className="bg-darkBlue text-white w-[2.4rem] h-[2.4rem] rounded-md hover:bg-blue-900 flex items-center justify-center transition"

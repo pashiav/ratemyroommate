@@ -5,7 +5,9 @@ import { PostHogProvider as PHProvider, usePostHog } from "posthog-js/react"
 import { Suspense, useEffect } from "react"
 import { usePathname, useSearchParams } from "next/navigation"
 
+// Main PostHog provider component for analytics initialization
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
+  // Initialize PostHog with configuration
   useEffect(() => {
     posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
       api_host: "/ingest",
@@ -23,11 +25,13 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
   )
 }
 
+// Component to capture page view events for analytics
 function PostHogPageView() {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const posthogClient = usePostHog()
 
+  // Track page views when route changes
   useEffect(() => {
     if (pathname && posthogClient) {
       let url = window.origin + pathname
@@ -42,6 +46,7 @@ function PostHogPageView() {
   return null
 }
 
+// Suspense wrapper for PostHog page view tracking
 function SuspendedPostHogPageView() {
   return (
     <Suspense fallback={null}>
