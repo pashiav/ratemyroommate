@@ -4,11 +4,13 @@ import TopFridge from "@/components/TopFridge";
 import AuthHeader from "@/components/AuthHeader";
 import SearchBar from "@/components/SearchBar";
 
+// Main search page component with search interface
 export default function SearchPage() {
   return (
     <main className="min-h-screen bg-[#315d8d] pl-[0.75rem] pr-[0.75rem]">
       <TopFridge showSearchBar={false}>
         <AuthHeader />
+        {/* Search page content with title, description, and search bar */}
         <div className="flex flex-col items-center gap-6 mt-[13.5rem]">
           <h1 className="text-[8rem] text-darkBlue text-center leading-none">
             Search

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { notFound, useParams } from "next/navigation";
 
+// Interface defining the structure of housing data from API
 interface HousingViewResult {
   housing_id: string;
   housing_name: string;
@@ -14,9 +15,11 @@ interface HousingViewResult {
 
 export default function HousingDetailClient() {
   const { id } = useParams();
+  // State management for housing data and error handling
   const [data, setData] = useState<HousingViewResult | null>(null);
   const [error, setError] = useState(false);
 
+  // Fetch housing details from API on component mount
   useEffect(() => {
     const fetchHousing = async () => {
       try {
@@ -35,6 +38,7 @@ export default function HousingDetailClient() {
     fetchHousing();
   }, [id]);
 
+  // Show error message if housing not found or loading failed
   if (error || !data) {
     return <p className="p-10 text-center">Housing not found or loading failed.</p>;
   }
@@ -42,15 +46,19 @@ export default function HousingDetailClient() {
   return (
     <main className="min-h-screen bg-white px-8 py-16 font-sans text-gray-900">
       <div className="max-w-3xl mx-auto">
+        {/* Housing Name Header */}
         <h1 className="text-4xl font-bold mb-2">{data.housing_name}</h1>
+        {/* School Information */}
         <p className="text-lg mb-4">School: <strong>{data.school_name}</strong></p>
 
+        {/* Verification Status Display */}
         {data.is_verified ? (
           <span className="text-green-600 font-bold">Verified</span>
         ) : (
           <span className="text-red-600 font-bold">Not Verified</span>
         )}
 
+        {/* Location Coordinates Display (if available) */}
         {(data.latitude && data.longitude) && (
           <div className="mt-6">
             <p>Coordinates:</p>

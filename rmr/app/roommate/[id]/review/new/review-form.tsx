@@ -5,15 +5,19 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
 import Loading from "@/components/Loading";
 
+// Props interface for the review form component
 interface ReviewFormProps {
   roommate_id: string;
 }
+
+// Interface for housing data structure
 interface HousingViewResult {
   housing_id: string;
   housing_name: string;
   is_verified: boolean;
 }
 
+// Info tip component for form field help text
 function InfoTip({ message }: { message: string }) {
   return (
     <span className="relative group ml-2 cursor-pointer text-gray-500">
@@ -29,6 +33,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
   const router = useRouter();
   const { userId, getToken, isLoaded, isSignedIn } = useAuth();
 
+  // Form state management for all review fields
   const [rating, setRating] = useState(5);
   const [wouldRecommend, setWouldRecommend] = useState<boolean | null>(null);
   const [petFriendly, setPetFriendly] = useState("");
@@ -36,26 +41,32 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
   const [yearsLived, setYearsLived] = useState("");
   const [comments, setComments] = useState("");
 
+  // Numeric rating fields for roommate attributes
   const [noiseLevel, setNoiseLevel] = useState(3);
   const [cleanliness, setCleanliness] = useState(3);
   const [communication, setCommunication] = useState(3);
   const [responsibility, setResponsibility] = useState(3);
 
+  // Lifestyle compatibility fields
   const [sleepPattern, setSleepPattern] = useState("");
   const [guestFrequency, setGuestFrequency] = useState("");
   const [studyCompatibility, setStudyCompatibility] = useState("");
 
+  // Housing and pet-related fields
   const [unitSuffix, setUnitSuffix] = useState("");
   const [petType, setPetType] = useState("");
   const [petImpact, setPetImpact] = useState("");
 
+  // Form submission and UI state
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
+  // Housing options for the form
   const [housingOptions, setHousingOptions] = useState<HousingViewResult[]>([]);
   const [housingId, setHousingId] = useState("");
 
+  // Fetch available housing options on component mount
   useEffect(() => {
     async function fetchHousing() {
       try {
@@ -70,8 +81,10 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
     fetchHousing();
   }, []);
 
+  // State for displaying roommate name
   const [roommateName, setRoommateName] = useState<string>("");
 
+  // Fetch roommate name for display purposes
   useEffect(() => {
     async function fetchRoommateName() {
       try {
@@ -94,6 +107,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
     fetchRoommateName();
   }, [roommate_id]);
 
+  // Handle form submission to create new review
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!isSignedIn || !userId) {
@@ -106,6 +120,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
 
     try {
       const token = await getToken();
+      // Submit review data to API
       const response = await fetch("/api/reviews", {
         method: "POST",
         headers: {
@@ -148,6 +163,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
         throw new Error(data.error || "Failed to submit review");
 
       setSuccessMessage("Review submitted successfully!");
+      // Redirect to roommate profile page after successful submission
       setTimeout(() => {
         router.push(
           `/roommate/${roommate_id}?housing_id=${housingId}&unit_suffix=${unitSuffix}`
@@ -165,7 +181,10 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
     }
   }
 
+  // Show loading state while Clerk is initializing
   if (!isLoaded) return <Loading text="Loading" />;
+  
+  // Show sign-in requirement if user is not authenticated
   if (!isSignedIn)
     return (
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
@@ -177,16 +196,20 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
 
   return (
     <div className="bg-white p-6 rounded-2xl border-gray-200 border-4 w-[55%] mx-auto">
+      {/* Form Header with Roommate Name */}
       <h1 className="text-[1.75rem] font-bold mb-6">
         Leave a Review for{" "}
         <span className="text-darkBlue">{roommateName || "Roommate..."}</span>
       </h1>
+      
+      {/* Error and Success Message Display */}
       {error && <p className="text-red-600 mb-4">{error}</p>}
       {successMessage && (
         <p className="text-green-600 mb-4">{successMessage}</p>
       )}
+      
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Rating */}
+        {/* Overall Rating Section */}
         <div>
           <label className="block text-gray-700 text-lg mb-2">
             Rating
@@ -214,6 +237,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
           </div>
         </div>
 
+        {/* Recommendation Section */}
         <div>
           <label className="block font-medium mb-1 items-center gap-1">
             Would you recommend?
@@ -236,6 +260,8 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
             </button>
           </div>
         </div>
+        
+        {/* Numeric Rating Grid for Roommate Attributes */}
         <div className="grid grid-cols-2 gap-x-6 gap-y-6">
           {[
             {
@@ -285,6 +311,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
           ))}
         </div>
 
+        {/* Lifestyle Compatibility Grid */}
         <div className="grid grid-cols-2 gap-x-6 gap-y-6 mt-6">
           {[
             {
@@ -337,6 +364,8 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
             </div>
           ))}
         </div>
+        
+        {/* Pet Friendliness Section */}
         <div>
           <label className="block font-medium mb-1 items-center gap-1">
             Pet Friendly?
@@ -360,6 +389,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
           </div>
         </div>
 
+        {/* Pet Ownership Section */}
         <div>
           <label className="block font-medium mb-1 items-center gap-1">
             Pets?
@@ -383,6 +413,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
           </div>
         </div>
 
+        {/* Conditional Pet Details Section */}
         {hasPets && (
           <div className="border border-blue-400 bg-blue-50 p-4 rounded-xl space-y-4 mt-4">
             <div>
@@ -417,6 +448,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
           </div>
         )}
 
+        {/* Housing and Unit Selection Grid */}
         <div className="grid grid-cols-2 gap-x-6 gap-y-6">
           <div>
             <label className="block font-medium mb-1 items-center gap-1">
@@ -448,6 +480,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
               value={unitSuffix}
               required
               onChange={(e) => {
+                // Sanitize input to only allow alphanumeric characters, max 1 character
                 const sanitized = e.target.value
                   .toLowerCase()
                   .replace(/[^a-z0-9]/g, "")
@@ -459,6 +492,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
           </div>
         </div>
 
+        {/* Comments Section */}
         <div>
           <label className="block font-medium mb-1 items-center gap-1">
             Comments
@@ -473,6 +507,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
           />
         </div>
 
+        {/* Submit Button */}
         <button
           type="submit"
           disabled={isSubmitting}

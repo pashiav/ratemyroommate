@@ -1,5 +1,6 @@
 import React from 'react';
 
+// Terms of Service page component - currently displays placeholder content
 const TermsOfServicePage = () => {
     return (
         <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
