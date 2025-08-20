@@ -1,5 +1,6 @@
 import React from 'react';
 
+// Privacy Policy page component - currently displays placeholder content
 const PrivacyPolicyPage: React.FC = () => {
     return (
         <div>

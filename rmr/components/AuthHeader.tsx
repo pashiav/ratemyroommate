@@ -11,14 +11,18 @@ export default function AuthHeader() {
   const { isSignedIn, isLoaded, user } = useUser();
   const { signOut } = useClerk();
 
+  // State management for dropdown and modal visibility
   const [showDropdown, setShowDropdown] = useState(false);
   const [showAccountModal, setShowAccountModal] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  
+  // State for password change functionality
   const [newPassword, setNewPassword] = useState("");
   const [passwordSuccess, setPasswordSuccess] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
+  // Handle clicks outside dropdown and modal to close them
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -43,9 +47,10 @@ export default function AuthHeader() {
   if (!isLoaded) return null;
 
   return (
-    <div className="absolute top-0 right-0 mt-[3.5rem] mr-[6rem] z-100">
+    <div className="absolute top-0 right-0 mt-[3rem] mr-[6rem] z-100">
       {isSignedIn ? (
         <>
+          {/* User Account Button */}
           <Button
             variant="ghost"
             className="w-10 rounded-full pt-1 pb-1 bg-[#153f65] hover:bg-[#5a6c7c] overflow-hidden"
@@ -57,6 +62,7 @@ export default function AuthHeader() {
             />
           </Button>
 
+          {/* User Dropdown Menu */}
           {showDropdown && (
             <div
               ref={dropdownRef}
@@ -92,9 +98,11 @@ export default function AuthHeader() {
             </div>
           )}
 
+          {/* Account Management Modal */}
           {showAccountModal && (
             <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
               <div ref={modalRef} className="relative w-[30rem] h-[30rem] bg-white p-6 rounded-xl shadow-lg flex flex-col border-2 border-black border-r-8 border-b-8">
+                {/* Close Button */}
                 <button
                   className="absolute top-3 right-6 text-gray-500 hover:text-gray-700 text-3xl font-sans"
                   onClick={() => setShowAccountModal(false)}
@@ -107,6 +115,7 @@ export default function AuthHeader() {
                 </h2>
 
                 <div className="space-y-4">
+                  {/* Email Display (Read-only) */}
                   <div>
                     <label className="block font-bold mb-1">
                       Email Address
@@ -119,6 +128,7 @@ export default function AuthHeader() {
                     />
                   </div>
 
+                  {/* Password Change Section */}
                   <div>
                     <label className="block font-bold mb-1">New Password</label>
                     <Input
@@ -146,6 +156,7 @@ export default function AuthHeader() {
                     >
                       Change Password
                     </Button>
+                    {/* Password Update Status Messages */}
                     {passwordSuccess && (
                       <p className="text-green-600 font-semibold mt-2">
                         {passwordSuccess}
@@ -163,6 +174,7 @@ export default function AuthHeader() {
           )}
         </>
       ) : (
+        /* Sign In Button for Unauthenticated Users */
         <SignInButton mode="modal">
           <Button className="bg-darkBlue text-white px-6 py-2 text-lg font-lazyDog rounded-md z-1000">
             Log In

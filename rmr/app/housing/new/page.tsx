@@ -5,16 +5,19 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import TopFridge from "@/components/TopFridge";
 import AuthHeader from "@/components/AuthHeader";
+import Loading from "@/components/Loading";
 
 export default function AddHousingPage() {
   const router = useRouter();
   const { user } = useUser();
 
+  // State management for form inputs and loading states
   const [housingName, setHousingName] = useState("");
   const [schoolName, setSchoolName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingSchool, setIsLoadingSchool] = useState(true);
 
+  // Fetch user's school information on component mount
   useEffect(() => {
     const fetchSchool = async () => {
       if (!user?.id) return;
@@ -32,6 +35,7 @@ export default function AddHousingPage() {
     fetchSchool();
   }, [user]);
 
+  // Handle form submission to create new housing
   const handleSubmit = async () => {
     if (!user?.id || !housingName.trim()) {
       alert("Please enter a housing name.");
@@ -40,6 +44,7 @@ export default function AddHousingPage() {
 
     setIsSubmitting(true);
 
+    // Submit housing creation request to API
     const res = await fetch("/api/housing/new", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -57,6 +62,7 @@ export default function AddHousingPage() {
       return;
     }
 
+    // Extract housing ID from response and redirect to housing detail page
     const result = await res.json();
     const housingId = result.data?.[0]?.housing_id;
 
@@ -74,9 +80,7 @@ export default function AddHousingPage() {
         <AuthHeader />
 
         {isLoadingSchool ? (
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-            <p className="text-darkBlue text-2xl font-lazyDog">Loading...</p>
-          </div>
+          <Loading text="Loading" />
         ) : (
           <div className="flex flex-col items-center mt-[13rem] font-lazyDog">
             <h1 className="w-1/2 text-[2rem] text-darkBlue text-center leading-none">
@@ -86,7 +90,7 @@ export default function AddHousingPage() {
               @ <strong>{schoolName}</strong>
             </p>
 
-            {/* Housing Name */}
+            {/* Housing Name Input Field */}
             <input
               type="text"
               placeholder="Housing name"
@@ -95,7 +99,7 @@ export default function AddHousingPage() {
               className="w-1/3 p-3 border border-darkBlue rounded-md mb-4 mt-8"
             />
 
-            {/* Submit */}
+            {/* Submit Button */}
             <button
               onClick={handleSubmit}
               disabled={isSubmitting}

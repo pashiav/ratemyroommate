@@ -7,20 +7,22 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Verify user authentication using Clerk
   const { userId } = await auth();
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // Note the change here - we need to await params
+  // Extract roommate ID from route parameters
   const { id } = await params;
 
+  // Initialize Supabase client with anonymous key for read operations
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   );
 
-  // Get roommate
+  // Fetch roommate basic information
   const { data: roommate, error: roommateError } = await supabase
     .from("roommates")
     .select("rm_id, full_name")
@@ -34,11 +36,12 @@ export async function GET(
     );
   }
 
-  // Get their reviews
+  // Extract query parameters for filtering reviews by housing and unit
   const { searchParams } = new URL(request.url);
   const housing_id = searchParams.get("housing_id");
   const unit_suffix = searchParams.get("unit_suffix");
 
+  // Fetch roommate's reviews with comprehensive field selection
   const { data: reviews, error: reviewsError } = await supabase
     .from("reviews")
     .select(

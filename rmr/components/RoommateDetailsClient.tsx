@@ -10,7 +10,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHouse } from "@fortawesome/free-solid-svg-icons";
 import { useSearchParams } from "next/navigation";
 import { useParams } from "next/navigation";
+import Loading from "@/components/Loading";
 
+// Interface for review data structure
 interface Review {
   rv_id: string;
   rating: number;
@@ -33,6 +35,7 @@ interface Review {
   housing_id: string | null;
 }
 
+// Interface for roommate data structure
 interface Roommate {
   rm_id: string;
   full_name: string;
@@ -40,10 +43,13 @@ interface Roommate {
 }
 
 export default function RoommateDetails() {
+  // State management for roommate data and UI
   const [roommate, setRoommate] = useState<Roommate | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { isSignedIn, getToken } = useAuth();
+  
+  // State for housing information display
   const [housingInfo, setHousingInfo] = useState<{
     housing_name: string;
     school_name: string;
@@ -51,10 +57,13 @@ export default function RoommateDetails() {
     latitude: number;
     longitude: number;
   } | null>(null);
+  
   const reviewsRef = useRef<HTMLDivElement>(null);
+  // State for expanding/collapsing review comments
   const [expandedReviews, setExpandedReviews] = useState<
     Record<string, boolean>
   >({});
+  
   const params = useParams();
   const searchParams = useSearchParams();
 
@@ -62,6 +71,7 @@ export default function RoommateDetails() {
   const housing_id = searchParams.get("housing_id");
   const unit_suffix = searchParams.get("unit_suffix");
 
+  // Toggle review comment expansion state
   const toggleExpanded = (rv_id: string) => {
     setExpandedReviews((prev) => ({
       ...prev,
@@ -69,6 +79,7 @@ export default function RoommateDetails() {
     }));
   };
 
+  // Fetch roommate data and housing information
   useEffect(() => {
     async function fetchRoommate() {
       setLoading(true);
@@ -83,6 +94,7 @@ export default function RoommateDetails() {
 
       try {
         const token = await getToken();
+        // Fetch roommate reviews from API
         const res = await fetch(
           `/api/reviews?rm_id=${rm_id}&housing_id=${housing_id}&unit_suffix=${unit_suffix}`,
           {
@@ -94,6 +106,7 @@ export default function RoommateDetails() {
         );
 
         const json = await res.json();
+        // Fetch housing information if available
         if (json.roommate?.reviews?.[0]?.housing_id) {
           const housingId = json.roommate.reviews[0].housing_id;
           const housingRes = await fetch(`/api/housing/${housingId}`);
@@ -118,11 +131,13 @@ export default function RoommateDetails() {
     fetchRoommate();
   }, [rm_id, isSignedIn, getToken]);
 
+  // Calculate average rating from all reviews
   const averageRating = roommate?.reviews?.length
     ? roommate.reviews.reduce((sum, r) => sum + r.rating, 0) /
       roommate.reviews.length
     : 0;
 
+  // Component for displaying trait rating bars
   function TraitBar({ label, value }: { label: string; value: number }) {
     return (
       <div className="flex items-center gap-2 text-[#6d4d55]">
@@ -138,6 +153,7 @@ export default function RoommateDetails() {
     );
   }
 
+  // Component for displaying colored tags
   function Tag({ text, color }: { text: string; color: string }) {
     const bg =
       {
@@ -152,6 +168,7 @@ export default function RoommateDetails() {
     );
   }
 
+  // Calculate average trait values across all reviews
   const avgTrait = (key: keyof Review): number => {
     return roommate?.reviews?.length
       ? roommate.reviews.reduce((sum, r) => sum + Number(r[key] ?? 0), 0) /
@@ -164,10 +181,11 @@ export default function RoommateDetails() {
       <TopFridge showSearchBar={true} back={true}>
         <AuthHeader />
 
-        <div className="max-w-3xl mx-auto w-full mt-[8rem] text-lazyDog">
+        <div className="max-w-3xl mx-auto w-full text-lazyDog">
           {loading ? (
-            <p>Loading roommate details...</p>
+            <Loading text="Loading"/>
           ) : error ? (
+            /* Error state display */
             <div className="bg-[#fafafa] rounded-3xl shadow-lg p-8 text-center">
               <p className="text-red-500 mb-4">{error}</p>
               <Link
@@ -178,7 +196,8 @@ export default function RoommateDetails() {
               </Link>
             </div>
           ) : roommate && roommate.reviews.length === 0 ? (
-            <div className="bg-white text-darkBlue w-full max-w-2xl rounded-3xl shadow-xl border-[0.90rem] border-darkBlue px-8 py-12 text-center">
+            /* No reviews state display */
+            <div className="mt-[8rem] bg-white text-darkBlue w-full max-w-2xl rounded-3xl shadow-xl border-[0.90rem] border-darkBlue px-8 py-12 text-center">
               <h1 className="text-[3rem] mb-4">{roommate.full_name}</h1>
               <p className="text-lg mb-6">No reviews yet for this roommate.</p>
               {isSignedIn && (
@@ -191,7 +210,8 @@ export default function RoommateDetails() {
               )}
             </div>
           ) : roommate ? (
-            <div className="flex flex-col items-center -mt-6">
+            /* Main roommate profile display */
+            <div className="mt-[6.75rem] flex flex-col items-center">
               <p className="text-[.7rem] italic text-center text-gray-400 -mt-4 mb-2 font-sans">
                 Reviews are grouped by name and living location. If this seems
                 like multiple people,{" "}
@@ -201,9 +221,11 @@ export default function RoommateDetails() {
                 .
               </p>
               <div className="w-[50vw] bg-white rounded-[2rem] shadow-xl pt-4 pr-16 pl-16 pb-16 border-[0.90rem] border-darkBlue text-darkBlue font-lazyDog">
+                {/* Roommate Name Header */}
                 <h1 className="text-[3.25rem] text-center">
                   {roommate.full_name}
                 </h1>
+                {/* Housing Information */}
                 <p className="text-center text-md -mt-2 pb-2 text-gray-600">
                   <FontAwesomeIcon icon={faHouse} className="pr-2" />
                   {housingInfo?.housing_name ?? "Unknown Housing"}
@@ -213,8 +235,8 @@ export default function RoommateDetails() {
                 </p>
 
                 <div className="flex flex-col md:flex-row my-6 w-full">
+                  {/* Left side: Average rating and star display */}
                   <div className="w-full md:w-1/2 flex flex-col items-center justify-center">
-                    {/* left side: averageRating and stars */}
                     <div className="text-center">
                       <div className="text-[4.5rem] leading-none">
                         {averageRating.toFixed(2)}
@@ -222,6 +244,7 @@ export default function RoommateDetails() {
                           /5
                         </span>
                       </div>
+                      {/* Star rating display with full/half star logic */}
                       <div className="flex justify-center mb-2">
                         {[1, 2, 3, 4, 5].map((star) => {
                           const full = star <= Math.floor(averageRating);
@@ -232,7 +255,7 @@ export default function RoommateDetails() {
 
                           return (
                             <div key={star} className="relative w-10 h-10">
-                              {/* Empty star in background */}
+                              {/* Empty star background */}
                               <svg
                                 className="absolute top-0 left-0 w-10 h-10 text-gray-300"
                                 fill="currentColor"
@@ -241,7 +264,7 @@ export default function RoommateDetails() {
                                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                               </svg>
 
-                              {/* Full or Half star in foreground */}
+                              {/* Full star overlay */}
                               {full && (
                                 <svg
                                   className="absolute top-0 left-0 w-10 h-10 text-gold"
@@ -252,6 +275,7 @@ export default function RoommateDetails() {
                                 </svg>
                               )}
 
+                              {/* Half star overlay */}
                               {half && (
                                 <svg
                                   className="absolute top-0 left-0 w-10 h-10 text-gold overflow-hidden"
@@ -269,16 +293,18 @@ export default function RoommateDetails() {
                     </div>
                   </div>
 
+                  {/* Vertical divider */}
                   <div className="w-[1px] bg-[#70768d] ml-8" />
 
+                  {/* Right side: Rating distribution and review count */}
                   <div className="w-full ml-8 md:w-1/2 px-4">
-                    {/* right side: bars and text */}
                     <p className="text-[1.25rem] text-lightBlue">
                       Based on{" "}
                       <a
                         href="#"
                         onClick={(e) => {
                           e.preventDefault();
+                          // Smooth scroll to reviews section
                           if (reviewsRef.current) {
                             const offset = -80; // adjust this value as needed
                             const y =
@@ -294,6 +320,7 @@ export default function RoommateDetails() {
                         {roommate.reviews.length !== 1 ? "s" : ""}
                       </a>
                     </p>
+                    {/* Rating distribution bars */}
                     {[5, 4, 3, 2, 1].map((star) => {
                       const count = roommate.reviews.filter(
                         (r) => r.rating === star
@@ -324,9 +351,8 @@ export default function RoommateDetails() {
                 <hr className="mt-[1rem] border-t border-[#70768d]" />
 
                 <div className="flex flex-col md:flex-row w-full mt-6 gap-6">
-                  {/* Left: Trait Bars */}
+                  {/* Left: Trait rating bars */}
                   <div className="w-full md:w-1/2 flex flex-col justify-center">
-                    {/* Trait Bars */}
                     <div className="grid grid-cols-1 gap-2 text-sm mt-[1rem] mb-8">
                       <TraitBar
                         label="Cleanliness"
@@ -346,13 +372,15 @@ export default function RoommateDetails() {
                       />
                     </div>
                   </div>
-                  {/* Divider */}
+                  
+                  {/* Vertical divider */}
                   <div className="hidden md:block w-[1px] bg-[#70768d] mx-4" />
-                  {/* Right: Tags and Aliases */}
+                  
+                  {/* Right: Tags and attributes */}
                   <div className="w-full md:w-1/2 flex flex-col justify-center">
                     <div className="flex flex-col gap-1 mb-4">
                       <p className="text-[1.5rem] text-lightBlue">Tags:</p>
-                      {/* Tags */}
+                      {/* Display roommate tags */}
                       <div className="flex gap-2 flex-wrap mt-2 mb-4">
                         <Tag text="PETS" color="red" />
                         <Tag text="PET-FRIENDLY" color="green" />
@@ -366,14 +394,18 @@ export default function RoommateDetails() {
         </div>
       </TopFridge>
 
+      {/* Bottom section with reviews */}
       <BottomFridge>
         <div
           ref={reviewsRef}
           className="max-w-3xl mx-auto w-full text-lazyDog space-y-6"
         >
+          {/* Reviews section header */}
           <h2 className="text-[2rem] text-darkBlue font-bold">
             Reviews ({roommate?.reviews.length || 0})
           </h2>
+          
+          {/* Write review button for signed-in users */}
           {isSignedIn && (
             <Link
               href={`/roommate/${rm_id}/review/new`}
@@ -382,11 +414,14 @@ export default function RoommateDetails() {
               Write a Review
             </Link>
           )}
+          
+          {/* Individual review display */}
           {roommate?.reviews.map((review) => (
             <div
               key={review.rv_id}
               className="bg-[#f9f9f9] border border-gray-300 rounded-xl px-6 py-4 mb-6 shadow-md"
             >
+              {/* Review header with rating and date */}
               <div className="flex justify-between text-sm text-gray-500 mb-2">
                 <span>
                   Rating: <strong>{review.rating}★</strong>
@@ -394,6 +429,7 @@ export default function RoommateDetails() {
                 <span>{new Date(review.created_at).toLocaleDateString()}</span>
               </div>
 
+              {/* Review details grid */}
               <div className="grid grid-cols-2 gap-2 text-sm text-gray-800">
                 <p>
                   <strong>Would Recommend:</strong>{" "}
@@ -402,6 +438,7 @@ export default function RoommateDetails() {
                 <p>
                   <strong>Has Pets:</strong> {review.has_pets ? "Yes" : "No"}
                 </p>
+                {/* Conditional pet-related information */}
                 {review.has_pets && (
                   <>
                     <p>
@@ -440,18 +477,22 @@ export default function RoommateDetails() {
                   <strong>Study Compatibility:</strong>{" "}
                   {review.study_compatibility}
                 </p>
+                {/* Unit suffix if available */}
                 {review.unit_suffix && (
                   <p>
                     <strong>Unit #:</strong> {review.unit_suffix}
                   </p>
                 )}
               </div>
+              
+              {/* Review comments with expand/collapse functionality */}
               <div className="mb-2 mt-4 text-lightBlue">
                 "
                 {expandedReviews[review.rv_id] || review.comments.length <= 150
                   ? review.comments
                   : `${review.comments.slice(0, 225)}...`}
                 "
+                {/* Expand/collapse button for long comments */}
                 {review.comments.length > 150 && (
                   <button
                     onClick={() => toggleExpanded(review.rv_id)}

@@ -3,17 +3,21 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
-import Link from "next/link";
+import Loading from "@/components/Loading";
 
+// Props interface for the review form component
 interface ReviewFormProps {
   roommate_id: string;
 }
+
+// Interface for housing data structure
 interface HousingViewResult {
   housing_id: string;
   housing_name: string;
   is_verified: boolean;
 }
 
+// Info tip component for form field help text
 function InfoTip({ message }: { message: string }) {
   return (
     <span className="relative group ml-2 cursor-pointer text-gray-500">
@@ -29,6 +33,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
   const router = useRouter();
   const { userId, getToken, isLoaded, isSignedIn } = useAuth();
 
+  // Form state management for all review fields
   const [rating, setRating] = useState(5);
   const [wouldRecommend, setWouldRecommend] = useState<boolean | null>(null);
   const [petFriendly, setPetFriendly] = useState("");
@@ -36,26 +41,32 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
   const [yearsLived, setYearsLived] = useState("");
   const [comments, setComments] = useState("");
 
+  // Numeric rating fields for roommate attributes
   const [noiseLevel, setNoiseLevel] = useState(3);
   const [cleanliness, setCleanliness] = useState(3);
   const [communication, setCommunication] = useState(3);
   const [responsibility, setResponsibility] = useState(3);
 
+  // Lifestyle compatibility fields
   const [sleepPattern, setSleepPattern] = useState("");
   const [guestFrequency, setGuestFrequency] = useState("");
   const [studyCompatibility, setStudyCompatibility] = useState("");
 
+  // Housing and pet-related fields
   const [unitSuffix, setUnitSuffix] = useState("");
   const [petType, setPetType] = useState("");
   const [petImpact, setPetImpact] = useState("");
 
+  // Form submission and UI state
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
+  // Housing options for the form
   const [housingOptions, setHousingOptions] = useState<HousingViewResult[]>([]);
   const [housingId, setHousingId] = useState("");
 
+  // Fetch available housing options on component mount
   useEffect(() => {
     async function fetchHousing() {
       try {
@@ -70,6 +81,33 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
     fetchHousing();
   }, []);
 
+  // State for displaying roommate name
+  const [roommateName, setRoommateName] = useState<string>("");
+
+  // Fetch roommate name for display purposes
+  useEffect(() => {
+    async function fetchRoommateName() {
+      try {
+        const res = await fetch(`/api/roommates/${roommate_id}/name`);
+        const data = await res.json();
+
+        if (!res.ok || !data.full_name) {
+          throw new Error("Roommate not found");
+        }
+
+        setRoommateName(data.full_name);
+
+        setRoommateName(data.full_name);
+      } catch (err) {
+        console.error("Failed to fetch roommate name", err);
+        setRoommateName("Unknown Roommate");
+      }
+    }
+
+    fetchRoommateName();
+  }, [roommate_id]);
+
+  // Handle form submission to create new review
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!isSignedIn || !userId) {
@@ -82,6 +120,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
 
     try {
       const token = await getToken();
+      // Submit review data to API
       const response = await fetch("/api/reviews", {
         method: "POST",
         headers: {
@@ -124,8 +163,11 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
         throw new Error(data.error || "Failed to submit review");
 
       setSuccessMessage("Review submitted successfully!");
+      // Redirect to roommate profile page after successful submission
       setTimeout(() => {
-        router.push(`/roommate/${roommate_id}?housing_id=${housingId}&unit_suffix=${unitSuffix}`);
+        router.push(
+          `/roommate/${roommate_id}?housing_id=${housingId}&unit_suffix=${unitSuffix}`
+        );
         router.refresh();
       }, 1500);
     } catch (err) {
@@ -139,67 +181,87 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
     }
   }
 
-  if (!isLoaded) return <div>Loading...</div>;
-  if (!isSignedIn) return <p>You must be signed in</p>;
+  // Show loading state while Clerk is initializing
+  if (!isLoaded) return <Loading text="Loading" />;
+  
+  // Show sign-in requirement if user is not authenticated
+  if (!isSignedIn)
+    return (
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <p className="text-darkBlue text-2xl font-lazyDog">
+          You must be signed in
+        </p>
+      </div>
+    );
 
   return (
-    <div className="bg-white p-8 rounded-2xl shadow w-[55%] mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Leave a Review</h1>
+    <div className="bg-white p-6 rounded-2xl border-gray-200 border-4 w-[55%] mx-auto">
+      {/* Form Header with Roommate Name */}
+      <h1 className="text-[1.75rem] font-bold mb-6">
+        Leave a Review for{" "}
+        <span className="text-darkBlue">{roommateName || "Roommate..."}</span>
+      </h1>
+      
+      {/* Error and Success Message Display */}
       {error && <p className="text-red-600 mb-4">{error}</p>}
       {successMessage && (
         <p className="text-green-600 mb-4">{successMessage}</p>
       )}
+      
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Rating */}
-      <div>
-        <label className="block text-gray-700 text-lg mb-2">
-          Rating
-          <InfoTip message="Overall roommate experience. 1 = very poor, 5 = excellent." />
-        </label>
-        <div className="flex mb-6">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <button
-              key={star}
-              type="button"
-              onClick={() => setRating(star)}
-              className="focus:outline-none mr-1"
-              aria-label={`Rate ${star} stars`}
-            >
-              <svg
-                className={`w-8 h-8 ${star <= rating ? "text-yellow-400" : "text-gray-300"}`}
-                fill="currentColor"
-                viewBox="0 0 20 20"
+        {/* Overall Rating Section */}
+        <div>
+          <label className="block text-gray-700 text-lg mb-2">
+            Rating
+            <InfoTip message="Overall roommate experience. 1 = very poor, 5 = excellent." />
+          </label>
+          <div className="flex mb-6">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <button
+                key={star}
+                type="button"
+                onClick={() => setRating(star)}
+                className="focus:outline-none mr-1"
+                aria-label={`Rate ${star} stars`}
               >
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-            </button>
-          ))}
-          <span className="ml-2 self-center text-gray-600">{rating}/5</span>
+                <svg
+                  className={`w-10 h-10 ${star <= rating ? "text-gold" : "text-gray-300"}`}
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              </button>
+            ))}
+            <span className="ml-2 self-center text-gray-600">{rating}/5</span>
+          </div>
         </div>
-      </div>
 
-      <div>
-  <label className="block font-medium mb-1 items-center gap-1">
-    Would you recommend?
-    <InfoTip message="Would you live with this person again or recommend them to someone else?" />
-  </label>
-  <div className="flex gap-4">
-    <button
-      type="button"
-      className={`px-4 py-2 rounded-md ${wouldRecommend === true ? "bg-green-600 text-white" : "bg-gray-200"}`}
-      onClick={() => setWouldRecommend(true)}
-    >
-      Yes
-    </button>
-    <button
-      type="button"
-      className={`px-4 py-2 rounded-md ${wouldRecommend === false ? "bg-red-600 text-white" : "bg-gray-200"}`}
-      onClick={() => setWouldRecommend(false)}
-    >
-      No
-    </button>
-  </div>
-</div>
+        {/* Recommendation Section */}
+        <div>
+          <label className="block font-medium mb-1 items-center gap-1">
+            Would you recommend?
+            <InfoTip message="Would you live with this person again or recommend them to someone else?" />
+          </label>
+          <div className="flex gap-4">
+            <button
+              type="button"
+              className={`px-4 py-2 rounded-md ${wouldRecommend === true ? "bg-lightBlue text-white" : "bg-gray-200"}`}
+              onClick={() => setWouldRecommend(true)}
+            >
+              Yes
+            </button>
+            <button
+              type="button"
+              className={`px-4 py-2 rounded-md ${wouldRecommend === false ? "bg-lightBlue text-white" : "bg-gray-200"}`}
+              onClick={() => setWouldRecommend(false)}
+            >
+              No
+            </button>
+          </div>
+        </div>
+        
+        {/* Numeric Rating Grid for Roommate Attributes */}
         <div className="grid grid-cols-2 gap-x-6 gap-y-6">
           {[
             {
@@ -249,6 +311,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
           ))}
         </div>
 
+        {/* Lifestyle Compatibility Grid */}
         <div className="grid grid-cols-2 gap-x-6 gap-y-6 mt-6">
           {[
             {
@@ -301,6 +364,8 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
             </div>
           ))}
         </div>
+        
+        {/* Pet Friendliness Section */}
         <div>
           <label className="block font-medium mb-1 items-center gap-1">
             Pet Friendly?
@@ -313,7 +378,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
                 type="button"
                 className={`px-4 py-2 rounded-md ${
                   petFriendly === option
-                    ? "bg-green-600 text-white"
+                    ? "bg-lightBlue text-white"
                     : "bg-gray-200"
                 }`}
                 onClick={() => setPetFriendly(option)}
@@ -324,6 +389,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
           </div>
         </div>
 
+        {/* Pet Ownership Section */}
         <div>
           <label className="block font-medium mb-1 items-center gap-1">
             Pets?
@@ -332,14 +398,14 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
           <div className="flex gap-4">
             <button
               type="button"
-              className={`px-4 py-2 rounded-md ${hasPets === true ? "bg-blue-600 text-white" : "bg-gray-200"}`}
+              className={`px-4 py-2 rounded-md ${hasPets === true ? "bg-lightBlue text-white" : "bg-gray-200"}`}
               onClick={() => setHasPets(true)}
             >
               Yes
             </button>
             <button
               type="button"
-              className={`px-4 py-2 rounded-md ${hasPets === false ? "bg-blue-600 text-white" : "bg-gray-200"}`}
+              className={`px-4 py-2 rounded-md ${hasPets === false ? "bg-lightBlue text-white" : "bg-gray-200"}`}
               onClick={() => setHasPets(false)}
             >
               No
@@ -347,6 +413,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
           </div>
         </div>
 
+        {/* Conditional Pet Details Section */}
         {hasPets && (
           <div className="border border-blue-400 bg-blue-50 p-4 rounded-xl space-y-4 mt-4">
             <div>
@@ -381,6 +448,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
           </div>
         )}
 
+        {/* Housing and Unit Selection Grid */}
         <div className="grid grid-cols-2 gap-x-6 gap-y-6">
           <div>
             <label className="block font-medium mb-1 items-center gap-1">
@@ -412,9 +480,11 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
               value={unitSuffix}
               required
               onChange={(e) => {
+                // Sanitize input to only allow alphanumeric characters, max 1 character
                 const sanitized = e.target.value
                   .toLowerCase()
-                  .replace(/[^a-z0-9]/g, "").slice(0, 1);
+                  .replace(/[^a-z0-9]/g, "")
+                  .slice(0, 1);
                 setUnitSuffix(sanitized);
               }}
               className="w-full border rounded-md p-2"
@@ -422,6 +492,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
           </div>
         </div>
 
+        {/* Comments Section */}
         <div>
           <label className="block font-medium mb-1 items-center gap-1">
             Comments
@@ -436,10 +507,11 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
           />
         </div>
 
+        {/* Submit Button */}
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full py-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
+          className="w-full py-3 rounded-md bg-lightBlue text-white hover:bg-blue-800 disabled:opacity-50 border-r-4 border-b-4 border-darkBlue transition duration-200"
         >
           {isSubmitting ? "Submitting..." : "Submit Review"}
         </button>

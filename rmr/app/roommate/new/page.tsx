@@ -5,17 +5,20 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import TopFridge from "@/components/TopFridge";
 import AuthHeader from "@/components/AuthHeader";
+import Loading from "@/components/Loading";
 
 export default function AddRoommatePage() {
   const router = useRouter();
   const { user } = useUser();
 
+  // State management for form inputs and loading states
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [schoolName, setSchoolName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingSchool, setIsLoadingSchool] = useState(true);
 
+  // Fetch user's school information on component mount
   useEffect(() => {
     const fetchSchool = async () => {
       if (!user?.id) return;
@@ -33,6 +36,7 @@ export default function AddRoommatePage() {
     fetchSchool();
   }, [user]);
 
+  // Handle form submission to create new roommate
   const handleSubmit = async () => {
     if (!user?.id || !firstName.trim() || !lastName.trim()) {
       alert("Please fill in all required fields.");
@@ -41,6 +45,7 @@ export default function AddRoommatePage() {
 
     setIsSubmitting(true);
 
+    // Submit roommate creation request to API
     const res = await fetch("/api/roommates/new", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -59,6 +64,7 @@ export default function AddRoommatePage() {
       return;
     }
 
+    // Extract roommate ID from response and redirect to roommate detail page
     const result = await res.json();
     const roommateId = result.data?.[0]?.rm_id;
 
@@ -76,9 +82,7 @@ export default function AddRoommatePage() {
         <AuthHeader />
 
         {isLoadingSchool ? (
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-            <p className="text-darkBlue text-2xl font-lazyDog">Loading...</p>
-          </div>
+          <Loading text="Loading" />
         ) : (
           <div className="flex flex-col items-center mt-[13rem] font-lazyDog">
             <h1 className="w-1/2 text-[2rem] text-darkBlue text-center leading-none">
@@ -88,7 +92,7 @@ export default function AddRoommatePage() {
               @ <strong>{schoolName}</strong>
             </p>
 
-            {/* First Name */}
+            {/* First Name Input Field */}
             <input
               type="text"
               placeholder="First name"
@@ -97,7 +101,7 @@ export default function AddRoommatePage() {
               className="w-1/3 p-3 border border-darkBlue rounded-md mb-4 mt-8"
             />
 
-            {/* Last Name */}
+            {/* Last Name Input Field */}
             <input
               type="text"
               placeholder="Last name"
@@ -106,7 +110,7 @@ export default function AddRoommatePage() {
               className="w-1/3 p-3 border border-darkBlue rounded-md mb-4"
             />
 
-            {/* Submit */}
+            {/* Submit Button */}
             <button
               onClick={handleSubmit}
               disabled={isSubmitting}

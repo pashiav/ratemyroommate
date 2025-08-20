@@ -9,8 +9,9 @@ import AuthHeader from "@/components/AuthHeader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserFriends } from "@fortawesome/free-solid-svg-icons";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 
-// Types
+// Type definitions for search result data structures
 interface RoommateViewResult {
   rm_id: string;
   full_name: string;
@@ -34,19 +35,23 @@ interface HousingViewResult {
 
 export default function SearchResultsClient() {
   const searchParams = useSearchParams();
+  // Extract search parameters from URL
   const roommateName = searchParams.get("roommateName");
   const location = searchParams.get("location");
   const type = searchParams.get("type");
 
+  // State management for search results and UI
   const [results, setResults] = useState<
     (RoommateViewResult | HousingViewResult)[]
   >([]);
   const [loading, setLoading] = useState(true);
   const { isSignedIn } = useUser();
+  // Group roommates by name for better organization
   const [groupedRoommates, setGroupedRoommates] = useState<
     Record<string, RoommateViewResult[]>
   >({});
 
+  // Fetch search results from API based on search parameters
   useEffect(() => {
     async function fetchResults() {
       try {
@@ -58,7 +63,9 @@ export default function SearchResultsClient() {
         const res = await fetch(`/api/search?${queryParams.toString()}`);
         const data = await res.json();
         console.table("API returned:", data);
+        
         if (type === "roommate") {
+          // Group roommate results by name for better display
           const grouped = (data as RoommateViewResult[]).reduce(
             (acc, item) => {
               if (!acc[item.full_name]) acc[item.full_name] = [];
@@ -83,6 +90,7 @@ export default function SearchResultsClient() {
     if (type) fetchResults();
   }, [type, roommateName, location]);
 
+  // Type guard to distinguish between roommate and housing results
   function isHousing(
     item: RoommateViewResult | HousingViewResult
   ): item is HousingViewResult {
@@ -91,10 +99,11 @@ export default function SearchResultsClient() {
 
   return (
     <main className="min-h-screen bg-[#315d8d] pl-[0.75rem] pr-[0.75rem]">
-      <TopFridge showSearchBar={true}>
+      <TopFridge showSearchBar={true} back={true}>
         <AuthHeader />
 
-        <div className="flex flex-col items-center mt-[7.5rem] gap-2">
+        <div className="flex flex-col items-center mt-[6.5rem] gap-2">
+          {/* Search Results Header */}
           <h1 className="text-[2.5rem] text-darkBlue text-center leading-none">
             Search Results
           </h1>
@@ -108,10 +117,11 @@ export default function SearchResultsClient() {
             )}
           </p>
 
+          {/* Loading State */}
           {loading ? (
             <p className="text-gray-500">Loading...</p>
           ) : results.length > 0 ? (
-            <ul className="gap-4 w-full max-w-[55%] space-y-3">
+            <ul className="gap-4 w-[55vw] space-y-3">
               {type === "roommate"
                 ? Object.entries(groupedRoommates).map(([name, group]) => {
                     const hasNoReviews =
@@ -162,13 +172,14 @@ export default function SearchResultsClient() {
                           </div>
                         </div>
 
-                        {/* Only show review rows if NOT hasNoReviews */}
+                        {/* Review details for each roommate profile */}
                         {!hasNoReviews &&
                           group.map((item) => (
                             <div
                               key={item.rm_id + item.unit_suffix}
                               className="grid grid-cols-[1fr_1fr_auto] pl-3"
                             >
+                              {/* Location and unit information */}
                               <div>
                                 <p className="text-gray-700 text-sm">
                                   <span className="underline">
@@ -180,7 +191,7 @@ export default function SearchResultsClient() {
                                 </p>
                               </div>
 
-                              {/* Middle: Stars */}
+                              {/* Rating display with star icons */}
                               <div className="flex justify-center min-w-[160px] whitespace-nowrap">
                                 {item.avg_rating !== null ? (
                                   <div className="flex items-center text-sm">
@@ -222,7 +233,7 @@ export default function SearchResultsClient() {
                                 )}
                               </div>
 
-                              {/* Right: Button */}
+                              {/* View Profile button for each review */}
                               <div className="flex justify-end">
                                 <Link
                                   href={`/roommate/${item.rm_id}?housing_id=${item.housing_id}&unit_suffix=${item.unit_suffix}`}
@@ -237,6 +248,7 @@ export default function SearchResultsClient() {
                     );
                   })
                 : results.filter(isHousing).map((item) => (
+                    // Housing result display
                     <li
                       key={item.housing_id}
                       className="bg-[#fafafa] p-4 rounded-xl shadow flex flex-col gap-2 border-r-[.35rem] border-b-[.35rem] border-r-[#ebebeb] border-b-[#ebebeb] ml-8"
@@ -250,6 +262,7 @@ export default function SearchResultsClient() {
                             {item.school_name}
                           </p>
                         </div>
+                        {/* Verification status indicator */}
                         {item.is_verified && (
                           <span className="text-green-600 text-sm font-semibold whitespace-nowrap">
                             ✔ Verified
@@ -262,37 +275,16 @@ export default function SearchResultsClient() {
           ) : (
             <div className="mt-6">
               <p className="text-gray-500 mb-4">No results found.</p>
-              <Link
-                href={type === "roommate" ? "/roommate/new" : "/housing/new"}
-                className="inline-block bg-navy-blue text-lazyDog text-white px-6 py-2 rounded-md bg-darkBlue hover:bg-blue-800 hover:transition"
-              >
-                Add a new {type === "roommate" ? "roommate" : "housing"}
-              </Link>
             </div>
           )}
 
-          <div className="mt-8">
-            <Link
-              href="/search"
-              className="inline-flex items-center text-navy-blue hover:underline"
-            >
-              <svg
-                className="w-4 h-4 mr-1"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                />
-              </svg>
-              Back to Search
-            </Link>
-          </div>
+          {/* Add New Item Button */}
+          <Link
+            href={type === "roommate" ? "/roommate/new" : "/housing/new"}
+            className="inline-block mt-4 bg-lightBlue text-lazyDog text-white px-6 py-2 rounded-md hover:bg-blue-900 hover:transition shadow-[3px_3px_0_0_#0c4a6e]"
+          >
+            Add a new {type === "roommate" ? "roommate" : "housing option"}
+          </Link>
         </div>
       </TopFridge>
     </main>
