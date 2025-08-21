@@ -19,11 +19,31 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Missing user_id" }, { status: 400 });
   }
 
-  // Initialize Supabase client with service role key for admin operations
+  // Initialize Supabase client with anon key
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   );
+
+  // First, check if the user exists
+  const { data: userExists, error: userCheckError } = await supabase
+    .from("users")
+    .select("user_id")
+    .eq("user_id", user_id)
+    .maybeSingle();
+
+  if (userCheckError) {
+    console.error("Error checking if user exists:", userCheckError);
+    return NextResponse.json({ 
+      error: "Database error occurred while checking user" 
+    }, { status: 500 });
+  }
+
+  if (!userExists) {
+    return NextResponse.json({ 
+      error: "User not found" 
+    }, { status: 404 });
+  }
 
   // Fetch user's school information with joined school details
   const { data, error } = await supabase
@@ -32,8 +52,30 @@ export async function GET(req: Request) {
     .eq("user_id", user_id)
     .single<UserSchoolInfo>();
 
-  if (error || !data || !data.schools) {
-    return NextResponse.json({ error: "User or school not found" }, { status: 404 });
+  if (error) {
+    console.error("Error fetching user school info:", error);
+    return NextResponse.json({ 
+      error: "Failed to fetch user school information" 
+    }, { status: 500 });
+  }
+
+  if (!data) {
+    return NextResponse.json({ 
+      error: "User data not found" 
+    }, { status: 404 });
+  }
+
+  // If user has no school_id, return a default response
+  if (!data.school_id) {
+    return NextResponse.json({ 
+      school_name: "Other/General" 
+    });
+  }
+
+  if (!data.schools) {
+    return NextResponse.json({ 
+      error: "School information not found" 
+    }, { status: 404 });
   }
 
   return NextResponse.json({ school_name: data.schools.school_name });

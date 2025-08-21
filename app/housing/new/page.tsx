@@ -16,6 +16,8 @@ export default function AddHousingPage() {
   const [schoolName, setSchoolName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingSchool, setIsLoadingSchool] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   // Fetch user's school information on component mount
   useEffect(() => {
@@ -35,14 +37,22 @@ export default function AddHousingPage() {
     fetchSchool();
   }, [user]);
 
+  // Clear messages when user types
+  useEffect(() => {
+    setErrorMessage("");
+    setSuccessMessage("");
+  }, [housingName]);
+
   // Handle form submission to create new housing
   const handleSubmit = async () => {
     if (!user?.id || !housingName.trim()) {
-      alert("Please enter a housing name.");
+      setErrorMessage("Please enter a housing name.");
       return;
     }
 
     setIsSubmitting(true);
+    setErrorMessage("");
+    setSuccessMessage("");
 
     // Submit housing creation request to API
     const res = await fetch("/api/housing/new", {
@@ -54,24 +64,34 @@ export default function AddHousingPage() {
       }),
     });
 
+    const result = await res.json();
     setIsSubmitting(false);
 
     if (!res.ok) {
-      const errorData = await res.json();
-      alert(`Failed to add housing: ${errorData.error || "Unknown error"}`);
+      // Handle duplicate housing case
+      if (res.status === 409 && result.is_existing) {
+        setErrorMessage(`Housing "${result.duplicate_name}" already exists for this school.`);
+      } else {
+        setErrorMessage(result.error || "Failed to add housing. Please try again.");
+      }
       return;
     }
 
+    // Success case
+    setSuccessMessage("Housing created successfully!");
+    
     // Extract housing ID from response and redirect to housing detail page
-    const result = await res.json();
     const housingId = result.data?.[0]?.housing_id;
 
     if (!housingId) {
-      alert("Housing added, but could not retrieve ID.");
+      setErrorMessage("Housing added, but could not retrieve ID.");
       return;
     }
 
-    router.push(`/housing/${housingId}`);
+    // Redirect after a short delay to show success message
+    setTimeout(() => {
+      router.push(`/housing/${housingId}`);
+    }, 1500);
   };
 
   return (
@@ -98,6 +118,20 @@ export default function AddHousingPage() {
               onChange={(e) => setHousingName(e.target.value)}
               className="w-1/3 p-3 border border-darkBlue rounded-md mb-4 mt-8"
             />
+
+            {/* Error Message Display */}
+            {errorMessage && (
+              <div className="w-1/3 mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md text-center">
+                {errorMessage}
+              </div>
+            )}
+
+            {/* Success Message Display */}
+            {successMessage && (
+              <div className="w-1/3 mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded-md text-center">
+                {successMessage}
+              </div>
+            )}
 
             {/* Submit Button */}
             <button

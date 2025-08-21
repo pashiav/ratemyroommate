@@ -17,6 +17,8 @@ export default function AddRoommatePage() {
   const [schoolName, setSchoolName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingSchool, setIsLoadingSchool] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   // Fetch user's school information on component mount
   useEffect(() => {
@@ -36,14 +38,22 @@ export default function AddRoommatePage() {
     fetchSchool();
   }, [user]);
 
+  // Clear messages when user types
+  useEffect(() => {
+    setErrorMessage("");
+    setSuccessMessage("");
+  }, [firstName, lastName]);
+
   // Handle form submission to create new roommate
   const handleSubmit = async () => {
     if (!user?.id || !firstName.trim() || !lastName.trim()) {
-      alert("Please fill in all required fields.");
+      setErrorMessage("Please fill in all required fields.");
       return;
     }
 
     setIsSubmitting(true);
+    setErrorMessage("");
+    setSuccessMessage("");
 
     // Submit roommate creation request to API
     const res = await fetch("/api/roommates/new", {
@@ -56,24 +66,34 @@ export default function AddRoommatePage() {
       }),
     });
 
+    const result = await res.json();
     setIsSubmitting(false);
 
     if (!res.ok) {
-      const errorData = await res.json();
-      alert(`Failed to add roommate: ${errorData.error || "Unknown error"}`);
+      // Handle duplicate roommate case
+      if (res.status === 409 && result.is_existing) {
+        setErrorMessage(`Roommate "${result.duplicate_name}" already exists for this school.`);
+      } else {
+        setErrorMessage(result.error || "Failed to add roommate. Please try again.");
+      }
       return;
     }
 
+    // Success case
+    setSuccessMessage("Roommate created successfully!");
+    
     // Extract roommate ID from response and redirect to roommate detail page
-    const result = await res.json();
     const roommateId = result.data?.[0]?.rm_id;
 
     if (!roommateId) {
-      alert("Roommate created, but could not get their ID.");
+      setErrorMessage("Roommate created, but could not get their ID.");
       return;
     }
 
-    router.push(`/roommate/${roommateId}`);
+    // Redirect after a short delay to show success message
+    setTimeout(() => {
+      router.push(`/roommate/${roommateId}`);
+    }, 1500);
   };
 
   return (
@@ -109,6 +129,20 @@ export default function AddRoommatePage() {
               onChange={(e) => setLastName(e.target.value)}
               className="w-1/3 p-3 border border-darkBlue rounded-md mb-4"
             />
+
+            {/* Error Message Display */}
+            {errorMessage && (
+              <div className="w-1/3 mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md text-center">
+                {errorMessage}
+              </div>
+            )}
+
+            {/* Success Message Display */}
+            {successMessage && (
+              <div className="w-1/3 mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded-md text-center">
+                {successMessage}
+              </div>
+            )}
 
             {/* Submit Button */}
             <button

@@ -56,7 +56,6 @@ NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your-clerk-key
 CLERK_SECRET_KEY=your-clerk-secret
 NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-key
-SUPABASE_SERVICE_ROLE_KEY=your-service-key
 ```
 
 ### Database Setup

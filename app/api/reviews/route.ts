@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { auth } from "@clerk/nextjs/server";
 
-// Initialize Supabase client with service role key for admin operations
+// Initialize Supabase client with anon key
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-const supabase = createClient(supabaseUrl, supabaseServiceKey, {
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     autoRefreshToken: false,
     persistSession: false,
@@ -169,11 +169,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Insert new review with all validated fields
+    // Insert new review with all validated fields including reviewer_id
     const { data, error } = await supabase.from("reviews").insert([
       {
         rm_id,
         school_id: userRow.school_id,
+        reviewer_id,
         housing_id,
         rating,
         would_recommend,
