@@ -24,12 +24,11 @@ export default function SearchForm({
   onSearch,
 }: Props) {
   return (
-    <div className="flex items-center gap-1 h-full">
+    <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-1 h-full w-full">
       {/* Search Type Selector */}
-      <div className="relative inline-block min-w-fit">
-        {" "}
+      <div className="relative inline-block min-w-fit w-full sm:w-auto">
         <select
-          className="h-10 px-4 pr-10 text-center rounded-md bg-[#d8e1ec] border text-darkBlue text-base leading-tight appearance-none"
+          className="h-10 px-4 pr-10 text-center rounded-md bg-[#d8e1ec] border text-darkBlue text-sm sm:text-base leading-tight appearance-none w-full sm:w-auto"
           value={searchType}
           onChange={(e) => setSearchType(e.target.value)}
         >
@@ -55,7 +54,7 @@ export default function SearchForm({
       </div>
 
       {/* Search Input Fields */}
-      <div className="w-[25rem] h-[2.4rem] flex gap-1 italic font-sans text-[0.75rem] bg-transparent">
+      <div className="w-full sm:w-[25rem] h-auto sm:h-[2.4rem] flex flex-col sm:flex-row gap-2 sm:gap-1 italic font-sans text-[0.75rem] bg-transparent">
         {searchType === "roommate" ? (
           <>
             {/* Roommate name input field */}
@@ -73,7 +72,7 @@ export default function SearchForm({
                   onSearch();
                 }
               }}
-              className="w-1/2 px-4 py-2 border border-darkBlue rounded-md italic font-sans"
+              className="w-full sm:w-1/2 px-4 py-2 border border-darkBlue rounded-md italic font-sans text-sm sm:text-base"
             />
             {/* Location input field for roommate search */}
             <input
@@ -90,7 +89,7 @@ export default function SearchForm({
                   onSearch();
                 }
               }}
-              className="w-1/2 px-4 py-2 border border-darkBlue rounded-md italic font-sans"
+              className="w-full sm:w-1/2 px-4 py-2 border border-darkBlue rounded-md italic font-sans text-sm sm:text-base"
             />
           </>
         ) : (
@@ -109,7 +108,7 @@ export default function SearchForm({
                 onSearch();
               }
             }}
-            className="w-full px-4 py-2 border border-darkBlue rounded-md italic font-sans"
+            className="w-full px-4 py-2 border border-darkBlue rounded-md italic font-sans text-sm sm:text-base"
           />
         )}
       </div>
@@ -117,7 +116,7 @@ export default function SearchForm({
       {/* Search Button */}
       <button
         onClick={onSearch}
-        className="bg-darkBlue text-white w-[2.4rem] h-[2.4rem] rounded-md hover:bg-blue-900 flex items-center justify-center transition"
+        className="bg-darkBlue text-white w-full sm:w-[2.4rem] h-10 sm:h-[2.4rem] rounded-md hover:bg-blue-900 flex items-center justify-center transition"
       >
         <FontAwesomeIcon icon={faMagnifyingGlass} className="w-4 h-4" />
       </button>
