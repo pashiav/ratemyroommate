@@ -5,6 +5,7 @@ import SearchBar from "./SearchBar";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
+import ResponsiveSearchIcon from "./ResponsiveSearchIcon";
 
 // Props interface for the top fridge component
 interface Props {
@@ -87,7 +88,7 @@ export default function TopFridge({
       {/* Search Bar (Conditional) */}
       {showSearchBar && (
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 mt-[3rem] z-50">
-          <SearchBar />
+          <ResponsiveSearchIcon />
         </div>
       )}
     </div>
