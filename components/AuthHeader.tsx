@@ -47,7 +47,7 @@ export default function AuthHeader() {
   if (!isLoaded) return null;
 
   return (
-    <div className="absolute top-0 right-0 mt-[1.5rem] sm:mt-[2rem] md:mt-[2.5rem] lg:mt-[3rem] mr-[1rem] sm:mr-[2rem] md:mr-[4rem] lg:mr-[6rem] z-[100]">
+    <div className="absolute top-0 right-0 mt-[3rem] sm:mt-[3rem] md:mt-[2.5rem] lg:mt-[3rem] mr-[3rem] sm:mr-[3rem] md:mr-[4rem] lg:mr-[6rem] z-[100]">
       {isSignedIn ? (
         <>
           {/* User Account Button */}
