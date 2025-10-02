@@ -15,14 +15,14 @@ const TermsOfServicePage = () => {
                     <div className="flex items-center justify-between">
                         <Link href="/">
                             <Button 
-                                variant="outline" 
+                                variant="link"
                             >
                                 ← Back to Home
                             </Button>
                         </Link>
                         <div className="flex items-center space-x-3">
                             <img src="/logo.png" alt="Rate My Roommate" className="w-12 h-8" />
-                            <h1 className="text-2xl font-bold text-darkBlue font-lazyDog">Rate My Roommate</h1>
+                            <h1 className="text-1xl font-bold text-darkBlue font-lazyDog">Rate My Roommate</h1>
                         </div>
                     </div>
                 </div>
@@ -31,7 +31,7 @@ const TermsOfServicePage = () => {
             {/* Main content */}
             <div className="max-w-4xl mx-auto px-4 py-8">
                 {/* Title section with cute styling */}
-                <div className="bg-lightGray rounded-xl p-8 mb-8">
+                <div className="bg-lightGray rounded-xl p-2 mb-8">
                     <div className="text-center">
                         <h1 className="text-4xl md:text-5xl font-bold text-darkBlue font-lazyDog mb-4">
                             Terms of Service
