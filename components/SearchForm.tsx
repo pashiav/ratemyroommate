@@ -96,22 +96,24 @@ export default function SearchForm({
           </>
         ) : (
           /* Single location input field for housing search */
-          <input
-            type="text"
-            placeholder="Apartment/Dorm Name"
-            value={locationQuery}
-            onChange={(e) => {
-              // Sanitize input to remove numbers and semicolons
-              const sanitized = e.target.value.replace(/[0-9;]/g, "");
-              setLocationQuery(sanitized);
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                onSearch();
-              }
-            }}
-            className="w-full lg:w-[75vw] px-4 py-2 border border-darkBlue rounded-md italic font-sans text-sm lg:text-[0.625rem] xs:text-xs md:text-sm"
-          />
+          <div className="w-full lg:w-[25rem] h-auto md:h-[2.4rem]">
+            <input
+              type="text"
+              placeholder="Apartment/Dorm Name"
+              value={locationQuery}
+              onChange={(e) => {
+                // Sanitize input to remove numbers and semicolons
+                const sanitized = e.target.value.replace(/[0-9;]/g, "");
+                setLocationQuery(sanitized);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  onSearch();
+                }
+              }}
+              className="w-full px-4 py-2 border border-darkBlue rounded-md italic font-sans text-sm lg:text-[0.625rem] xs:text-xs md:text-sm"
+            />
+          </div>
         )}
       </div>
 

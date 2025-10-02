@@ -73,17 +73,6 @@ export default function Footer() {
                   <span>GitHub</span>
                 </a>
               </li>
-              <li>
-                <a 
-                  href="#" 
-                  className="text-gray-300 hover:text-white transition-colors duration-200 flex items-center space-x-2"
-                >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l10 8.104 10-8.104v11.817h-20z"/>
-                  </svg>
-                  <span>Contact Us</span>
-                </a>
-              </li>
             </ul>
           </div>
         </div>
@@ -95,7 +84,7 @@ export default function Footer() {
               © 2025 Rate My Roommate. All rights reserved.
             </p>
             <p className="text-gray-400 text-sm">
-              Made with ❤️ for students everywhere
+              Made for students.
             </p>
           </div>
         </div>

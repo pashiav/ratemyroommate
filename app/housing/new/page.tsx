@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import TopFridge from "@/components/TopFridge";
+import Footer from "@/components/Footer";
 import AuthHeader from "@/components/AuthHeader";
 import Loading from "@/components/Loading";
 
@@ -144,6 +145,7 @@ export default function AddHousingPage() {
           </div>
         )}
       </TopFridge>
+      <Footer />
     </main>
   );
 }
