@@ -90,7 +90,7 @@ export default function AddHousingPage() {
 
     // Redirect after a short delay to show success message
     setTimeout(() => {
-      router.push(`/housing/${housingId}`);
+      router.push(`/search`);
     }, 1500);
   };
 
