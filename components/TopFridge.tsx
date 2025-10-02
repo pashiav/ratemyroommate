@@ -62,7 +62,7 @@ export default function TopFridge({
       {back && (
         <button
           onClick={() => router.back()}
-          className="absolute w-auto h-auto left-[25%] top-[7.5rem] text-black text-[1.25rem] rounded-md hover:underline z-0"
+          className="absolute w-auto h-auto left-[15%] sm:left-[20%] md:left-[22%] lg:left-[25%] top-[6rem] sm:top-[6.5rem] md:top-[7rem] lg:top-[7.5rem] text-black text-[1rem] sm:text-[1.125rem] md:text-[1.25rem] rounded-md hover:underline z-0 transition-colors"
         >
           <FontAwesomeIcon
             icon={faArrowLeftLong}

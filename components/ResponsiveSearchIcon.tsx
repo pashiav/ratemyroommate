@@ -111,18 +111,18 @@ export default function ResponsiveSearchIcon() {
 
       {/* Modal Overlay */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-start justify-center pt-10">
-          <div className="bg-white w-[95vw] sm:w-[80vw] md:w-[60vw] lg:w-[50vw] xl:w-[40vw] max-w-[40rem] p-4 rounded-md">
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-start justify-center pt-4 sm:pt-6 md:pt-8 lg:pt-10 px-2">
+          <div className="bg-white w-full max-w-[95vw] sm:max-w-[85vw] md:max-w-[70vw] lg:max-w-[60vw] xl:max-w-[50vw] 2xl:max-w-[40vw] max-h-[90vh] rounded-lg shadow-2xl">
             <div
               ref={modalRef}
-              className="bg-white rounded-lg p-4 w-full max-h-[95vh] overflow-y-auto shadow-2xl"
+              className="bg-white rounded-lg p-3 sm:p-4 w-full max-h-[85vh] overflow-y-auto"
             >
               {/* Modal Header */}
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold text-darkBlue">Search</h2>
+              <div className="flex justify-between items-center mb-3 sm:mb-4">
+                <h2 className="text-base sm:text-lg font-semibold text-darkBlue">Search</h2>
                 <button
                   onClick={() => setIsModalOpen(false)}
-                  className="text-gray-500 hover:text-gray-700 text-2xl font-bold w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100"
+                  className="text-gray-500 hover:text-gray-700 text-xl sm:text-2xl font-bold w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
                   aria-label="Close search modal"
                 >
                   ×

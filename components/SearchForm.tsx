@@ -24,11 +24,11 @@ export default function SearchForm({
   onSearch,
 }: Props) {
   return (
-    <div className="flex flex-col lg:flex-row items-center gap-2 md:gap-1 h-full w-full lg:w-[auto]">
+    <div className="flex flex-col lg:flex-row items-center gap-3 lg:gap-2 h-full w-full lg:w-[auto]">
       {/* Search Type Selector */}
-      <div className="relative inline-block min-w-fit w-full md:w-auto">
+      <div className="relative inline-block min-w-fit w-full lg:w-auto">
         <select
-          className="h-10 px-4 pr-10 text-center rounded-md bg-[#d8e1ec] border text-darkBlue text-xs xs:text-sm md:text-base leading-tight appearance-none w-full md:w-auto"
+          className="h-10 px-4 pr-10 text-center rounded-md bg-[#d8e1ec] border text-darkBlue text-sm lg:text-xs xs:text-sm md:text-base leading-tight appearance-none w-full lg:w-auto"
           value={searchType}
           onChange={(e) => setSearchType(e.target.value)}
         >
@@ -54,47 +54,46 @@ export default function SearchForm({
       </div>
 
       {/* Search Input Fields */}
-      <div className="w-full lg:w-auto h-auto md:h-[2.4rem] flex flex-col md:flex-row lg:flex-row gap-2 md:gap-1 italic font-sans text-[0.625rem] xs:text-[0.75rem] md:text-sm bg-transparent">        {searchType === "roommate" ? (
+      <div className="w-full lg:w-auto h-auto md:h-[2.4rem] flex flex-col lg:flex-row gap-3 lg:gap-1 italic font-sans text-sm lg:text-[0.625rem] xs:text-[0.75rem] md:text-sm bg-transparent">
+        {searchType === "roommate" ? (
           <>
             {/* Roommate name input field */}
-            <div className="w-full md:w-[25rem] h-auto md:h-[2.4rem] flex flex-col md:flex-row gap-2 md:gap-1">
-
-            <input
-              type="text"
-              placeholder="Roommate Name"
-              value={searchQuery}
-              onChange={(e) => {
-                // Sanitize input to remove numbers and semicolons
-                const sanitized = e.target.value.replace(/[0-9;]/g, "");
-                setSearchQuery(sanitized);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  onSearch();
-                }
-              }}
-              className="w-[75vw] md:w-[75vw] lg:w-[75vw] px-4 py-2 border border-darkBlue rounded-md italic font-sans text-[0.625rem] xs:text-xs md:text-sm"
+            <div className="w-full lg:w-[25rem] h-auto md:h-[2.4rem] flex flex-col lg:flex-row gap-3 lg:gap-1">
+              <input
+                type="text"
+                placeholder="Roommate Name"
+                value={searchQuery}
+                onChange={(e) => {
+                  // Sanitize input to remove numbers and semicolons
+                  const sanitized = e.target.value.replace(/[0-9;]/g, "");
+                  setSearchQuery(sanitized);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    onSearch();
+                  }
+                }}
+                className="w-full lg:w-[75vw] px-4 py-2 border border-darkBlue rounded-md italic font-sans text-sm lg:text-[0.625rem] xs:text-xs md:text-sm"
               />
-            {/* Location input field for roommate search */}
-            <input
-              type="text"
-              placeholder="Apartment/Dorm Name"
-              value={locationQuery}
-              onChange={(e) => {
-                // Sanitize input to remove numbers and semicolons
-                const sanitized = e.target.value.replace(/[0-9;]/g, "");
-                setLocationQuery(sanitized);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  onSearch();
-                }
-              }}
-              className="w-[75vw] md:w-[75vw] lg:w-[75vw] px-4 py-2 border border-darkBlue rounded-md italic font-sans text-[0.625rem] xs:text-xs md:text-sm"
+              {/* Location input field for roommate search */}
+              <input
+                type="text"
+                placeholder="Apartment/Dorm Name"
+                value={locationQuery}
+                onChange={(e) => {
+                  // Sanitize input to remove numbers and semicolons
+                  const sanitized = e.target.value.replace(/[0-9;]/g, "");
+                  setLocationQuery(sanitized);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    onSearch();
+                  }
+                }}
+                className="w-full lg:w-[75vw] px-4 py-2 border border-darkBlue rounded-md italic font-sans text-sm lg:text-[0.625rem] xs:text-xs md:text-sm"
               />
             </div>
           </>
-
         ) : (
           /* Single location input field for housing search */
           <input
@@ -111,15 +110,15 @@ export default function SearchForm({
                 onSearch();
               }
             }}
-            className="w-[75vw] md:w-[75vw] lg:w-[75vw] px-4 py-2 border border-darkBlue rounded-md italic font-sans text-[0.625rem] xs:text-xs md:text-sm"
-            />
+            className="w-full lg:w-[75vw] px-4 py-2 border border-darkBlue rounded-md italic font-sans text-sm lg:text-[0.625rem] xs:text-xs md:text-sm"
+          />
         )}
       </div>
 
       {/* Search Button */}
       <button
         onClick={onSearch}
-        className="bg-darkBlue text-white w-full md:w-[2.4rem] h-10 md:h-[2.4rem] rounded-md hover:bg-blue-900 flex items-center justify-center transition"
+        className="bg-darkBlue text-white w-full lg:w-[2.4rem] h-10 lg:h-[2.4rem] rounded-md hover:bg-blue-900 flex items-center justify-center transition"
       >
         <FontAwesomeIcon icon={faMagnifyingGlass} className="w-4 h-4" />
       </button>
