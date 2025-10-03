@@ -117,7 +117,3 @@ Found bugs? Have ideas? Submit an [issue](https://github.com/pashiav/ratemyroomm
 ## License
 
 MIT - do whatever you want with it
-
----
-
-**Note**: This platform is for sharing genuine experiences to help students make informed housing decisions. Don't use it to be vindictive or post fake reviews. We can tell the difference.
