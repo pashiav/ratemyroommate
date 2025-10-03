@@ -465,7 +465,7 @@ export default function RoommateDetails() {
 
               {/* Key Info Badges */}
               <div className="flex flex-wrap gap-1.5 mb-3">
-                <span className={`px-2 py-1 rounded-full text-[0.625rem] xs:text-xs font-bold font-sans ${review.would_recommend ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                <span className={`px-2 py-1 rounded-full text-[0.625rem] xs:text-xs font-bold ${review.would_recommend ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                   {review.would_recommend ? (
                     <>
                       <FaThumbsUp className="inline mr-1" /> Recommend
@@ -476,11 +476,11 @@ export default function RoommateDetails() {
                     </>
                   )}
                 </span>
-                <span className="px-2 py-1 rounded-full text-[0.625rem] xs:text-xs font-bold font-sans bg-blue-100 text-blue-700">
+                <span className="px-2 py-1 rounded-full text-[0.625rem] xs:text-xs font-bold bg-blue-100 text-blue-700">
                 {review.years_lived} {Number(review.years_lived) === 1 ? "year" : "years"} lived
                 </span>
                 {review.has_pets && (
-                  <span className="px-2 py-1 rounded-full text-[0.625rem] xs:text-xs font-bold font-sans bg-purple-100 text-purple-700">
+                  <span className="px-2 py-1 rounded-full text-[0.625rem] xs:text-xs font-bold bg-purple-100 text-purple-700">
                     <FaPaw className="inline mr-1" /> Pets
                   </span>
                 )}
