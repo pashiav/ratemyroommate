@@ -44,7 +44,7 @@ export default function Home() {
     <main className="min-h-screen bg-[#315d8d] px-2 sm:px-4 md:px-6 lg:px-8">
       {/* To Do List Section - Hangs over bottom fridge */}
       <div className="relative z-[2] flex justify-center w-full">
-        <div className="w-full max-w-[80%] sm:max-w-[60%] md:max-w-[60%] lg:max-w-[500px] mt-[13rem] sm:mt-[16rem] md:mt-[17rem] lg:mt-[22rem] xl:mt-[24rem] absolute border-2 border-navy-blue rounded-lg p-3 sm:p-4 md:p-6 pt-0 pb-[10vh] sm:pb-[15vh] md:pb-[20vh] lg:pb-[25vh] space-y-2 sm:space-y-3 md:space-y-4 bg-[#fdfeff] shadow-lg">
+        <div className="w-full max-w-[80%] sm:max-w-[60%] md:max-w-[60%] lg:max-w-[500px] mt-[13rem] sm:mt-[16rem] md:mt-[17rem] lg:mt-[22rem] xl:mt-[24rem] absolute border-2 border-navy-blue rounded-2xl p-3 sm:p-4 md:p-6 pt-0 pb-[10vh] sm:pb-[15vh] md:pb-[20vh] lg:pb-[25vh] space-y-2 sm:space-y-3 md:space-y-4 bg-[#fdfeff] border-2 border-darkBlue shadow-lg">
           {/* Magnets with more natural highlights - Responsive positioning */}
           {/* Left pink circle */}
           <div className="absolute -left-6 sm:-left-8 md:-left-10 lg:-left-12 -top-4 sm:-top-5 md:-top-6 lg:-top-7 w-12 sm:w-16 md:w-20 lg:w-24 h-12 sm:h-16 md:h-20 lg:h-24 rounded-full bg-rosePink">
@@ -70,7 +70,7 @@ export default function Home() {
           </h2>
 
           {/* Sign up task */}
-          <div className="flex items-start space-x-2 sm:space-x-3 md:space-x-4 pt-0">
+          <div className="flex items-start space-x-2 sm:space-x-3 md:space-x-4 pt-0 -mt-12">
             <Checkbox
               id="signup"
               checked={todoItems[0].checked}
@@ -161,7 +161,7 @@ export default function Home() {
       </LandingTopFridge>
       
       <BottomFridge>
-        <div className="mt-[15vh] sm:mt-[20vh] md:mt-[25vh] lg:mt-[30vh] bg-[#fdfeff] rounded-[10px] shadow-md p-4 sm:p-6 md:p-8 max-w-lg sm:max-w-xl mx-auto text-left text-[#315d8d]">
+        <div className="mt-[15vh] sm:mt-[20vh] md:mt-[25vh] lg:mt-[30vh] bg-[#fdfeff] rounded-[10px] shadow-md p-4 sm:p-6 md:p-8 max-w-lg sm:max-w-xl mx-auto text-left text-[#315d8d] border-2 border-darkBlue">
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-center text-darkBlue">
             About RMR
           </h2>
