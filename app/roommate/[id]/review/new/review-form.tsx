@@ -473,7 +473,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
           <div>
             <label className="block font-medium mb-1 items-center gap-1">
               Unit End #...?
-              <InfoTip message={"e.g. Unit #993C → C\ne.g. Unit #4381 → 1"} />
+              <InfoTip message={"e.g. Unit #993C → C\ne.g. Unit #2 → 2"} />
             </label>
             <input
               type="text"
