@@ -52,6 +52,8 @@ export default function SearchResultsClient() {
   const [groupedRoommates, setGroupedRoommates] = useState<
     Record<string, RoommateViewResult[]>
   >({});
+  // Dynamic result splitting based on available height
+  const [topResultsCount, setTopResultsCount] = useState(2);
 
   // Fetch search results from API based on search parameters
   useEffect(() => {
@@ -99,8 +101,28 @@ export default function SearchResultsClient() {
     return "housing_id" in item && "is_verified" in item;
   }
 
-  // Split results into top (first 2) and bottom (rest)
-  const topResultsCount = 2;
+  // Calculate dynamic result splitting based on screen size and available height
+  useEffect(() => {
+    const calculateTopResultsCount = () => {
+      const screenWidth = window.innerWidth;
+      let maxResults = 2; // default fallback
+      
+      if (screenWidth >= 1024) { // lg screens
+        maxResults = 4;
+      } else if (screenWidth >= 768) { // md screens  
+        maxResults = 3;
+      } else { // sm and below
+        maxResults = 2;
+      }
+      
+      setTopResultsCount(maxResults);
+    };
+
+    calculateTopResultsCount();
+    window.addEventListener('resize', calculateTopResultsCount);
+    
+    return () => window.removeEventListener('resize', calculateTopResultsCount);
+  }, []);
   const topGroupedRoommates = type === "roommate" 
     ? Object.fromEntries(Object.entries(groupedRoommates).slice(0, topResultsCount))
     : {};
@@ -288,7 +310,7 @@ export default function SearchResultsClient() {
           {loading ? (
             <p className="text-gray-500">Loading...</p>
           ) : results.length > 0 ? (
-            <ul className={`w-full max-w-4xl space-y-3 px-2 sm:px-4 ${results.length > topResultsCount ? 'mb-0' : ''}`}>
+            <ul className={`w-full max-w-4xl md:max-w-lg lg:max-w-2xl space-y-3 px-2 sm:px-4 ${results.length > topResultsCount ? 'mb-0' : ''}`}>
               {type === "roommate"
                 ? Object.entries(topGroupedRoommates).map(([name, group]) =>
                     renderRoommateItem(name, group)
@@ -307,13 +329,20 @@ export default function SearchResultsClient() {
       {!loading && results.length > topResultsCount && (
         <BottomFridge>
           <div className="flex flex-col items-center gap-2 px-2 sm:px-4 pt-3">
-            <ul className="w-full max-w-4xl space-y-3 px-2 sm:px-4">
+            <ul className="w-full max-w-4xl md:max-w-lg lg:max-w-2xl space-y-3 px-2 sm:px-4">
               {type === "roommate"
                 ? Object.entries(bottomGroupedRoommates).map(([name, group]) =>
                     renderRoommateItem(name, group)
                   )
                 : bottomHousingResults.map((item) => renderHousingItem(item))}
             </ul>
+
+            {/* No more results message - always show above add button */}
+            <div className="text-center mt-6 mb-4">
+              <p className="text-gray-500 text-sm">
+                No more {type === "roommate" ? "roommates" : "housing options"} found
+              </p>
+            </div>
 
             {/* Add New Item Button */}
             <Link
@@ -328,7 +357,14 @@ export default function SearchResultsClient() {
 
       {/* Show "Add New" button in TopFridge if no overflow results */}
       {!loading && results.length > 0 && results.length <= topResultsCount && (
-        <div className="flex justify-center -mt-[4rem] relative z-20">
+        <div className="flex flex-col items-center -mt-[4rem] relative z-20">
+          {/* No more results message */}
+          <div className="text-center mb-4">
+            <p className="text-gray-500 text-sm">
+              No more {type === "roommate" ? "roommates" : "housing options"} found
+            </p>
+          </div>
+          
           <Link
             href={type === "roommate" ? "/roommate/new" : "/housing/new"}
             className="inline-block bg-lightBlue text-lazyDog text-white px-4 sm:px-6 py-2 sm:py-3 rounded-md hover:bg-blue-900 hover:transition shadow-[3px_3px_0_0_#0c4a6e] text-sm sm:text-base transition-colors"

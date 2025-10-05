@@ -142,9 +142,9 @@ export default function RoommateDetails() {
   // Component for displaying trait rating bars
   function TraitBar({ label, value }: { label: string; value: number }) {
     return (
-      <div className="flex items-center gap-2 text-[#6d4d55] text-xs sm:text-sm">
-        <span className="w-20 sm:w-24 md:w-28">{label}</span>
-        <div className="flex-1 bg-[#ebebeb] h-4 sm:h-5 rounded-full">
+      <div className="flex items-center gap-3 text-[#6d4d55] text-xs sm:text-sm">
+        <span className="w-24 sm:w-28 md:w-32">{label}</span>
+        <div className="w-40 sm:w-40 md:flex-1 bg-[#ebebeb] h-4 sm:h-5 rounded-full">
           <div
             className="h-4 sm:h-5 bg-[#c4adb9] rounded-full"
             style={{ width: `${(value / 5) * 100}%` }}
@@ -228,7 +228,7 @@ export default function RoommateDetails() {
                 </a>
                 .
               </p>
-              <div className="w-[80vw] sm:w-[80vw] md:w-[70vw] lg:w-[60vw] xl:w-[60vw] max-w-4xl bg-white rounded-xl sm:rounded-[2rem] pt-4 px-4 sm:px-8 md:px-12 lg:px-16 pb-8 sm:pb-16 border-4 sm:border-[0.90rem] border-darkBlue text-darkBlue font-lazyDog">
+              <div className="w-[80vw] sm:w-[80vw] md:w-[70vw] lg:w-[65vw] xl:w-[60vw] max-w-4xl bg-white rounded-xl sm:rounded-[2rem] pt-4 px-4 sm:px-8 md:px-12 lg:px-16 pb-8 sm:pb-16 border-4 sm:border-[0.90rem] border-darkBlue text-darkBlue font-lazyDog">
                 {/* Roommate Name Header */}
                 <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.25rem] mt-2 text-center break-words">
                   {roommate.full_name}
@@ -305,8 +305,8 @@ export default function RoommateDetails() {
                   <div className="hidden md:block w-[1px] bg-[#70768d] mx-4 lg:mx-8" />
 
                   {/* Right side: Rating distribution and review count */}
-                  <div className="w-full md:w-1/2 px-2 sm:px-4">
-                    <p className="text-base sm:text-lg md:text-[1.25rem] text-lightBlue">
+                  <div className="w-full md:w-1/2 px-2 sm:px-4 flex flex-col items-center md:items-start">
+                    <p className="text-base sm:text-lg md:text-[1.25rem] text-lightBlue text-center md:text-left">
                       Based on{" "}
                       <a
                         href="#"
@@ -329,30 +329,32 @@ export default function RoommateDetails() {
                       </a>
                     </p>
                     {/* Rating distribution bars */}
-                    {[5, 4, 3, 2, 1].map((star) => {
-                      const count = roommate.reviews.filter(
-                        (r) => r.rating === star
-                      ).length;
-                      return (
-                        <div key={star} className="flex items-center gap-2">
-                          <span className="w-6">
-                            {star}
-                            <span className="text-[.85rem] relative -top-[0.1rem]">
-                              ★
+                    <div className="flex flex-col items-center md:items-start w-full">
+                      {[5, 4, 3, 2, 1].map((star) => {
+                        const count = roommate.reviews.filter(
+                          (r) => r.rating === star
+                        ).length;
+                        return (
+                          <div key={star} className="flex items-center gap-2 w-full justify-center md:justify-start">
+                            <span className="w-6">
+                              {star}
+                              <span className="text-[.85rem] relative -top-[0.1rem]">
+                                ★
+                              </span>
                             </span>
-                          </span>
-                          <div className="h-5 bg-lightGray rounded-full w-2/3 border-darkBlue border-2">
-                            <div
-                              className="h-4 bg-[#c1ccd8] rounded-full"
-                              style={{
-                                width: `${(count / roommate.reviews.length) * 100}%`,
-                              }}
-                            />
+                            <div className="h-5 bg-lightGray rounded-full w-2/3 border-darkBlue border-2">
+                              <div
+                                className="h-4 bg-[#c1ccd8] rounded-full"
+                                style={{
+                                  width: `${(count / roommate.reviews.length) * 100}%`,
+                                }}
+                              />
+                            </div>
+                            <span className="text-[1rem]">{count}</span>
                           </div>
-                          <span className="text-[1rem]">{count}</span>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
 
@@ -360,7 +362,7 @@ export default function RoommateDetails() {
 
                 <div className="flex flex-col md:flex-row w-full mt-6 gap-6">
                   {/* Left: Trait rating bars */}
-                  <div className="w-full md:w-1/2 flex flex-col justify-center">
+                  <div className="w-full md:w-1/2 flex flex-col justify-center items-center md:items-start">
                     <div className="grid grid-cols-1 gap-2 text-sm mt-[1rem] mb-8">
                       <TraitBar
                         label="Cleanliness"

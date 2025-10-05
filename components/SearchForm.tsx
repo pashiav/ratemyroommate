@@ -24,11 +24,11 @@ export default function SearchForm({
   onSearch,
 }: Props) {
   return (
-    <div className="flex flex-col lg:flex-row items-center gap-3 lg:gap-2 h-full w-full lg:w-[auto]">
+    <div className="flex flex-col lg:flex-row items-center gap-3 lg:gap-2 h-full w-full">
       {/* Search Type Selector */}
       <div className="relative inline-block min-w-fit w-full lg:w-auto">
         <select
-          className="h-10 px-4 pr-10 text-center rounded-md bg-[#d8e1ec] border text-darkBlue text-sm lg:text-xs xs:text-sm md:text-base leading-tight appearance-none w-full lg:w-auto"
+          className="h-10 px-4 pr-10 text-center rounded-md bg-[#d8e1ec] border text-darkBlue text-sm lg:text-md xs:text-sm md:text-base leading-tight appearance-none w-full lg:w-auto"
           value={searchType}
           onChange={(e) => setSearchType(e.target.value)}
         >
@@ -54,11 +54,11 @@ export default function SearchForm({
       </div>
 
       {/* Search Input Fields */}
-      <div className="w-full lg:w-auto h-auto md:h-[2.4rem] flex flex-col lg:flex-row gap-3 lg:gap-1 italic font-sans text-sm lg:text-[0.625rem] xs:text-[0.75rem] md:text-sm bg-transparent">
+      <div className="w-full lg:w-auto h-auto md:h-auto lg:h-[2.4rem] flex flex-col lg:flex-row gap-3 lg:gap-1 italic font-sans text-sm lg:text-[0.75rem] xs:text-[0.75rem] md:text-sm bg-transparent">
         {searchType === "roommate" ? (
           <>
             {/* Roommate name input field */}
-            <div className="w-full lg:w-[25rem] h-auto md:h-[2.4rem] flex flex-col lg:flex-row gap-3 lg:gap-1">
+            <div className="w-full lg:w-[25rem] h-auto md:h-auto lg:h-[2.4rem] flex flex-col lg:flex-row gap-3 lg:gap-1">
               <input
                 type="text"
                 placeholder="Roommate Name"
@@ -73,7 +73,7 @@ export default function SearchForm({
                     onSearch();
                   }
                 }}
-                className="w-full lg:w-[75vw] px-4 py-2 border border-darkBlue rounded-md italic font-sans text-sm lg:text-[0.625rem] xs:text-xs md:text-sm"
+                className="w-full lg:w-[75vw] px-4 py-2 border border-darkBlue rounded-md italic font-sans text-sm lg:text-[0.75rem] xs:text-xs md:text-sm"
               />
               {/* Location input field for roommate search */}
               <input
@@ -90,7 +90,7 @@ export default function SearchForm({
                     onSearch();
                   }
                 }}
-                className="w-full lg:w-[75vw] px-4 py-2 border border-darkBlue rounded-md italic font-sans text-sm lg:text-[0.625rem] xs:text-xs md:text-sm"
+                className="w-full lg:w-[75vw] px-4 py-2 border border-darkBlue rounded-md italic font-sans text-sm lg:text-[0.75rem] xs:text-xs md:text-sm"
               />
             </div>
           </>

@@ -42,6 +42,8 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-[#315d8d] px-2 sm:px-4 md:px-6 lg:px-8">
+      <AuthHeader />
+
       {/* To Do List Section - Hangs over bottom fridge */}
       <div className="relative z-[2] flex justify-center w-full">
         <div className="w-full max-w-[80%] sm:max-w-[60%] md:max-w-[60%] lg:max-w-[500px] mt-[13rem] sm:mt-[16rem] md:mt-[17rem] lg:mt-[22rem] xl:mt-[24rem] absolute border-2 border-navy-blue rounded-2xl p-3 sm:p-4 md:p-6 pt-0 pb-[10vh] sm:pb-[15vh] md:pb-[20vh] lg:pb-[25vh] space-y-2 sm:space-y-3 md:space-y-4 bg-[#fdfeff] border-2 border-darkBlue shadow-lg">
@@ -94,7 +96,10 @@ export default function Home() {
                     {todoItems[0].label}
                   </label>
 
-                  <form className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mt-2 sm:mt-3" onSubmit={handleGoClick}>
+                  <form
+                    className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mt-2 sm:mt-3"
+                    onSubmit={handleGoClick}
+                  >
                     <Input
                       placeholder="Enter your .edu email address"
                       value={email}
@@ -130,7 +135,10 @@ export default function Home() {
 
           {/* Other tasks */}
           {todoItems.slice(1).map((item) => (
-            <div key={item.id} className="flex items-center space-x-2 sm:space-x-3 md:space-x-4 mt-2">
+            <div
+              key={item.id}
+              className="flex items-center space-x-2 sm:space-x-3 md:space-x-4 mt-2"
+            >
               <Checkbox
                 id={item.id}
                 checked={item.checked}
@@ -148,9 +156,8 @@ export default function Home() {
           ))}
         </div>
       </div>
-      
+
       <LandingTopFridge>
-        <AuthHeader />
         <div className="logo flex justify-center">
           <img
             src="/logo.png"
@@ -159,7 +166,7 @@ export default function Home() {
           />
         </div>
       </LandingTopFridge>
-      
+
       <BottomFridge>
         <div className="mt-[15vh] sm:mt-[20vh] md:mt-[25vh] lg:mt-[30vh] bg-[#fdfeff] rounded-[10px] shadow-md p-4 sm:p-6 md:p-8 max-w-lg sm:max-w-xl mx-auto text-left text-[#315d8d] border-2 border-darkBlue">
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-center text-darkBlue">
@@ -188,32 +195,41 @@ export default function Home() {
           </h3>
           <div className="space-y-4">
             <div className="bg-[#e4f1ff] p-4 rounded-lg border-2 border-darkBlue">
-              <h4 className="font-bold text-darkBlue mb-2">Search for Roommates</h4>
-              <p className="text-sm text-darkBlue mb-3">Find potential roommates in your area with detailed reviews and ratings.</p>
-              <a 
-                href="/search" 
+              <h4 className="font-bold text-darkBlue mb-2">
+                Search for Roommates
+              </h4>
+              <p className="text-sm text-darkBlue mb-3">
+                Find potential roommates in your area with detailed reviews and
+                ratings.
+              </p>
+              <a
+                href="/search"
                 className="inline-block bg-darkBlue text-white px-4 py-2 rounded-md text-sm hover:bg-opacity-80 transition-colors"
               >
                 Start Searching
               </a>
             </div>
-            
+
             <div className="bg-[#e4f1ff] p-4 rounded-lg border-2 border-darkBlue">
               <h4 className="font-bold text-darkBlue mb-2">Add a Roommate</h4>
-              <p className="text-sm text-darkBlue mb-3">Share your experience with a roommate to help other students.</p>
-              <a 
-                href="/roommate/new" 
+              <p className="text-sm text-darkBlue mb-3">
+                Share your experience with a roommate to help other students.
+              </p>
+              <a
+                href="/roommate/new"
                 className="inline-block bg-darkBlue text-white px-4 py-2 rounded-md text-sm hover:bg-opacity-80 transition-colors"
               >
                 Add Review
               </a>
             </div>
-            
+
             <div className="bg-[#e4f1ff] p-4 rounded-lg border-2 border-darkBlue">
               <h4 className="font-bold text-darkBlue mb-2">Find Housing</h4>
-              <p className="text-sm text-darkBlue mb-3">Discover housing options with roommate reviews and ratings.</p>
-              <a 
-                href="/housing/new" 
+              <p className="text-sm text-darkBlue mb-3">
+                Discover housing options with roommate reviews and ratings.
+              </p>
+              <a
+                href="/housing/new"
                 className="inline-block bg-darkBlue text-white px-4 py-2 rounded-md text-sm hover:bg-opacity-80 transition-colors"
               >
                 Browse Housing

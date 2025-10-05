@@ -9,7 +9,7 @@ export default function BottomFridge({
   return (
     <div className="w-full">
       <div
-      className="bg-[#f5f5f5] rounded-[3rem] md:rounded-[4rem] lg:rounded-[6rem] xl:rounded-[96px] shadow-lg p-4 md:p-6 lg:p-8 min-h-[30rem] md:min-h-[40rem] lg:min-h-[50rem] relative z-0 overflow-hidden"
+      className="bg-[#f5f5f5] rounded-[3rem] md:rounded-[4rem] lg:rounded-[6rem] xl:rounded-[96px] shadow-lg p-4 md:p-6 lg:p-8 min-h-[30rem] md:min-h-[40rem] lg:min-h-[50rem] relative z-[1] overflow-hidden"
       style={{ boxShadow: "0 4px 4px -2px rgba(0, 0, 0, 0.2)" }}
     >
       {/* Decorative Fridge Handle - Hidden on mobile, visible on larger screens */}

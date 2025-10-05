@@ -53,7 +53,7 @@ export default function LandingTopFridge({
       <div className="absolute right-[3.5rem] md:right-[5rem] lg:right-[6.5rem] top-[0.4rem] md:top-[0.6rem] lg:top-[0.8rem] w-[1.5rem] md:w-[2.25rem] lg:w-[3rem] h-[3.5px] md:h-[5px] lg:h-[7px] bg-white rounded-full"></div>
       
       {/* Main content area */}
-      <div className="relative z-10">
+      <div className="relative z-[2]">
         {children}
       </div>
     </div>

@@ -29,7 +29,7 @@ export default function TopFridge({
       style={{ boxShadow: "0 4px 4px -2px rgba(0, 0, 0, 0.2)" }}
     >
       {/* Decorative Fridge Handle - Hidden on mobile, visible on larger screens */}
-      <div className="hidden md:block absolute w-auto h-[25rem] lg:h-[30rem] xl:h-[35rem] left-0 ml-8 lg:ml-16 xl:ml-20 top-0 mt-[12rem] lg:mt-[15rem] xl:mt-[10rem]">
+      <div className="hidden md:block absolute w-auto h-[25rem] lg:h-[28rem] xl:h-[35rem] left-0 ml-8 lg:ml-16 xl:ml-20 top-0 mt-[12rem] md:mt-[12rem] lg:mt-[18rem] xl:mt-[10rem]">
         {/* Main handle body with rounded borders */}
         <div className="w-[3rem] lg:w-[4rem] xl:w-[4.75rem] h-full border-r-[1.5rem] lg:border-r-[1.75rem] xl:border-r-[2rem] border-l-[.25rem] lg:border-l-[.4rem] xl:border-l-[.5rem] border-t-[1.5rem] lg:border-t-[2rem] xl:border-t-[2.25rem] border-b-[1.5rem] lg:border-b-[2rem] xl:border-b-[2.25rem] border-darkBlue relative rounded-[1.5rem] lg:rounded-[1.75rem] xl:rounded-[2rem]"></div>
         {/* Handle top with custom clip path */}
@@ -62,7 +62,7 @@ export default function TopFridge({
       {back && (
         <button
           onClick={() => router.back()}
-          className="absolute w-auto h-auto left-[15%] sm:left-[20%] md:left-[22%] lg:left-[25%] top-[6rem] sm:top-[6.5rem] md:top-[7rem] lg:top-[7.5rem] text-black text-[1rem] sm:text-[1.125rem] md:text-[1.25rem] rounded-md hover:underline z-0 transition-colors"
+          className="absolute w-auto h-auto left-[25%] top-[7.5rem] text-black text-[1.25rem] rounded-md hover:underline z-0"
         >
           <FontAwesomeIcon
             icon={faArrowLeftLong}

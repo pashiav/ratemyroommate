@@ -111,11 +111,11 @@ export default function ResponsiveSearchIcon() {
 
       {/* Modal Overlay */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-start justify-center pt-4 sm:pt-6 md:pt-8 lg:pt-10 px-2">
-          <div className="bg-white w-full max-w-[95vw] sm:max-w-[85vw] md:max-w-[70vw] lg:max-w-[60vw] xl:max-w-[50vw] 2xl:max-w-[40vw] max-h-[90vh] rounded-lg shadow-2xl">
+        <div className="w-[80vw] fixed top-[4rem] left-1/2 -translate-x-1/2 h-screen z-50 flex items-start justify-center">
+            <div className="bg-white w-full max-h-[90vh] rounded-lg shadow-2xl">
             <div
               ref={modalRef}
-              className="bg-white rounded-lg p-3 sm:p-4 w-full max-h-[85vh] overflow-y-auto"
+              className="bg-white rounded-lg p-3 sm:p-4 w-full max-h-[90vh] overflow-y-auto"
             >
               {/* Modal Header */}
               <div className="flex justify-between items-center mb-3 sm:mb-4">

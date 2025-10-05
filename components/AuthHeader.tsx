@@ -47,7 +47,7 @@ export default function AuthHeader() {
   if (!isLoaded) return null;
 
   return (
-    <div className="absolute top-0 right-0 mt-[3rem] sm:mt-[3rem] md:mt-[2.5rem] lg:mt-[3rem] mr-[3rem] sm:mr-[3rem] md:mr-[4rem] lg:mr-[6rem] z-[100]">
+    <div className="absolute top-0 right-0 mt-[3rem] sm:mt-[3rem] md:mt-[2.5rem] lg:mt-[3rem] mr-[3rem] sm:mr-[3rem] md:mr-[4rem] lg:mr-[6rem] z-[99997]">
       {isSignedIn ? (
         <>
           {/* User Account Button */}
@@ -66,7 +66,7 @@ export default function AuthHeader() {
           {showDropdown && (
             <div
               ref={dropdownRef}
-              className="absolute right-0 mt-2 w-36 sm:w-48 bg-white shadow-lg rounded-md border-[0.1rem] border-black border-r-4 border-b-4 z-[200]"
+              className="absolute right-0 mt-2 w-36 sm:w-48 bg-white shadow-lg rounded-md border-[0.1rem] border-black border-r-4 border-b-4 z-[99998]"
             >
               <button
                 className="w-full text-left px-3 sm:px-4 py-2 hover:bg-gray-100 rounded text-sm sm:text-base"
@@ -100,8 +100,8 @@ export default function AuthHeader() {
 
           {/* Account Management Modal */}
           {showAccountModal && (
-            <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-[9999] p-4">
-              <div ref={modalRef} className="relative w-full max-w-[20rem] sm:max-w-[25rem] md:max-w-[30rem] h-auto max-h-[90vh] bg-white p-4 sm:p-6 rounded-xl shadow-lg flex flex-col border-2 border-black border-r-4 sm:border-r-6 md:border-r-8 border-b-4 sm:border-b-6 md:border-b-8">
+            <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-[999999] p-4">
+              <div ref={modalRef} className="relative w-full max-w-[20rem] sm:max-w-[25rem] md:max-w-[30rem] h-auto max-h-[90vh] bg-white p-4 sm:p-6 rounded-xl shadow-lg flex flex-col border-2 border-black border-r-4 sm:border-r-6 md:border-r-8 border-b-4 sm:border-b-6 md:border-b-8 z-[1000000]">
                 {/* Close Button */}
                 <button
                   className="absolute top-2 sm:top-3 right-4 sm:right-6 text-gray-500 hover:text-gray-700 text-2xl sm:text-3xl font-sans"
