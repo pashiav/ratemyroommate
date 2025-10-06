@@ -5,7 +5,10 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useUser, UserButton, SignInButton } from "@clerk/nextjs";
 import TopFridge from "@/components/TopFridge";
+import BottomFridge from "@/components/BottomFridge";
+import Footer from "@/components/Footer";
 import AuthHeader from "@/components/AuthHeader";
+import AuthGuard from "@/components/AuthGuard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserFriends } from "@fortawesome/free-solid-svg-icons";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
@@ -50,6 +53,8 @@ export default function SearchResultsClient() {
   const [groupedRoommates, setGroupedRoommates] = useState<
     Record<string, RoommateViewResult[]>
   >({});
+  // Dynamic result splitting based on available height
+  const [topResultsCount, setTopResultsCount] = useState(2);
 
   // Fetch search results from API based on search parameters
   useEffect(() => {
@@ -97,17 +102,203 @@ export default function SearchResultsClient() {
     return "housing_id" in item && "is_verified" in item;
   }
 
+  // Calculate dynamic result splitting based on screen size and available height
+  useEffect(() => {
+    const calculateTopResultsCount = () => {
+      const screenWidth = window.innerWidth;
+      let maxResults = 2; // default fallback
+      
+      if (screenWidth >= 1024) { // lg screens
+        maxResults = 4;
+      } else if (screenWidth >= 768) { // md screens  
+        maxResults = 3;
+      } else { // sm and below
+        maxResults = 2;
+      }
+      
+      setTopResultsCount(maxResults);
+    };
+
+    calculateTopResultsCount();
+    window.addEventListener('resize', calculateTopResultsCount);
+    
+    return () => window.removeEventListener('resize', calculateTopResultsCount);
+  }, []);
+  const topGroupedRoommates = type === "roommate" 
+    ? Object.fromEntries(Object.entries(groupedRoommates).slice(0, topResultsCount))
+    : {};
+  const bottomGroupedRoommates = type === "roommate"
+    ? Object.fromEntries(Object.entries(groupedRoommates).slice(topResultsCount))
+    : {};
+  const topHousingResults = type === "housing" ? results.filter(isHousing).slice(0, topResultsCount) : [];
+  const bottomHousingResults = type === "housing" ? results.filter(isHousing).slice(topResultsCount) : [];
+
+  // Render a roommate result item
+  const renderRoommateItem = (name: string, group: RoommateViewResult[]) => {
+    const hasNoReviews = group.length === 1 && group[0].review_count === 0;
+
+    return (
+      <li
+        key={name}
+        className="bg-[#fafafa] p-3 sm:p-4 rounded-xl shadow flex flex-col gap-2 border-r-[.35rem] border-b-[.35rem] border-r-[#ebebeb] border-b-[#ebebeb]"
+      >
+        {/* Mobile-first layout for roommate header */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+          {/* Left column: Name and profile count */}
+          <div className="flex-1 min-w-0">
+            <h2 className="text-[1.25rem] sm:text-[1.5rem] md:text-[1.75rem] font-semibold break-words">
+              {name}
+            </h2>
+
+            {group.length > 1 && (
+              <div className="flex items-center mt-2 text-[#8f8f8f] text-sm">
+                <FontAwesomeIcon icon={faUserFriends} className="mr-2" />
+                <span>
+                  {group.length} profiles found with this name
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* Right column - VIEW PROFILE button for single profiles */}
+          <div className="flex justify-start sm:justify-end">
+            {group.length === 1 &&
+              group[0].review_count !== 1 && (
+                <Link
+                  href={`/roommate/${group[0].rm_id}?housing_id=${group[0].housing_id}&unit_suffix=${group[0].unit_suffix}`}
+                  className="px-3 py-2 bg-lightBlue text-white rounded-md hover:bg-blue-900 text-sm whitespace-nowrap transition-colors"
+                >
+                  VIEW PROFILE
+                </Link>
+              )}
+          </div>
+        </div>
+
+        {/* Review details for each roommate profile */}
+        {!hasNoReviews &&
+          group.map((item, index) => (
+            <div
+              key={`${item.rm_id}-${item.unit_suffix}-${item.housing_id}-${index}`}
+              className="border-t border-gray-200 pt-3 mt-2"
+            >
+              {/* Mobile-first layout for review details */}
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+                {/* Location and unit information */}
+                <div className="flex-1 min-w-0">
+                  <p className="text-gray-700 text-sm leading-relaxed">
+                    <span className="underline">
+                      <FontAwesomeIcon icon={faLocationDot} className="mr-1" />
+                      {item.housing_name ?? "N/A"}
+                    </span>{" "}
+                    · Unit #...{item.unit_suffix ?? "?"} ·{" "}
+                    {item.review_year ?? "N/A"}
+                  </p>
+                </div>
+
+                {/* Rating display with star icons */}
+                <div className="flex justify-start sm:justify-center min-w-[140px] sm:min-w-[160px]">
+                  {item.avg_rating !== null ? (
+                    <div className="flex items-center text-sm">
+                      <div className="flex">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <svg
+                            key={star}
+                            className={`w-4 h-4 ${
+                              star <=
+                              Math.round(item.avg_rating ?? 0)
+                                ? "text-[gold]"
+                                : "text-gray-300"
+                            }`}
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                        ))}
+                      </div>
+                      <span className="ml-2 text-xs text-gray-700">
+                        {item.avg_rating.toFixed(2)}{" "}
+                        <a
+                          href="#"
+                          className="underline text-[0.7rem]"
+                        >
+                          ({item.review_count}{" "}
+                          {item.review_count === 1
+                            ? "review"
+                            : "reviews"}
+                          )
+                        </a>
+                      </span>
+                    </div>
+                  ) : (
+                    <p className="text-sm text-gray-500">
+                      No reviews yet
+                    </p>
+                  )}
+                </div>
+
+                {/* View Profile button for each review */}
+                <div className="flex justify-start sm:justify-end">
+                  <Link
+                    href={`/roommate/${item.rm_id}?housing_id=${item.housing_id}&unit_suffix=${item.unit_suffix}`}
+                    className="px-3 py-2 bg-lightBlue text-white rounded-md hover:bg-blue-900 text-sm whitespace-nowrap transition-colors"
+                  >
+                    VIEW PROFILE
+                  </Link>
+                </div>
+              </div>
+            </div>
+          ))}
+
+        {/* Show "No reviews yet" message for profiles without reviews */}
+        {hasNoReviews && (
+          <div className="border-t border-gray-200 pt-3 mt-2">
+            <p className="text-sm text-gray-500 text-center">
+              No reviews yet
+            </p>
+          </div>
+        )}
+      </li>
+    );
+  };
+
+  // Render a housing result item
+  const renderHousingItem = (item: HousingViewResult) => (
+    <li
+      key={item.housing_id}
+      className="bg-[#fafafa] p-3 sm:p-4 rounded-xl shadow flex flex-col gap-2 border-r-[.35rem] border-b-[.35rem] border-r-[#ebebeb] border-b-[#ebebeb]"
+    >
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+        <div className="flex-1 min-w-0">
+          <h2 className="text-lg sm:text-xl font-semibold break-words">
+            {item.housing_name}
+          </h2>
+          <p className="text-sm text-gray-500 mt-1">
+            {item.school_name}
+          </p>
+        </div>
+        {/* Verification status indicator */}
+        {item.is_verified && (
+          <span className="text-green-600 text-sm font-semibold whitespace-nowrap self-start sm:self-center">
+            ✔ Verified
+          </span>
+        )}
+      </div>
+    </li>
+  );
+
   return (
-    <main className="min-h-screen bg-[#315d8d] pl-[0.75rem] pr-[0.75rem]">
-      <TopFridge showSearchBar={true} back={true}>
+    <AuthGuard>
+      <main className="min-h-screen bg-[#315d8d] px-3 sm:px-4 md:px-6 lg:pl-[0.75rem] lg:pr-[0.75rem]">
+        <TopFridge showSearchBar={true} back={true}>
         <AuthHeader />
 
-        <div className="flex flex-col items-center mt-[6.5rem] gap-2">
+        <div className={`flex flex-col items-center mt-[6.5rem] gap-2 px-2 sm:px-4 ${!loading && results.length > topResultsCount ? 'pb-2' : ''}`}>
           {/* Search Results Header */}
-          <h1 className="text-[2.5rem] text-darkBlue text-center leading-none">
+          <h1 className="text-[1.75rem] sm:text-[2rem] md:text-[2.25rem] lg:text-[2.5rem] text-darkBlue text-center leading-none">
             Search Results
           </h1>
-          <p className="text-[1rem] text-[#696969] mb-6">
+          <p className="text-[0.875rem] sm:text-[0.9rem] md:text-[0.95rem] lg:text-[1rem] text-[#696969] mb-4 sm:mb-6 text-center px-2">
             Showing results for <strong>{type}</strong>
             {type === "roommate" && roommateName && (
               <span className="italic font-sans">: {roommateName}</span>
@@ -121,172 +312,82 @@ export default function SearchResultsClient() {
           {loading ? (
             <p className="text-gray-500">Loading...</p>
           ) : results.length > 0 ? (
-            <ul className="gap-4 w-[55vw] space-y-3">
-              {type === "roommate"
-                ? Object.entries(groupedRoommates).map(([name, group]) => {
-                    const hasNoReviews =
-                      group.length === 1 && group[0].review_count === 0;
-
-                    return (
-                      <li
-                        key={name}
-                        className="bg-[#fafafa] p-4 rounded-xl shadow flex flex-col gap-2 border-r-[.35rem] border-b-[.35rem] border-r-[#ebebeb] border-b-[#ebebeb] ml-8"
-                      >
-                        <div className="grid grid-cols-[3fr_1fr_auto] items-center gap-x-4">
-                          {/* Left column: Name and profile count */}
-                          <div className="flex items-center flex-wrap relative">
-                            <h2 className="text-[1.75rem] whitespace-nowrap">
-                              {name}
-
-                              {group.length > 1 && (
-                                <span className="absolute ml-8 top-2 text-[#8f8f8f] text-sm">
-                                  <FontAwesomeIcon icon={faUserFriends} />
-                                  <span className="ml-2">
-                                    {group.length} profiles found with this name
-                                  </span>
-                                </span>
-                              )}
-                            </h2>
-                          </div>
-
-                          {/* Middle column - aligned with stars */}
-                          <div className="flex justify-center min-w-[160px] whitespace-nowrap mr-14">
-                            {hasNoReviews && (
-                              <p className="text-sm text-gray-500">
-                                No reviews yet
-                              </p>
-                            )}
-                          </div>
-
-                          {/* Right column - VIEW PROFILE button */}
-                          <div className="flex justify-end">
-                            {group.length === 1 &&
-                              group[0].review_count !== 1 && (
-                                <Link
-                                  href={`/roommate/${group[0].rm_id}?housing_id=${group[0].housing_id}&unit_suffix=${group[0].unit_suffix}`}
-                                  className="px-2 py-[0.2rem] bg-lightBlue text-white rounded-md hover:bg-blue-900 text-sm whitespace-nowrap"
-                                >
-                                  VIEW PROFILE
-                                </Link>
-                              )}
-                          </div>
-                        </div>
-
-                        {/* Review details for each roommate profile */}
-                        {!hasNoReviews &&
-                          group.map((item) => (
-                            <div
-                              key={item.rm_id + item.unit_suffix}
-                              className="grid grid-cols-[1fr_1fr_auto] pl-3"
-                            >
-                              {/* Location and unit information */}
-                              <div>
-                                <p className="text-gray-700 text-sm">
-                                  <span className="underline">
-                                    <FontAwesomeIcon icon={faLocationDot} />{" "}
-                                    {item.housing_name ?? "N/A"}
-                                  </span>{" "}
-                                  · Unit #...{item.unit_suffix ?? "?"} ·{" "}
-                                  {item.review_year ?? "N/A"}
-                                </p>
-                              </div>
-
-                              {/* Rating display with star icons */}
-                              <div className="flex justify-center min-w-[160px] whitespace-nowrap">
-                                {item.avg_rating !== null ? (
-                                  <div className="flex items-center text-sm">
-                                    <div className="flex">
-                                      {[1, 2, 3, 4, 5].map((star) => (
-                                        <svg
-                                          key={star}
-                                          className={`w-4 h-4 ${
-                                            star <=
-                                            Math.round(item.avg_rating ?? 0)
-                                              ? "text-[gold]"
-                                              : "text-gray-300"
-                                          }`}
-                                          fill="currentColor"
-                                          viewBox="0 0 20 20"
-                                        >
-                                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
-                                      ))}
-                                    </div>
-                                    <span className="ml-2 text-xs text-gray-700 ">
-                                      {item.avg_rating.toFixed(2)}{" "}
-                                      <a
-                                        href="#"
-                                        className="underline text-[0.7rem]"
-                                      >
-                                        ({item.review_count}{" "}
-                                        {item.review_count === 1
-                                          ? "review"
-                                          : "reviews"}
-                                        )
-                                      </a>
-                                    </span>
-                                  </div>
-                                ) : (
-                                  <p className="text-sm text-gray-500">
-                                    No reviews yet
-                                  </p>
-                                )}
-                              </div>
-
-                              {/* View Profile button for each review */}
-                              <div className="flex justify-end">
-                                <Link
-                                  href={`/roommate/${item.rm_id}?housing_id=${item.housing_id}&unit_suffix=${item.unit_suffix}`}
-                                  className="px-2 py-[0.2rem] bg-lightBlue text-white rounded-md hover:bg-blue-900 text-sm whitespace-nowrap"
-                                >
-                                  VIEW PROFILE
-                                </Link>
-                              </div>
-                            </div>
-                          ))}
-                      </li>
-                    );
-                  })
-                : results.filter(isHousing).map((item) => (
-                    // Housing result display
-                    <li
-                      key={item.housing_id}
-                      className="bg-[#fafafa] p-4 rounded-xl shadow flex flex-col gap-2 border-r-[.35rem] border-b-[.35rem] border-r-[#ebebeb] border-b-[#ebebeb] ml-8"
-                    >
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <h2 className="text-xl font-semibold">
-                            {item.housing_name}
-                          </h2>
-                          <p className="text-sm text-gray-500">
-                            {item.school_name}
-                          </p>
-                        </div>
-                        {/* Verification status indicator */}
-                        {item.is_verified && (
-                          <span className="text-green-600 text-sm font-semibold whitespace-nowrap">
-                            ✔ Verified
-                          </span>
-                        )}
-                      </div>
-                    </li>
-                  ))}
-            </ul>
+            <>
+              <ul className={`w-full max-w-4xl md:max-w-lg lg:max-w-2xl space-y-3 px-2 sm:px-4 ${results.length > topResultsCount ? 'mb-0' : ''}`}>
+                {type === "roommate"
+                  ? Object.entries(topGroupedRoommates).map(([name, group]) =>
+                      renderRoommateItem(name, group)
+                    )
+                  : topHousingResults.map((item) => renderHousingItem(item))}
+              </ul>
+              
+              {/* Show "Add New" button in TopFridge if no overflow results */}
+              {results.length <= topResultsCount && (
+                <div className="flex flex-col items-center mt-6">
+                  {/* No more results message */}
+                  <div className="text-center mb-4">
+                    <p className="text-gray-500 text-sm">
+                      No more {type === "roommate" ? "roommates" : "housing options"} found.
+                    </p>
+                  </div>
+                  
+                  <Link
+                    href={type === "roommate" ? "/roommate/new" : "/housing/new"}
+                    className="inline-block bg-lightBlue text-lazyDog text-white px-4 sm:px-6 py-2 sm:py-3 rounded-md hover:bg-blue-900 hover:transition shadow-[3px_3px_0_0_#0c4a6e] text-sm sm:text-base transition-colors"
+                  >
+                    Add a new {type === "roommate" ? "roommate" : "housing option"}
+                  </Link>
+                </div>
+              )}
+            </>
           ) : (
-            <div className="mt-6">
+            <div className="mt-6 text-center px-4">
               <p className="text-gray-500 mb-4">No results found.</p>
+              <Link
+                href={type === "roommate" ? "/roommate/new" : "/housing/new"}
+                className="inline-block bg-lightBlue text-lazyDog text-white px-4 sm:px-6 py-2 sm:py-3 rounded-md hover:bg-blue-900 hover:transition shadow-[3px_3px_0_0_#0c4a6e] text-sm sm:text-base transition-colors"
+              >
+                Add a new {type === "roommate" ? "roommate" : "housing option"}
+              </Link>
             </div>
           )}
-
-          {/* Add New Item Button */}
-          <Link
-            href={type === "roommate" ? "/roommate/new" : "/housing/new"}
-            className="inline-block mt-4 bg-lightBlue text-lazyDog text-white px-6 py-2 rounded-md hover:bg-blue-900 hover:transition shadow-[3px_3px_0_0_#0c4a6e]"
-          >
-            Add a new {type === "roommate" ? "roommate" : "housing option"}
-          </Link>
         </div>
       </TopFridge>
+
+      {/* Bottom Fridge Section - Remaining Results */}
+      {!loading && results.length > topResultsCount && (
+        <BottomFridge>
+          <div className="flex flex-col items-center gap-2 px-2 sm:px-4 pt-3">
+            <ul className="w-full max-w-4xl md:max-w-lg lg:max-w-2xl space-y-3 px-2 sm:px-4">
+              {type === "roommate"
+                ? Object.entries(bottomGroupedRoommates).map(([name, group]) =>
+                    renderRoommateItem(name, group)
+                  )
+                : bottomHousingResults.map((item) => renderHousingItem(item))}
+            </ul>
+
+            {/* No more results message - always show above add button */}
+            <div className="text-center mt-6 mb-4">
+              <p className="text-gray-500 text-sm">
+                No more {type === "roommate" ? "roommates" : "housing options"} found.
+              </p>
+            </div>
+
+            {/* Add New Item Button */}
+            <Link
+              href={type === "roommate" ? "/roommate/new" : "/housing/new"}
+              className="inline-block mt-6 sm:mt-8 bg-lightBlue text-lazyDog text-white px-4 sm:px-6 py-2 sm:py-3 rounded-md hover:bg-blue-900 hover:transition shadow-[3px_3px_0_0_#0c4a6e] text-sm sm:text-base transition-colors"
+            >
+              Add a new {type === "roommate" ? "roommate" : "housing option"}
+            </Link>
+          </div>
+        </BottomFridge>
+      )}
+
+
+      {/* Footer */}
+      <Footer />
     </main>
+    </AuthGuard>
   );
 }

@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import TopFridge from "@/components/TopFridge";
+import Footer from "@/components/Footer";
 import AuthHeader from "@/components/AuthHeader";
+import AuthGuard from "@/components/AuthGuard";
 import Loading from "@/components/Loading";
 
 export default function AddHousingPage() {
@@ -90,13 +92,14 @@ export default function AddHousingPage() {
 
     // Redirect after a short delay to show success message
     setTimeout(() => {
-      router.push(`/housing/${housingId}`);
+      router.push(`/search`);
     }, 1500);
   };
 
   return (
-    <main className="min-h-screen bg-[#315d8d] pl-[0.75rem] pr-[0.75rem] relative">
-      <TopFridge showSearchBar={true} back={true}>
+    <AuthGuard>
+      <main className="min-h-screen bg-[#315d8d] pl-[0.75rem] pr-[0.75rem] relative">
+        <TopFridge showSearchBar={true} back={true}>
         <AuthHeader />
 
         {isLoadingSchool ? (
@@ -144,6 +147,8 @@ export default function AddHousingPage() {
           </div>
         )}
       </TopFridge>
+      <Footer />
     </main>
+    </AuthGuard>
   );
 }

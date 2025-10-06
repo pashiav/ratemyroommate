@@ -20,9 +20,9 @@ interface HousingViewResult {
 // Info tip component for form field help text
 function InfoTip({ message }: { message: string }) {
   return (
-    <span className="relative group ml-2 cursor-pointer text-gray-500">
+    <span className="relative group ml-1 sm:ml-2 cursor-pointer text-gray-500 text-sm sm:text-base">
       ⓘ
-      <div className="absolute z-10 hidden group-hover:block bg-white text-darkBlue text-xs px-2 py-1 rounded border-2 border-gray-200 top-full left-1/2 transform -translate-x-1/2 mt-1 w-64 whitespace-pre-line">
+      <div className="absolute z-10 hidden group-hover:block bg-white text-darkBlue text-xs sm:text-sm px-2 py-1 sm:px-3 sm:py-2 rounded border-2 border-gray-200 shadow-lg top-full left-1/2 transform -translate-x-1/2 mt-1 w-48 sm:w-64 whitespace-pre-line">
         {message}
       </div>
     </span>
@@ -114,6 +114,29 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
       setError("You must be signed in to leave a review");
       return;
     }
+
+    // Validate required fields
+    const missingFields: string[] = [];
+    
+    if (wouldRecommend === null) missingFields.push("Would you recommend");
+    if (!yearsLived) missingFields.push("Years Lived");
+    if (!sleepPattern) missingFields.push("Sleep Pattern");
+    if (!guestFrequency) missingFields.push("Guest Frequency");
+    if (!studyCompatibility) missingFields.push("Study Compatibility");
+    if (!petFriendly) missingFields.push("Pet Friendly");
+    if (hasPets === null) missingFields.push("Pets");
+    if (!housingId) missingFields.push("Housing");
+    if (!unitSuffix.trim()) missingFields.push("Unit/Apt");
+    if (!comments.trim()) missingFields.push("Comments");
+
+    if (missingFields.length > 0) {
+      setError(`Please fill in the following required fields: ${missingFields.join(", ")}`);
+      setSuccessMessage(null);
+      // Scroll to error message
+      window.scrollTo({ top: document.getElementById('submit-section')?.offsetTop! - 100, behavior: 'smooth' });
+      return;
+    }
+
     setIsSubmitting(true);
     setError(null);
     setSuccessMessage(null);
@@ -182,40 +205,24 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
   }
 
   // Show loading state while Clerk is initializing
-  if (!isLoaded) return <Loading text="Loading" />;
-  
-  // Show sign-in requirement if user is not authenticated
-  if (!isSignedIn)
-    return (
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-        <p className="text-darkBlue text-2xl font-lazyDog">
-          You must be signed in
-        </p>
-      </div>
-    );
+  if (!isLoaded || !isSignedIn) return <Loading text="Loading" />;
 
   return (
-    <div className="bg-white p-6 rounded-2xl border-gray-200 border-4 w-[55%] mx-auto">
+    <div className="bg-white p-4 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl border-gray-200 border-2 sm:border-4 w-full max-w-[95%] sm:max-w-[85%] md:max-w-[75%] lg:max-w-[65%] xl:max-w-[55%] mx-auto">
       {/* Form Header with Roommate Name */}
-      <h1 className="text-[1.75rem] font-bold mb-6">
+      <h1 className="text-xl sm:text-2xl md:text-[1.75rem] font-bold mb-4 sm:mb-6">
         Leave a Review for{" "}
         <span className="text-darkBlue">{roommateName || "Roommate..."}</span>
       </h1>
       
-      {/* Error and Success Message Display */}
-      {error && <p className="text-red-600 mb-4">{error}</p>}
-      {successMessage && (
-        <p className="text-green-600 mb-4">{successMessage}</p>
-      )}
-      
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
         {/* Overall Rating Section */}
         <div>
-          <label className="block text-gray-700 text-lg mb-2">
+          <label className="block text-gray-700 text-base sm:text-lg mb-2">
             Rating
             <InfoTip message="Overall roommate experience. 1 = very poor, 5 = excellent." />
           </label>
-          <div className="flex mb-6">
+          <div className="flex mb-4 sm:mb-6">
             {[1, 2, 3, 4, 5].map((star) => (
               <button
                 key={star}
@@ -225,7 +232,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
                 aria-label={`Rate ${star} stars`}
               >
                 <svg
-                  className={`w-10 h-10 ${star <= rating ? "text-gold" : "text-gray-300"}`}
+                  className={`w-8 h-8 sm:w-10 sm:h-10 ${star <= rating ? "text-gold" : "text-gray-300"}`}
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -233,27 +240,27 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
                 </svg>
               </button>
             ))}
-            <span className="ml-2 self-center text-gray-600">{rating}/5</span>
+            <span className="ml-2 self-center text-gray-600 text-sm sm:text-base">{rating}/5</span>
           </div>
         </div>
 
         {/* Recommendation Section */}
         <div>
-          <label className="block font-medium mb-1 items-center gap-1">
+          <label className="block font-medium mb-1 items-center gap-1 text-sm sm:text-base">
             Would you recommend?
             <InfoTip message="Would you live with this person again or recommend them to someone else?" />
           </label>
-          <div className="flex gap-4">
+          <div className="flex gap-3 sm:gap-4">
             <button
               type="button"
-              className={`px-4 py-2 rounded-md ${wouldRecommend === true ? "bg-lightBlue text-white" : "bg-gray-200"}`}
+              className={`px-3 sm:px-4 py-2 rounded-md text-sm sm:text-base transition-colors ${wouldRecommend === true ? "bg-lightBlue text-white" : "bg-gray-200"}`}
               onClick={() => setWouldRecommend(true)}
             >
               Yes
             </button>
             <button
               type="button"
-              className={`px-4 py-2 rounded-md ${wouldRecommend === false ? "bg-lightBlue text-white" : "bg-gray-200"}`}
+              className={`px-3 sm:px-4 py-2 rounded-md text-sm sm:text-base transition-colors ${wouldRecommend === false ? "bg-lightBlue text-white" : "bg-gray-200"}`}
               onClick={() => setWouldRecommend(false)}
             >
               No
@@ -262,7 +269,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
         </div>
         
         {/* Numeric Rating Grid for Roommate Attributes */}
-        <div className="grid grid-cols-2 gap-x-6 gap-y-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 sm:gap-x-6 gap-y-4 sm:gap-y-6">
           {[
             {
               label: "Noise Level",
@@ -290,7 +297,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
             },
           ].map(({ label, value, setter, tip }) => (
             <div key={label}>
-              <label className="block font-medium mb-1 items-center gap-1">
+              <label className="block font-medium mb-1 items-center gap-1 text-sm sm:text-base">
                 {label}
                 <InfoTip message={tip} />
               </label>
@@ -303,7 +310,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
                   onChange={(e) => setter(parseInt(e.target.value))}
                   className="slider w-full"
                 />
-                <span className="text-sm text-gray-600 font-semibold">
+                <span className="text-sm text-gray-600 font-semibold whitespace-nowrap">
                   {value}/5
                 </span>
               </div>
@@ -312,7 +319,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
         </div>
 
         {/* Lifestyle Compatibility Grid */}
-        <div className="grid grid-cols-2 gap-x-6 gap-y-6 mt-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 sm:gap-x-6 gap-y-4 sm:gap-y-6 mt-4 sm:mt-6">
           {[
             {
               label: "Years Lived Together",
@@ -344,7 +351,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
             },
           ].map(({ label, value, setter, options, tip }) => (
             <div key={label}>
-              <label className="block font-medium mb-1 items-center gap-1">
+              <label className="block font-medium mb-1 items-center gap-1 text-sm sm:text-base">
                 {label}
                 <InfoTip message={tip} />
               </label>
@@ -352,7 +359,7 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
                 value={value}
                 onChange={(e) => setter(e.target.value)}
                 required
-                className="w-full border rounded-md p-2"
+                className="w-full border rounded-md p-2 text-sm sm:text-base"
               >
                 <option value="">Select</option>
                 {options.map((opt) => (
@@ -367,16 +374,16 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
         
         {/* Pet Friendliness Section */}
         <div>
-          <label className="block font-medium mb-1 items-center gap-1">
+          <label className="block font-medium mb-1 items-center gap-1 text-sm sm:text-base">
             Pet Friendly?
             <InfoTip message="Were they kind, respectful, and accommodating to pets — regardless of whether they had one?" />
           </label>
-          <div className="flex gap-4">
+          <div className="flex flex-wrap gap-3 sm:gap-4">
             {["yes", "no", "n/a"].map((option) => (
               <button
                 key={option}
                 type="button"
-                className={`px-4 py-2 rounded-md ${
+                className={`px-3 sm:px-4 py-2 rounded-md text-sm sm:text-base transition-colors ${
                   petFriendly === option
                     ? "bg-lightBlue text-white"
                     : "bg-gray-200"
@@ -391,21 +398,21 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
 
         {/* Pet Ownership Section */}
         <div>
-          <label className="block font-medium mb-1 items-center gap-1">
+          <label className="block font-medium mb-1 items-center gap-1 text-sm sm:text-base">
             Pets?
             <InfoTip message="Did this roommate have any pets?" />
           </label>
-          <div className="flex gap-4">
+          <div className="flex gap-3 sm:gap-4">
             <button
               type="button"
-              className={`px-4 py-2 rounded-md ${hasPets === true ? "bg-lightBlue text-white" : "bg-gray-200"}`}
+              className={`px-3 sm:px-4 py-2 rounded-md text-sm sm:text-base transition-colors ${hasPets === true ? "bg-lightBlue text-white" : "bg-gray-200"}`}
               onClick={() => setHasPets(true)}
             >
               Yes
             </button>
             <button
               type="button"
-              className={`px-4 py-2 rounded-md ${hasPets === false ? "bg-lightBlue text-white" : "bg-gray-200"}`}
+              className={`px-3 sm:px-4 py-2 rounded-md text-sm sm:text-base transition-colors ${hasPets === false ? "bg-lightBlue text-white" : "bg-gray-200"}`}
               onClick={() => setHasPets(false)}
             >
               No
@@ -415,9 +422,9 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
 
         {/* Conditional Pet Details Section */}
         {hasPets && (
-          <div className="border border-blue-400 bg-blue-50 p-4 rounded-xl space-y-4 mt-4">
+          <div className="border border-blue-400 bg-blue-50 p-3 sm:p-4 rounded-xl space-y-3 sm:space-y-4 mt-4">
             <div>
-              <label className="block font-medium mb-1 items-center gap-1">
+              <label className="block font-medium mb-1 items-center gap-1 text-sm sm:text-base">
                 Pet Type (Optional)
                 <InfoTip message="What kind of pet(s) did they have? (e.g. dog, cat, bird)" />
               </label>
@@ -425,19 +432,19 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
                 type="text"
                 value={petType}
                 onChange={(e) => setPetType(e.target.value)}
-                className="w-full border rounded-md p-2"
+                className="w-full border rounded-md p-2 text-sm sm:text-base"
               />
             </div>
 
             <div>
-              <label className="block font-medium mb-1 items-center gap-1">
+              <label className="block font-medium mb-1 items-center gap-1 text-sm sm:text-base">
                 Pet Impact (Optional)
                 <InfoTip message="How much did the pet(s) affect your living experience?" />
               </label>
               <select
                 value={petImpact}
                 onChange={(e) => setPetImpact(e.target.value)}
-                className="w-full border rounded-md p-2"
+                className="w-full border rounded-md p-2 text-sm sm:text-base"
               >
                 <option value="">Select</option>
                 <option value="minimal">Minimal</option>
@@ -449,31 +456,62 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
         )}
 
         {/* Housing and Unit Selection Grid */}
-        <div className="grid grid-cols-2 gap-x-6 gap-y-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 sm:gap-x-6 gap-y-4 sm:gap-y-6">
           <div>
-            <label className="block font-medium mb-1 items-center gap-1">
-              Where did you live together?
-              <InfoTip message="Select the housing where you and this roommate lived." />
-            </label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="block font-medium items-center gap-1 text-sm sm:text-base">
+                Where did you live together?
+                <InfoTip message="Select the housing where you and this roommate lived." />
+              </label>
+              <button
+                type="button"
+                onClick={async (e) => {
+                  const target = e.currentTarget;
+                  target.classList.add('animate-spin');
+                  const res = await fetch("/api/housing", { cache: "no-store" });
+                  const data = await res.json();
+                  setHousingOptions(data);
+                  target.classList.remove('animate-spin');
+                }}
+                className="text-xl text-lightBlue hover:text-blue-900 hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer bg-blue-50 hover:bg-blue-100 rounded-full w-8 h-8 flex items-center justify-center shadow-sm"
+                title="Refresh housing list"
+              >
+                ↻
+              </button>
+            </div>
             <select
               value={housingId}
-              onChange={(e) => setHousingId(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value === "__add_new__") {
+                  // Open new housing form in new tab
+                  window.open("/housing/new", "_blank");
+                  // Reset selection
+                  setHousingId("");
+                } else {
+                  setHousingId(value);
+                }
+              }}
               required
-              className="w-full border rounded-md p-2"
+              className="w-full border rounded-md p-2 text-sm sm:text-base mb-2"
             >
               <option value="">Select housing</option>
               {housingOptions.map((h) => (
                 <option key={h.housing_id} value={h.housing_id}>
-                  {h.housing_name} {h.is_verified ? "✅" : ""}
+                  {h.housing_name} {h.is_verified ? "" : ""}
                 </option>
               ))}
+              <option value="__add_new__" className="text-lightBlue font-medium">
+                + Don't see your housing? Add it here
+              </option>
             </select>
+            
           </div>
 
           <div>
-            <label className="block font-medium mb-1 items-center gap-1">
+            <label className="block font-medium mb-1 items-center gap-1 text-sm sm:text-base">
               Unit End #...?
-              <InfoTip message={"e.g. Unit #993C → C\ne.g. Unit #4381 → 1"} />
+              <InfoTip message={"e.g. Unit #993C → C\ne.g. Unit #2 → 2"} />
             </label>
             <input
               type="text"
@@ -487,14 +525,14 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
                   .slice(0, 1);
                 setUnitSuffix(sanitized);
               }}
-              className="w-full border rounded-md p-2"
+              className="w-full border rounded-md p-2 text-sm sm:text-base"
             />
           </div>
         </div>
 
         {/* Comments Section */}
         <div>
-          <label className="block font-medium mb-1 items-center gap-1">
+          <label className="block font-medium mb-1 items-center gap-1 text-sm sm:text-base">
             Comments
             <InfoTip message="Anything else you'd like to share about your roommate experience?" />
           </label>
@@ -502,16 +540,35 @@ export default function ReviewForm({ roommate_id }: ReviewFormProps) {
             value={comments}
             onChange={(e) => setComments(e.target.value)}
             required
-            className="w-full border rounded-md p-2 h-32"
+            className="w-full border rounded-md p-2 h-24 sm:h-32 text-sm sm:text-base"
             placeholder="Share your experience..."
           />
+        </div>
+
+        {/* Messages Section - Show above submit button for better UX */}
+        <div id="submit-section">
+          {successMessage && (
+            <div className="bg-green-50 border-2 border-green-500 rounded-lg p-3 sm:p-4">
+              <p className="text-green-700 font-semibold text-sm sm:text-base text-center">
+                ✓ {successMessage}
+              </p>
+            </div>
+          )}
+          
+          {error && (
+            <div className="bg-red-50 border-2 border-red-500 rounded-lg p-3 sm:p-4">
+              <p className="text-red-700 font-semibold text-sm sm:text-base text-center">
+                ✗ {error}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Submit Button */}
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full py-3 rounded-md bg-lightBlue text-white hover:bg-blue-800 disabled:opacity-50 border-r-4 border-b-4 border-darkBlue transition duration-200"
+          className="w-full py-2 sm:py-3 rounded-md bg-lightBlue text-white hover:bg-blue-800 disabled:opacity-50 border-r-4 border-b-4 border-darkBlue transition duration-200 text-sm sm:text-base font-medium"
         >
           {isSubmitting ? "Submitting..." : "Submit Review"}
         </button>
