@@ -10,18 +10,40 @@ import LandingTopFridge from "@/components/LandingTopFridge";
 import BottomFridge from "@/components/BottomFridge";
 import AuthHeader from "@/components/AuthHeader";
 import Footer from "@/components/Footer";
+import { FaFireExtinguisher } from "react-icons/fa";
+import { FaVideo } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
+import { FaRegStar } from "react-icons/fa";
+import { FaHouseCircleCheck } from "react-icons/fa6";
+import { FiCheck } from "react-icons/fi";
+import { BsFillFileBarGraphFill } from "react-icons/bs";
+import { AiFillSound } from "react-icons/ai";
+import { LuMessageCircleMore } from "react-icons/lu";
+import { FaBed } from "react-icons/fa";
+import { GiMagicBroom } from "react-icons/gi";
+import { IoMdPeople } from "react-icons/io";
+import { TbPigMoney } from "react-icons/tb";
+import { PiStudentFill } from "react-icons/pi";
+import { GoChevronRight } from "react-icons/go";
 
 export default function Home() {
   const [email, setEmail] = useState("");
   const [showError, setShowError] = useState(false);
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [todoItems, setTodoItems] = useState([
-    { id: "signup", label: "SIGN UP!", checked: false },
+    { id: "signup", label: "Sign up with your .edu email", checked: false },
     { id: "trash", label: "TAKE OUT TRASH", checked: true },
     { id: "sweep", label: "SWEEP", checked: true },
     { id: "dishes", label: "DISHES", checked: false },
   ]);
 
-  const { isSignedIn } = useUser();
+  const { isSignedIn: clerkIsSignedIn } = useUser();
+
+  useEffect(() => {
+    setIsSignedIn(clerkIsSignedIn || false);
+    setIsLoaded(true);
+  }, [clerkIsSignedIn]);
 
   const handleGoClick = (e: React.FormEvent) => {
     e.preventDefault(); // always prevent full form submit
@@ -46,7 +68,7 @@ export default function Home() {
 
       {/* To Do List Section - Hangs over bottom fridge */}
       <div className="relative z-[2] flex justify-center w-full">
-        <div className="w-full max-w-[80%] sm:max-w-[60%] md:max-w-[60%] lg:max-w-[500px] mt-[13rem] sm:mt-[16rem] md:mt-[17rem] lg:mt-[22rem] xl:mt-[24rem] absolute border-2 border-navy-blue rounded-2xl p-3 sm:p-4 md:p-6 pt-0 pb-[10vh] sm:pb-[15vh] md:pb-[20vh] lg:pb-[25vh] space-y-2 sm:space-y-3 md:space-y-4 bg-[#fdfeff] border-2 border-darkBlue shadow-lg">
+        <div className="w-full max-w-[80%] sm:max-w-[60%] md:max-w-[60%] lg:max-w-[500px] mt-[17rem] sm:mt-[17rem] md:mt-[17rem] lg:mt-[20rem] xl:mt-[20rem] absolute border-2 border-navy-blue rounded-2xl p-3 sm:p-4 md:p-6 pt-0 pb-[10vh] sm:pb-[15vh] md:pb-[20vh] lg:pb-[25vh] space-y-2 sm:space-y-3 md:space-y-4 bg-[#fdfeff] border-2 border-darkBlue shadow-lg">
           {/* Magnets with more natural highlights - Responsive positioning */}
           {/* Left pink circle */}
           <div className="absolute -left-6 sm:-left-8 md:-left-10 lg:-left-12 -top-4 sm:-top-5 md:-top-6 lg:-top-7 w-12 sm:w-16 md:w-20 lg:w-24 h-12 sm:h-16 md:h-20 lg:h-24 rounded-full bg-rosePink">
@@ -80,7 +102,18 @@ export default function Home() {
               className="text-xl sm:text-2xl md:text-3xl font-bold text-primary mt-3 sm:mt-5 md:mt-7 flex-shrink-0"
             />
             <div className="flex-1 w-full">
-              {isSignedIn ? (
+              {!isLoaded ? (
+                <div className="mt-2 sm:mt-3 md:mt-5 w-full rounded-xl bg-gray-100 px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 md:py-4 text-lg sm:text-xl md:text-2xl lg:text-3xl font-lazyDog font-bold text-darkBlue flex items-center justify-center">
+                  Loading
+                  <span className="dot ml-1">.</span>
+                  <span className="dot ml-1" style={{ animationDelay: "0.2s" }}>
+                    .
+                  </span>
+                  <span className="dot ml-1" style={{ animationDelay: "0.4s" }}>
+                    .
+                  </span>
+                </div>
+              ) : isSignedIn ? (
                 <button
                   onClick={() => (window.location.href = "/search")}
                   className="mt-2 sm:mt-3 md:mt-5 w-full rounded-xl bg-[#e4f1ff] px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 md:py-4 text-lg sm:text-xl md:text-2xl lg:text-3xl font-lazyDog font-bold text-darkBlue shadow-md border-2 border-darkBlue border-r-2 sm:border-r-4 md:border-r-6 lg:border-r-8 border-b-2 sm:border-b-4 md:border-b-6 lg:border-b-8 hover:bg-[#f4f9ff] transition-all duration-200"
@@ -93,7 +126,7 @@ export default function Home() {
                     htmlFor="signup"
                     className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl mt-2 sm:mt-3 md:mt-5 block font-bold text-darkBlue"
                   >
-                    {todoItems[0].label}
+                    Sign up! <span className="text-sm">with your .edu email</span>
                   </label>
 
                   <form
@@ -117,7 +150,7 @@ export default function Home() {
                         className="sm:ml-2 bg-darkBlue text-white rounded-md px-3 sm:px-4 py-2 text-sm sm:text-base w-full sm:w-auto"
                         disabled={!email.endsWith(".edu")}
                       >
-                        GO
+                        <GoChevronRight className="w-4 h-4" />
                       </Button>
                     </SignUpButton>
                   </form>
@@ -162,85 +195,344 @@ export default function Home() {
           <img
             src="/logo.png"
             alt="Logo"
-            className="w-[15rem] sm:w-[20rem] md:w-[20rem] lg:w-[25rem] h-auto max-w-full z-0 pointer-events-none"
+            className="w-[20rem] sm:w-[20rem] md:w-[20rem] lg:w-[25rem] h-auto max-w-full z-0 pointer-events-none"
           />
         </div>
       </LandingTopFridge>
 
       <BottomFridge>
-        <div className="mt-[15vh] sm:mt-[20vh] md:mt-[25vh] lg:mt-[30vh] bg-[#fdfeff] rounded-[10px] shadow-md p-4 sm:p-6 md:p-8 max-w-lg sm:max-w-xl mx-auto text-left text-[#315d8d] border-2 border-darkBlue">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-center text-darkBlue">
-            About RMR
-          </h2>
-          <p className="text-sm sm:text-base font-sans italic leading-relaxed">
-            We've all had unpredictable roommates - and wished we knew more
-            before moving in.
-            <br />
-            <br />
-            Rate My Roommate helps students share honest, verified reviews to
-            make finding the right roommate easier and safer.
-            <br />
-            <br />
-            All reviews are tied to .edu emails, so only real students can
-            contribute.
-            <br />
-            <br />
-          </p>
+        {/* Hero Problem Statement - Immediate Impact */}
+        <div className="mt-[15vh] sm:mt-[30vh] md:mt-[18vh] lg:mt-[12vh] xl:mt-[15vh] px-4 sm:px-6 lg:px-8">
+          <div className="max-w-2xl md:max-w-xl lg:max-w-2xl mx-auto text-center mb-16">
+            <h2 className="text-3xl sm:text-5xl md:text-5xl lg:text-6xl font-bold mb-6 text-darkBlue">
+              Tired of Nightmare Roommates?{" "}
+              <FaFireExtinguisher className="inline ml-2 text-darkBlue" />
+            </h2>
+            <p className="text-lg sm:text-lg md:text-xl text-[#315d8d] mb-8 max-w-2xl mx-auto leading-loose">
+              <strong className="block mb-4">
+                We had terrible roommates and wished we could have known
+                beforehand.
+              </strong>
+              Rate My Roommate is basically{" "}
+              <span className="font-bold text-darkBlue">
+                Yelp for roommates
+              </span>{" "}
+              - so you can avoid the people who don't clean, blast music at 3am,
+              or invite strangers over constantly.
+            </p>
+            <div className="flex flex-wrap justify-center gap-2 text-sm sm:text-base text-[#315d8d]">
+              <span className="bg-[#fdfeff] px-3 py-1 rounded-full border border-darkBlue">
+                Don't clean (ever)
+              </span>
+              <span className="bg-[#fdfeff] px-3 py-1 rounded-full border border-darkBlue">
+                Blast music at 3am
+              </span>
+              <span className="bg-[#fdfeff] px-3 py-1 rounded-full border border-darkBlue">
+                Invite strangers constantly
+              </span>
+              <span className="bg-[#fdfeff] px-3 py-1 rounded-full border border-darkBlue">
+                Eat your food
+              </span>
+              <span className="bg-[#fdfeff] px-3 py-1 rounded-full border border-darkBlue">
+                Never pay rent
+              </span>
+            </div>
+          </div>
         </div>
 
-        {/* Demo Section */}
-        <div className="mt-8 sm:mt-12 md:mt-16 bg-[#fdfeff] rounded-[10px] shadow-md p-4 sm:p-6 md:p-8 max-w-lg sm:max-w-xl mx-auto text-left text-[#315d8d]">
-          <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-center text-darkBlue">
-            Try It Out
-          </h3>
-          <div className="space-y-4">
-            <div className="bg-[#e4f1ff] p-4 rounded-lg border-2 border-darkBlue">
-              <h4 className="font-bold text-darkBlue mb-2">
-                Search for Roommates
-              </h4>
-              <p className="text-sm text-darkBlue mb-3">
-                Find potential roommates in your area with detailed reviews and
-                ratings.
-              </p>
-              <a
-                href="/search"
-                className="inline-block bg-darkBlue text-white px-4 py-2 rounded-md text-sm hover:bg-opacity-80 transition-colors"
-              >
-                Start Searching
-              </a>
+        {/* Demo Section - Show the Solution */}
+        <div className="px-4 sm:px-6 lg:px-8 mb-20">
+          <div className="max-w-4xl mx-auto">
+            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-8 text-center text-darkBlue">
+              See It In Action <FaVideo className="inline ml-2 text-darkBlue" />
+            </h3>
+
+            {/* Demo GIF Placeholder */}
+            <div className="bg-[#fdfeff] rounded-2xl border-2 border-darkBlue p-4 md:p-12 mb-8 text-center shadow-lg">
+              <img src="/demo.gif" alt="Demo" className="w-full h-auto" />
             </div>
 
-            <div className="bg-[#e4f1ff] p-4 rounded-lg border-2 border-darkBlue">
-              <h4 className="font-bold text-darkBlue mb-2">Add a Roommate</h4>
-              <p className="text-sm text-darkBlue mb-3">
-                Share your experience with a roommate to help other students.
-              </p>
-              <a
-                href="/roommate/new"
-                className="inline-block bg-darkBlue text-white px-4 py-2 rounded-md text-sm hover:bg-opacity-80 transition-colors"
-              >
-                Add Review
-              </a>
-            </div>
+            {/* Quick Actions */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-[#e4f1ff] p-6 rounded-xl border-2 border-darkBlue text-center hover:shadow-lg transition-shadow">
+                <div className="text-3xl mb-3">
+                  <FaSearch className="mx-auto text-darkBlue" />
+                </div>
+                <h4 className="font-bold text-darkBlue mb-3 text-lg">
+                  Search by Name
+                </h4>
+                <p className="text-sm text-darkBlue mb-4">
+                  See if anyone has reviewed them before you sign that lease
+                  together.
+                </p>
+                {isSignedIn ? (
+                  <a
+                    href="/search"
+                    className="inline-block bg-darkBlue text-white px-6 py-3 rounded-lg text-sm hover:bg-opacity-80 transition-colors font-medium"
+                  >
+                    Start Searching
+                  </a>
+                ) : (
+                  <SignUpButton mode="modal">
+                    <button className="inline-block bg-darkBlue text-white px-6 py-3 rounded-lg text-sm hover:bg-opacity-80 transition-colors font-medium">
+                      Start Searching
+                    </button>
+                  </SignUpButton>
+                )}
+              </div>
 
-            <div className="bg-[#e4f1ff] p-4 rounded-lg border-2 border-darkBlue">
-              <h4 className="font-bold text-darkBlue mb-2">Find Housing</h4>
-              <p className="text-sm text-darkBlue mb-3">
-                Discover housing options with roommate reviews and ratings.
-              </p>
-              <a
-                href="/housing/new"
-                className="inline-block bg-darkBlue text-white px-4 py-2 rounded-md text-sm hover:bg-opacity-80 transition-colors"
-              >
-                Browse Housing
-              </a>
+              <div className="bg-[#e4f1ff] p-6 rounded-xl border-2 border-darkBlue text-center hover:shadow-lg transition-shadow">
+                <div className="text-3xl mb-3">
+                  <FaRegStar className="mx-auto text-darkBlue" />
+                </div>
+                <h4 className="font-bold text-darkBlue mb-3 text-lg">
+                  Leave Reviews
+                </h4>
+                <p className="text-sm text-darkBlue mb-4">
+                  Rate cleanliness, noise, communication, and whether you'd live
+                  with them again.
+                </p>
+                {isSignedIn ? (
+                  <a
+                    href="/roommate/new"
+                    className="inline-block bg-darkBlue text-white px-6 py-3 rounded-lg text-sm hover:bg-opacity-80 transition-colors font-medium"
+                  >
+                    Share Experience
+                  </a>
+                ) : (
+                  <SignUpButton mode="modal">
+                    <button className="inline-block bg-darkBlue text-white px-6 py-3 rounded-lg text-sm hover:bg-opacity-80 transition-colors font-medium">
+                      Share Experience
+                    </button>
+                  </SignUpButton>
+                )}
+              </div>
+
+              <div className="bg-[#e4f1ff] p-6 rounded-xl border-2 border-darkBlue text-center hover:shadow-lg transition-shadow">
+                <div className="text-3xl mb-3">
+                  <FaHouseCircleCheck className="mx-auto text-darkBlue" />
+                </div>
+                <h4 className="font-bold text-darkBlue mb-3 text-lg">
+                  Find Housing
+                </h4>
+                <p className="text-sm text-darkBlue mb-4">
+                  Discover dorms, apartments, and housing with roommate reviews
+                  and ratings.
+                </p>
+                {isSignedIn ? (
+                  <a
+                    href="/housing/new"
+                    className="inline-block bg-darkBlue text-white px-6 py-3 rounded-lg text-sm hover:bg-opacity-80 transition-colors font-medium"
+                  >
+                    Browse Housing
+                  </a>
+                ) : (
+                  <SignUpButton mode="modal">
+                    <button className="inline-block bg-darkBlue text-white px-6 py-3 rounded-lg text-sm hover:bg-opacity-80 transition-colors font-medium">
+                      Browse Housing
+                    </button>
+                  </SignUpButton>
+                )}
+              </div>
             </div>
+          </div>
+        </div>
+
+        {/* How It Works - Simple Steps */}
+        <div className="px-4 sm:px-6 lg:px-8 mb-20">
+          <div className="max-w-3xl mx-auto">
+            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-12 text-center text-darkBlue">
+              How It Works <FiCheck className="inline ml-2 text-darkBlue" />
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="flex items-start space-x-4">
+                <div className="bg-darkBlue text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-lg flex-shrink-0">
+                  1
+                </div>
+                <div>
+                  <h4 className="font-bold text-darkBlue mb-2 text-lg">
+                    Sign up with your .edu email
+                  </h4>
+                  <p className="text-darkBlue">
+                    Only verified students can post reviews - no fake accounts
+                    or trolls.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-4">
+                <div className="bg-darkBlue text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-lg flex-shrink-0">
+                  2
+                </div>
+                <div>
+                  <h4 className="font-bold text-darkBlue mb-2 text-lg">
+                    Search potential roommates
+                  </h4>
+                  <p className="text-darkBlue">
+                    Look up anyone by name to see if they've been reviewed by
+                    other students.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-4">
+                <div className="bg-darkBlue text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-lg flex-shrink-0">
+                  3
+                </div>
+                <div>
+                  <h4 className="font-bold text-darkBlue mb-2 text-lg">
+                    Read honest reviews
+                  </h4>
+                  <p className="text-darkBlue">
+                    See detailed ratings on cleanliness, noise, communication,
+                    and overall compatibility.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-4">
+                <div className="bg-darkBlue text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-lg flex-shrink-0">
+                  4
+                </div>
+                <div>
+                  <h4 className="font-bold text-darkBlue mb-2 text-lg">
+                    Help others dodge bullets
+                  </h4>
+                  <p className="text-darkBlue">
+                    Share your own experiences to save others from nightmare
+                    roommates.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* What We Rate - Detailed Breakdown */}
+        <div className="px-4 sm:px-6 lg:px-8 mb-20">
+          <div className="max-w-4xl mx-auto">
+            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-12 text-center text-darkBlue">
+              What We Rate{" "}
+              <BsFillFileBarGraphFill className="inline ml-2 text-darkBlue" />
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="bg-[#e4f1ff] p-4 rounded-xl border border-darkBlue text-center hover:shadow-md transition-shadow">
+                <div className="text-2xl mb-2">
+                  <GiMagicBroom className="mx-auto text-darkBlue" />
+                </div>
+                <h4 className="font-bold text-darkBlue text-sm mb-1">
+                  Cleanliness
+                </h4>
+                <p className="text-xs text-darkBlue">
+                  Do they keep shared spaces clean?
+                </p>
+              </div>
+              <div className="bg-[#e4f1ff] p-4 rounded-xl border border-darkBlue text-center hover:shadow-md transition-shadow">
+                <div className="text-2xl mb-2">
+                  <AiFillSound className="mx-auto text-darkBlue" />
+                </div>
+                <h4 className="font-bold text-darkBlue text-sm mb-1">
+                  Noise Level
+                </h4>
+                <p className="text-xs text-darkBlue">
+                  Are they considerate of quiet hours?
+                </p>
+              </div>
+              <div className="bg-[#e4f1ff] p-4 rounded-xl border border-darkBlue text-center hover:shadow-md transition-shadow">
+                <div className="text-2xl mb-2">
+                  <LuMessageCircleMore className="mx-auto text-darkBlue" />
+                </div>
+                <h4 className="font-bold text-darkBlue text-sm mb-1">
+                  Communication
+                </h4>
+                <p className="text-xs text-darkBlue">
+                  Do they communicate issues clearly?
+                </p>
+              </div>
+              <div className="bg-[#e4f1ff] p-4 rounded-xl border border-darkBlue text-center hover:shadow-md transition-shadow">
+                <div className="text-2xl mb-2">
+                  <TbPigMoney className="mx-auto text-darkBlue" />
+                </div>
+                <h4 className="font-bold text-darkBlue text-sm mb-1">
+                  Responsibility
+                </h4>
+                <p className="text-xs text-darkBlue">
+                  Do they pay bills and follow rules?
+                </p>
+              </div>
+              <div className="bg-[#e4f1ff] p-4 rounded-xl border border-darkBlue text-center hover:shadow-md transition-shadow">
+                <div className="text-2xl mb-2">
+                  <IoMdPeople className="mx-auto text-darkBlue" />
+                </div>
+                <h4 className="font-bold text-darkBlue text-sm mb-1">
+                  Guest Frequency
+                </h4>
+                <p className="text-xs text-darkBlue">
+                  How often do they have visitors?
+                </p>
+              </div>
+              <div className="bg-[#e4f1ff] p-4 rounded-xl border border-darkBlue text-center hover:shadow-md transition-shadow">
+                <div className="text-2xl mb-2">
+                  <FaBed className="mx-auto text-darkBlue" />
+                </div>
+                <h4 className="font-bold text-darkBlue text-sm mb-1">
+                  Sleep Schedule
+                </h4>
+                <p className="text-xs text-darkBlue">
+                  Are your sleep patterns compatible?
+                </p>
+              </div>
+            </div>
+            <div className="mt-8 text-center">
+              <div className="bg-[#fdfeff] rounded-xl border-2 border-red-500 p-6 max-w-2xl mx-auto">
+                <p className="text-lg font-bold text-darkBlue">
+                  Most importantly:{" "}
+                  <span className="text-red-600">
+                    Would you live with them again?
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Trust & Security */}
+        <div className="px-4 sm:px-6 lg:px-8 mb-20">
+          <div className="max-w-2xl mx-auto text-center">
+            <h3 className="text-2xl sm:text-3xl font-bold mb-6 text-darkBlue">
+              Verified Students Only{" "}
+              <PiStudentFill className="inline ml-2 text-darkBlue" />
+            </h3>
+            <p className="text-lg text-[#315d8d] leading-relaxed">
+              All reviews require verified{" "}
+              <span className="font-bold text-darkBlue">.edu emails</span>, so
+              it's actual students sharing real experiences, not random internet
+              trolls. You can only access reviews for roommates at your own
+              school.
+            </p>
           </div>
         </div>
       </BottomFridge>
 
       {/* Footer */}
       <Footer />
+
+      {/* CSS animations for the loading dots */}
+      <style jsx>{`
+        .dot {
+          animation: blink 1.4s infinite both;
+        }
+
+        @keyframes blink {
+          0%,
+          100% {
+            opacity: 0;
+          }
+          50% {
+            opacity: 1;
+          }
+        }
+      `}</style>
     </main>
   );
 }
