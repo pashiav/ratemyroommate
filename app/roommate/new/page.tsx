@@ -6,6 +6,7 @@ import { useUser } from "@clerk/nextjs";
 import TopFridge from "@/components/TopFridge";
 import Footer from "@/components/Footer";
 import AuthHeader from "@/components/AuthHeader";
+import AuthGuard from "@/components/AuthGuard";
 import Loading from "@/components/Loading";
 
 export default function AddRoommatePage() {
@@ -98,8 +99,9 @@ export default function AddRoommatePage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#315d8d] pl-[0.75rem] pr-[0.75rem] relative">
-      <TopFridge showSearchBar={true} back={true}>
+    <AuthGuard>
+      <main className="min-h-screen bg-[#315d8d] pl-[0.75rem] pr-[0.75rem] relative">
+        <TopFridge showSearchBar={true} back={true}>
         <AuthHeader />
 
         {isLoadingSchool ? (
@@ -158,5 +160,6 @@ export default function AddRoommatePage() {
       </TopFridge>
       <Footer />
     </main>
+    </AuthGuard>
   );
 }

@@ -24,7 +24,7 @@ export default function SearchForm({
   onSearch,
 }: Props) {
   return (
-    <div className="flex flex-col lg:flex-row items-center gap-3 lg:gap-2 h-full w-full">
+    <div className="flex flex-col lg:flex-row items-center justify-center gap-3 lg:gap-2 h-full w-full md:w-[60vw]">
       {/* Search Type Selector */}
       <div className="relative inline-block min-w-fit w-full lg:w-auto">
         <select
@@ -96,7 +96,7 @@ export default function SearchForm({
           </>
         ) : (
           /* Single location input field for housing search */
-          <div className="w-full lg:w-[25rem] h-auto md:h-[2.4rem]">
+          <div className="w-full lg:w-[25rem] h-auto md:h-auto lg:h-[2.4rem] flex flex-col lg:flex-row gap-3 lg:gap-1">
             <input
               type="text"
               placeholder="Apartment/Dorm Name"
@@ -111,7 +111,7 @@ export default function SearchForm({
                   onSearch();
                 }
               }}
-              className="w-full px-4 py-2 border border-darkBlue rounded-md italic font-sans text-sm lg:text-[0.625rem] xs:text-xs md:text-sm"
+              className="w-full lg:w-[75vw] px-4 py-2 border border-darkBlue rounded-md italic font-sans text-sm lg:text-[0.75rem] xs:text-xs md:text-sm"
             />
           </div>
         )}

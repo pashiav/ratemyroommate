@@ -7,6 +7,7 @@ import TopFridge from "@/components/TopFridge";
 import BottomFridge from "@/components/BottomFridge";
 import Footer from "@/components/Footer";
 import AuthHeader from "@/components/AuthHeader";
+import AuthGuard from "@/components/AuthGuard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FaThumbsDown, FaThumbsUp, FaPaw } from "react-icons/fa";
 import { faHouse } from "@fortawesome/free-solid-svg-icons";
@@ -90,7 +91,6 @@ export default function RoommateDetails() {
 
       if (!isSignedIn) {
         setLoading(false);
-        setError("User is not signed in");
         return;
       }
 
@@ -185,8 +185,9 @@ export default function RoommateDetails() {
   ) ?? false;
 
   return (
-    <main className="min-h-screen bg-[#315d8d] px-3 sm:px-4 md:pl-[0.75rem] md:pr-[0.75rem] font-lazyDog">
-      <TopFridge showSearchBar={true} back={true}>
+    <AuthGuard>
+      <main className="min-h-screen bg-[#315d8d] px-3 sm:px-4 md:pl-[0.75rem] md:pr-[0.75rem] font-lazyDog">
+        <TopFridge showSearchBar={true} back={true}>
         <AuthHeader />
 
         <div className="max-w-5xl mx-auto w-full text-lazyDog px-2 sm:px-4">
@@ -410,7 +411,7 @@ export default function RoommateDetails() {
       <BottomFridge>
         <div
           ref={reviewsRef}
-          className="max-w-2xl mx-auto w-full text-lazyDog space-y-4 sm:space-y-6 px-3 sm:px-4"
+          className="max-w-2xl md:max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto w-full text-lazyDog space-y-4 sm:space-y-6 px-3 sm:px-4"
         >
           {/* Reviews section header */}
           <h2 className="text-2xl sm:text-3xl md:text-[2rem] text-darkBlue font-bold">
@@ -439,7 +440,7 @@ export default function RoommateDetails() {
                   <span className="text-xl font-bold text-gold">{review.rating}</span>
                   <span className="text-lg text-gold">★</span>
                 </div>
-                <span className="text-[0.625rem] xs:text-xs text-darkBlue italic font-sans">
+                <span className="text-[0.7rem] xs:text-xs text-darkBlue italic font-sans">
                   {new Date(review.created_at).toLocaleDateString('en-US', { 
                     year: 'numeric', 
                     month: 'short', 
@@ -450,10 +451,10 @@ export default function RoommateDetails() {
 
               {/* Review comments section */}
               <div className="mb-3 p-2.5 bg-[#f0f4f8] rounded-md border-l-2 border-lightBlue">
-                <p className="text-darkBlue text-[0.75rem] xs:text-sm leading-snug font-sans italic">
-                  "{expandedReviews[review.rv_id] || review.comments.length <= 150
+                <p className="text-darkBlue text-[0.85rem] xs:text-sm leading-snug font-sans italic">
+                  {expandedReviews[review.rv_id] || review.comments.length <= 150
                     ? review.comments
-                    : `${review.comments.slice(0, 225)}...`}"
+                    : `${review.comments.slice(0, 225)}...`}
                 </p>
                 {review.comments.length > 150 && (
                   <button
@@ -467,7 +468,7 @@ export default function RoommateDetails() {
 
               {/* Key Info Badges */}
               <div className="flex flex-wrap gap-1.5 mb-3">
-                <span className={`px-2 py-1 rounded-full text-[0.625rem] xs:text-xs font-bold ${review.would_recommend ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                <span className={`px-2 py-1 rounded-full text-[0.8rem] xs:text-xs font-bold ${review.would_recommend ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                   {review.would_recommend ? (
                     <>
                       <FaThumbsUp className="inline mr-1" /> Recommend
@@ -478,18 +479,18 @@ export default function RoommateDetails() {
                     </>
                   )}
                 </span>
-                <span className="px-2 py-1 rounded-full text-[0.625rem] xs:text-xs font-bold bg-blue-100 text-blue-700">
+                <span className="px-2 py-1 rounded-full text-[0.8rem] xs:text-xs font-bold bg-blue-100 text-blue-700">
                 {review.years_lived} {Number(review.years_lived) === 1 ? "year" : "years"} lived
                 </span>
                 {review.has_pets && (
-                  <span className="px-2 py-1 rounded-full text-[0.625rem] xs:text-xs font-bold bg-purple-100 text-purple-700">
+                  <span className="px-2 py-1 rounded-full text-[0.8rem] xs:text-xs font-bold bg-purple-100 text-purple-700">
                     <FaPaw className="inline mr-1" /> Pets
                   </span>
                 )}
               </div>
 
               {/* Compact Info Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[0.625rem] xs:text-xs font-lazyDog">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[0.75rem] xs:text-xs font-lazyDog">
                 <div className="flex flex-col p-2 bg-[#fafafa] rounded">
                   <span className="text-[#c4adb9]">Cleanliness</span>
                   <span className="text-[#6d4d55] font-bold">{review.cleanliness}/5</span>
@@ -531,5 +532,6 @@ export default function RoommateDetails() {
       </BottomFridge>
       <Footer />
     </main>
+    </AuthGuard>
   );
 }

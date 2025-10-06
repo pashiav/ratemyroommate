@@ -59,7 +59,7 @@ export default function BottomFridge({
       </div>
 
       {/* Fridge Feet/Base - Responsive sizing */}
-      <div className="w-full flex justify-between px-4 md:px-16 lg:px-24 xl:px-32 -mt-0">
+      <div className="w-full flex justify-center gap-[8rem] xs:gap-[16rem] sm:gap-[20rem] md:justify-between md:px-16 lg:px-24 xl:px-32 -mt-0">
         <div className="w-20 md:w-32 lg:w-40 xl:w-60 h-8 md:h-12 lg:h-16 xl:h-20 bg-[#2c2c30] rounded-bl-[20px] md:rounded-bl-[25px] lg:rounded-bl-[30px] xl:rounded-bl-[40px] rounded-br-[20px] md:rounded-br-[25px] lg:rounded-br-[30px] xl:rounded-br-[40px]"></div>
         <div className="w-20 md:w-32 lg:w-40 xl:w-60 h-8 md:h-12 lg:h-16 xl:h-20 bg-[#2c2c30] rounded-bl-[20px] md:rounded-bl-[25px] lg:rounded-bl-[30px] xl:rounded-bl-[40px] rounded-br-[20px] md:rounded-br-[25px] lg:rounded-br-[30px] xl:rounded-br-[40px]"></div>
       </div>

@@ -8,6 +8,7 @@ import TopFridge from "@/components/TopFridge";
 import BottomFridge from "@/components/BottomFridge";
 import Footer from "@/components/Footer";
 import AuthHeader from "@/components/AuthHeader";
+import AuthGuard from "@/components/AuthGuard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserFriends } from "@fortawesome/free-solid-svg-icons";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
@@ -175,9 +176,9 @@ export default function SearchResultsClient() {
 
         {/* Review details for each roommate profile */}
         {!hasNoReviews &&
-          group.map((item) => (
+          group.map((item, index) => (
             <div
-              key={item.rm_id + item.unit_suffix}
+              key={`${item.rm_id}-${item.unit_suffix}-${item.housing_id}-${index}`}
               className="border-t border-gray-200 pt-3 mt-2"
             >
               {/* Mobile-first layout for review details */}
@@ -287,8 +288,9 @@ export default function SearchResultsClient() {
   );
 
   return (
-    <main className="min-h-screen bg-[#315d8d] px-3 sm:px-4 md:px-6 lg:pl-[0.75rem] lg:pr-[0.75rem]">
-      <TopFridge showSearchBar={true} back={true}>
+    <AuthGuard>
+      <main className="min-h-screen bg-[#315d8d] px-3 sm:px-4 md:px-6 lg:pl-[0.75rem] lg:pr-[0.75rem]">
+        <TopFridge showSearchBar={true} back={true}>
         <AuthHeader />
 
         <div className={`flex flex-col items-center mt-[6.5rem] gap-2 px-2 sm:px-4 ${!loading && results.length > topResultsCount ? 'pb-2' : ''}`}>
@@ -310,16 +312,43 @@ export default function SearchResultsClient() {
           {loading ? (
             <p className="text-gray-500">Loading...</p>
           ) : results.length > 0 ? (
-            <ul className={`w-full max-w-4xl md:max-w-lg lg:max-w-2xl space-y-3 px-2 sm:px-4 ${results.length > topResultsCount ? 'mb-0' : ''}`}>
-              {type === "roommate"
-                ? Object.entries(topGroupedRoommates).map(([name, group]) =>
-                    renderRoommateItem(name, group)
-                  )
-                : topHousingResults.map((item) => renderHousingItem(item))}
-            </ul>
+            <>
+              <ul className={`w-full max-w-4xl md:max-w-lg lg:max-w-2xl space-y-3 px-2 sm:px-4 ${results.length > topResultsCount ? 'mb-0' : ''}`}>
+                {type === "roommate"
+                  ? Object.entries(topGroupedRoommates).map(([name, group]) =>
+                      renderRoommateItem(name, group)
+                    )
+                  : topHousingResults.map((item) => renderHousingItem(item))}
+              </ul>
+              
+              {/* Show "Add New" button in TopFridge if no overflow results */}
+              {results.length <= topResultsCount && (
+                <div className="flex flex-col items-center mt-6">
+                  {/* No more results message */}
+                  <div className="text-center mb-4">
+                    <p className="text-gray-500 text-sm">
+                      No more {type === "roommate" ? "roommates" : "housing options"} found.
+                    </p>
+                  </div>
+                  
+                  <Link
+                    href={type === "roommate" ? "/roommate/new" : "/housing/new"}
+                    className="inline-block bg-lightBlue text-lazyDog text-white px-4 sm:px-6 py-2 sm:py-3 rounded-md hover:bg-blue-900 hover:transition shadow-[3px_3px_0_0_#0c4a6e] text-sm sm:text-base transition-colors"
+                  >
+                    Add a new {type === "roommate" ? "roommate" : "housing option"}
+                  </Link>
+                </div>
+              )}
+            </>
           ) : (
             <div className="mt-6 text-center px-4">
               <p className="text-gray-500 mb-4">No results found.</p>
+              <Link
+                href={type === "roommate" ? "/roommate/new" : "/housing/new"}
+                className="inline-block bg-lightBlue text-lazyDog text-white px-4 sm:px-6 py-2 sm:py-3 rounded-md hover:bg-blue-900 hover:transition shadow-[3px_3px_0_0_#0c4a6e] text-sm sm:text-base transition-colors"
+              >
+                Add a new {type === "roommate" ? "roommate" : "housing option"}
+              </Link>
             </div>
           )}
         </div>
@@ -340,7 +369,7 @@ export default function SearchResultsClient() {
             {/* No more results message - always show above add button */}
             <div className="text-center mt-6 mb-4">
               <p className="text-gray-500 text-sm">
-                No more {type === "roommate" ? "roommates" : "housing options"} found
+                No more {type === "roommate" ? "roommates" : "housing options"} found.
               </p>
             </div>
 
@@ -355,27 +384,10 @@ export default function SearchResultsClient() {
         </BottomFridge>
       )}
 
-      {/* Show "Add New" button in TopFridge if no overflow results */}
-      {!loading && results.length > 0 && results.length <= topResultsCount && (
-        <div className="flex flex-col items-center -mt-[4rem] relative z-20">
-          {/* No more results message */}
-          <div className="text-center mb-4">
-            <p className="text-gray-500 text-sm">
-              No more {type === "roommate" ? "roommates" : "housing options"} found
-            </p>
-          </div>
-          
-          <Link
-            href={type === "roommate" ? "/roommate/new" : "/housing/new"}
-            className="inline-block bg-lightBlue text-lazyDog text-white px-4 sm:px-6 py-2 sm:py-3 rounded-md hover:bg-blue-900 hover:transition shadow-[3px_3px_0_0_#0c4a6e] text-sm sm:text-base transition-colors"
-          >
-            Add a new {type === "roommate" ? "roommate" : "housing option"}
-          </Link>
-        </div>
-      )}
 
       {/* Footer */}
       <Footer />
     </main>
+    </AuthGuard>
   );
 }

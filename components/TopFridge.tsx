@@ -72,6 +72,12 @@ export default function TopFridge({
       )}
       
       {/* Right Side Decorative Shine Effects - Responsive sizing */}
+      <div
+        className="absolute right-[0.5rem] md:right-[0.75rem] lg:right-[1rem] top-[0.4rem] md:top-[0.6rem] lg:top-[0.7rem] w-24 md:w-32 lg:w-36 xl:w-48 h-24 md:h-32 lg:h-36 xl:h-48 rounded-full border-[4px] md:border-[6px] lg:border-[8px] border-white"
+        style={{
+          clipPath: "ellipse(25% 25% at 70% 30%)",
+        }}
+      ></div>
       <div className="absolute right-[0.75rem] md:right-[1rem] lg:right-[1.25rem] top-[4rem] md:top-[5.5rem] lg:top-[6.5em] h-[60%] md:h-[70%] lg:h-[75%] w-[4px] md:w-[6px] lg:w-[8.5px] bg-white rounded-full"></div>
       <div className="absolute right-[3.5rem] md:right-[5rem] lg:right-[6.5rem] top-[0.4rem] md:top-[0.6rem] lg:top-[0.8rem] w-[1.5rem] md:w-[2.25rem] lg:w-[3rem] h-[3.5px] md:h-[5px] lg:h-[7px] bg-white rounded-full"></div>
       

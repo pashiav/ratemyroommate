@@ -111,7 +111,7 @@ export default function ResponsiveSearchIcon() {
 
       {/* Modal Overlay */}
       {isModalOpen && (
-        <div className="w-[80vw] fixed top-[4rem] left-1/2 -translate-x-1/2 h-screen z-50 flex items-start justify-center">
+        <div className="w-[63vw] fixed top-[4rem] left-1/2 -translate-x-1/2 h-screen z-50 flex items-start justify-center">
             <div className="bg-white w-full max-h-[90vh] rounded-lg shadow-2xl">
             <div
               ref={modalRef}

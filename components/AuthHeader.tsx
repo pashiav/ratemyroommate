@@ -8,8 +8,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserCog } from "@fortawesome/free-solid-svg-icons";
 
 export default function AuthHeader() {
-  const { isSignedIn, isLoaded, user } = useUser();
+  const { isSignedIn: clerkIsSignedIn, isLoaded: clerkIsLoaded, user } = useUser();
   const { signOut } = useClerk();
+
+  // Client-side state to prevent hydration mismatches
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   // State management for dropdown and modal visibility
   const [showDropdown, setShowDropdown] = useState(false);
@@ -21,6 +26,13 @@ export default function AuthHeader() {
   const [newPassword, setNewPassword] = useState("");
   const [passwordSuccess, setPasswordSuccess] = useState("");
   const [passwordError, setPasswordError] = useState("");
+
+  // Sync client state with Clerk's state to prevent hydration mismatches
+  useEffect(() => {
+    setMounted(true);
+    setIsSignedIn(clerkIsSignedIn || false);
+    setIsLoaded(clerkIsLoaded || false);
+  }, [clerkIsSignedIn, clerkIsLoaded]);
 
   // Handle clicks outside dropdown and modal to close them
   useEffect(() => {

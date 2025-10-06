@@ -2,6 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { notFound, useParams } from "next/navigation";
+import AuthGuard from "@/components/AuthGuard";
+import TopFridge from "@/components/TopFridge";
+import BottomFridge from "@/components/BottomFridge";
+import Footer from "@/components/Footer";
+import AuthHeader from "@/components/AuthHeader";
 
 // Interface defining the structure of housing data from API
 interface HousingViewResult {
@@ -40,34 +45,56 @@ export default function HousingDetailClient() {
 
   // Show error message if housing not found or loading failed
   if (error || !data) {
-    return <p className="p-10 text-center">Housing not found or loading failed.</p>;
+    return (
+      <AuthGuard>
+        <main className="min-h-screen bg-[#315d8d] px-3 sm:px-4 md:pl-[0.75rem] md:pr-[0.75rem]">
+          <TopFridge showSearchBar={true} back={true}>
+            <AuthHeader />
+            <div className="flex items-center justify-center mt-32">
+              <p className="text-white text-xl">Housing not found or loading failed.</p>
+            </div>
+          </TopFridge>
+          <Footer />
+        </main>
+      </AuthGuard>
+    );
   }
 
   return (
-    <main className="min-h-screen bg-white px-8 py-16 font-sans text-gray-900">
-      <div className="max-w-3xl mx-auto">
-        {/* Housing Name Header */}
-        <h1 className="text-4xl font-bold mb-2">{data.housing_name}</h1>
-        {/* School Information */}
-        <p className="text-lg mb-4">School: <strong>{data.school_name}</strong></p>
+    <AuthGuard>
+      <main className="min-h-screen bg-[#315d8d] px-3 sm:px-4 md:pl-[0.75rem] md:pr-[0.75rem]">
+        <TopFridge showSearchBar={true} back={true}>
+          <AuthHeader />
+          <div className="max-w-3xl mx-auto mt-20 sm:mt-24 md:mt-32">
+            <div className="bg-white rounded-2xl p-6 sm:p-8 md:p-10 border-4 border-darkBlue shadow-lg">
+              {/* Housing Name Header */}
+              <h1 className="text-3xl sm:text-4xl font-bold mb-3 text-darkBlue font-lazyDog">{data.housing_name}</h1>
+              {/* School Information */}
+              <p className="text-lg sm:text-xl mb-4 text-gray-700">School: <strong className="text-darkBlue">{data.school_name}</strong></p>
 
-        {/* Verification Status Display */}
-        {data.is_verified ? (
-          <span className="text-green-600 font-bold">Verified</span>
-        ) : (
-          <span className="text-red-600 font-bold">Not Verified</span>
-        )}
+              {/* Verification Status Display */}
+              <div className="mb-4">
+                {data.is_verified ? (
+                  <span className="bg-green-100 text-green-700 px-4 py-2 rounded-full font-bold text-sm">✓ Verified</span>
+                ) : (
+                  <span className="bg-red-100 text-red-700 px-4 py-2 rounded-full font-bold text-sm">Not Verified</span>
+                )}
+              </div>
 
-        {/* Location Coordinates Display (if available) */}
-        {(data.latitude && data.longitude) && (
-          <div className="mt-6">
-            <p>Coordinates:</p>
-            <p className="text-sm text-gray-700">
-              Latitude: {data.latitude}, Longitude: {data.longitude}
-            </p>
+              {/* Location Coordinates Display (if available) */}
+              {(data.latitude && data.longitude) && (
+                <div className="mt-6 bg-blue-50 p-4 rounded-lg">
+                  <p className="font-semibold text-darkBlue mb-2">Location Coordinates:</p>
+                  <p className="text-sm text-gray-700">
+                    Latitude: {data.latitude}, Longitude: {data.longitude}
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
-        )}
-      </div>
-    </main>
+        </TopFridge>
+        <Footer />
+      </main>
+    </AuthGuard>
   );
 }
