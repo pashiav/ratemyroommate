@@ -208,7 +208,7 @@ export default function Home() {
               Tired of Nightmare Roommates?{" "}
               <FaFireExtinguisher className="inline ml-2 text-darkBlue" />
             </h2>
-            <p className="text-lg sm:text-lg md:text-xl text-[#315d8d] mb-8 max-w-2xl mx-auto leading-loose font-fredoka">
+            <p className="text-lg sm:text-lg md:text-xl text-[#315d8d] mb-8 max-w-2xl mx-auto leading-loose">
               <strong className="block mb-4">
                 We had terrible roommates and wished we could have known
                 beforehand.
@@ -261,7 +261,7 @@ export default function Home() {
                 <h4 className="font-bold text-darkBlue mb-3 text-lg">
                   Search by Name
                 </h4>
-                <p className="text-sm text-darkBlue mb-4 font-fredoka">
+                <p className="text-sm text-darkBlue mb-4">
                   See if anyone has reviewed them before you sign that lease
                   together.
                 </p>
@@ -288,7 +288,7 @@ export default function Home() {
                 <h4 className="font-bold text-darkBlue mb-3 text-lg">
                   Leave Reviews
                 </h4>
-                <p className="text-sm text-darkBlue mb-4 font-fredoka">
+                <p className="text-sm text-darkBlue mb-4">
                   Rate cleanliness, noise, communication, and whether you'd live
                   with them again.
                 </p>
@@ -315,7 +315,7 @@ export default function Home() {
                 <h4 className="font-bold text-darkBlue mb-3 text-lg">
                   Find Housing
                 </h4>
-                <p className="text-sm text-darkBlue mb-4 font-fredoka">
+                <p className="text-sm text-darkBlue mb-4">
                   Discover dorms, apartments, and housing with roommate reviews
                   and ratings.
                 </p>
@@ -353,7 +353,7 @@ export default function Home() {
                   <h4 className="font-bold text-darkBlue mb-2 text-lg">
                     Sign up with your .edu email
                   </h4>
-                  <p className="text-darkBlue font-fredoka">
+                  <p className="text-darkBlue">
                     Only verified students can post reviews - no fake accounts
                     or trolls.
                   </p>
@@ -368,7 +368,7 @@ export default function Home() {
                   <h4 className="font-bold text-darkBlue mb-2 text-lg">
                     Search potential roommates
                   </h4>
-                  <p className="text-darkBlue font-fredoka">
+                  <p className="text-darkBlue">
                     Look up anyone by name to see if they've been reviewed by
                     other students.
                   </p>
@@ -383,7 +383,7 @@ export default function Home() {
                   <h4 className="font-bold text-darkBlue mb-2 text-lg">
                     Read honest reviews
                   </h4>
-                  <p className="text-darkBlue font-fredoka">
+                  <p className="text-darkBlue">
                     See detailed ratings on cleanliness, noise, communication,
                     and overall compatibility.
                   </p>
@@ -398,7 +398,7 @@ export default function Home() {
                   <h4 className="font-bold text-darkBlue mb-2 text-lg">
                     Help others dodge bullets
                   </h4>
-                  <p className="text-darkBlue font-fredoka">
+                  <p className="text-darkBlue">
                     Share your own experiences to save others from nightmare
                     roommates.
                   </p>
@@ -423,7 +423,7 @@ export default function Home() {
                 <h4 className="font-bold text-darkBlue text-sm mb-1">
                   Cleanliness
                 </h4>
-                <p className="text-xs text-darkBlue font-fredoka">
+                <p className="text-xs text-darkBlue">
                   Do they keep shared spaces clean?
                 </p>
               </div>
@@ -434,7 +434,7 @@ export default function Home() {
                 <h4 className="font-bold text-darkBlue text-sm mb-1">
                   Noise Level
                 </h4>
-                <p className="text-xs text-darkBlue font-fredoka">
+                <p className="text-xs text-darkBlue">
                   Are they considerate of quiet hours?
                 </p>
               </div>
@@ -445,7 +445,7 @@ export default function Home() {
                 <h4 className="font-bold text-darkBlue text-sm mb-1">
                   Communication
                 </h4>
-                <p className="text-xs text-darkBlue font-fredoka">
+                <p className="text-xs text-darkBlue">
                   Do they communicate issues clearly?
                 </p>
               </div>
@@ -456,7 +456,7 @@ export default function Home() {
                 <h4 className="font-bold text-darkBlue text-sm mb-1">
                   Responsibility
                 </h4>
-                <p className="text-xs text-darkBlue font-fredoka">
+                <p className="text-xs text-darkBlue">
                   Do they pay bills and follow rules?
                 </p>
               </div>
@@ -467,7 +467,7 @@ export default function Home() {
                 <h4 className="font-bold text-darkBlue text-sm mb-1">
                   Guest Frequency
                 </h4>
-                <p className="text-xs text-darkBlue font-fredoka">
+                <p className="text-xs text-darkBlue">
                   How often do they have visitors?
                 </p>
               </div>
@@ -478,7 +478,7 @@ export default function Home() {
                 <h4 className="font-bold text-darkBlue text-sm mb-1">
                   Sleep Schedule
                 </h4>
-                <p className="text-xs text-darkBlue font-fredoka">
+                <p className="text-xs text-darkBlue">
                   Are your sleep patterns compatible?
                 </p>
               </div>
@@ -503,7 +503,7 @@ export default function Home() {
               Verified Students Only{" "}
               <PiStudentFill className="inline ml-2 text-darkBlue" />
             </h3>
-            <p className="text-lg text-[#315d8d] leading-relaxed font-fredoka">
+            <p className="text-lg text-[#315d8d] leading-relaxed">
               All reviews require verified{" "}
               <span className="font-bold text-darkBlue">.edu emails</span>, so
               it's actual students sharing real experiences, not random internet
