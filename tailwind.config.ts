@@ -21,6 +21,7 @@ const config = {
       fontFamily: {
         lazyDog: ['Lazy Dog', 'sans-serif'],
         sans: ["Inter", "sans-serif"],
+        fredoka: ["Fredoka", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
